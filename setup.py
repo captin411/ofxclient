@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(name='ofxclient',
       version="0.1",
       description="OFX client for dowloading transactions from banks",
-      long_description=open("./README", "r").read(),
+      long_description=open("./README.md", "r").read(),
       classifiers=[
           "Development Status :: 4 - Beta",
           "Intended Audience :: Developers",
