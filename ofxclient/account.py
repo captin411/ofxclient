@@ -4,9 +4,7 @@ from ofxparse.ofxparse import InvestmentAccount as OfxInvestmentAccount
 from request import Builder
 from institution import Institution
 from settings import Settings
-import StringIO
-import hashlib
-import time
+import StringIO, hashlib, time, datetime
 
 class Account:
     def __init__(self, institution=None, routing_number=None, account_type=None, broker_id=None, number=None, description=None, guid=None ):
@@ -109,8 +107,9 @@ class Account:
             return 'bank'
         return 'credit'
 
-    def download(self,as_of=time.time()-60*86400):
-        from_date = time.strftime("%Y%m%d",time.localtime(as_of))
+    def download(self,days=60):
+        days_ago = datetime.datetime.now() - datetime.timedelta( days=days )
+        from_date = time.strftime("%Y%m%d",days_ago.timetuple())
         builder = Builder(self.institution) 
         query = None
         if self.is_brokerage_account():
@@ -125,17 +124,18 @@ class Account:
         response = builder.doQuery(query)
         return StringIO.StringIO(response)
 
-    def statement(self,as_of=time.time()-60*86400):
-        from_date = time.strftime("%Y%m%d",time.localtime(as_of))
+    def statement(self,days=60):
+        days_ago = datetime.datetime.now() - datetime.timedelta( days=days )
+        from_date = time.strftime("%Y%m%d",days_ago.timetuple())
         if not from_date in self._statements:
-            data = self.download(as_of=as_of)
+            data = self.download(days=days)
             ofx = OfxParser.parse( data )
             self._statements[from_date] = ofx.account.statement
 
         return self._statements[from_date]
 
-    def transactions(self,as_of=time.time()-60*86400):
-        return self.statement(as_of=as_of).transactions
+    def transactions(self,days=60):
+        return self.statement(days=days).transactions
 
     def __repr__(self):
         return str({
