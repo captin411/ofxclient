@@ -3,4 +3,4 @@ from account import Account
 from settings import Settings
 from request import Builder
 
-__version__ = '0.1'
+__version__ = '0.2'
