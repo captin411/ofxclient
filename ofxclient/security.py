@@ -7,7 +7,7 @@ except ImportError:
 
 REALM = Settings.security_realm
 JSON_KEY = 'OFXCredentials'
-CACHE_TIME = 15
+CACHE_TIME = 120
 
 def store(struct):
     str = base64.b64encode(json.dumps(struct))
