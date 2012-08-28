@@ -1,3 +1,4 @@
+import security
 from ofxparse import OfxParser
 from ofxparse.ofxparse import InvestmentAccount as OfxInvestmentAccount
 from request import Builder
@@ -5,7 +6,6 @@ from institution import Institution
 from settings import Settings
 import StringIO
 import hashlib
-import keyring
 import time
 
 class Account:
@@ -13,7 +13,7 @@ class Account:
         if guid is None and number is None:
             raise Exception("must provide either a guid or a number")
         self.institution = institution
-        self.number = number or keyring.get_password( Settings.security_realm, guid )
+        self.number = number or security.get_password( guid )
         self.guid = guid or account_number_hash(number)
         self.routing_number = routing_number
         self.account_type = account_type
@@ -71,7 +71,7 @@ class Account:
     
     def save(self):
         # always save the original account number in the keystore
-        keyring.set_password( Settings.security_realm, self.guid, self.number or '' )
+        security.set_password( self.guid, self.number or '' )
         struct = {
             'guid': self.guid,
             'institution': self.institution.guid(),

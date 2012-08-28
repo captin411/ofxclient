@@ -1,6 +1,6 @@
 import StringIO
-import keyring
 import os.path
+import security
 from BeautifulSoup import BeautifulStoneSoup
 from ofxhome import OFXHome
 from ofxhome import Institution as OFXHomeInstitution
@@ -17,10 +17,7 @@ class Institution:
         self.username = username
         self.dsn = dsn
         self.description = description or dsn['name']
-        self.password = keyring.get_password(
-            Settings.security_realm,
-            self.keyring_id()
-        )
+        self.password = security.get_password( self.keyring_id() )
 
     @staticmethod
     def from_config(c):
@@ -47,8 +44,7 @@ class Institution:
 
     def save(self):
         # always save the password
-        keyring.set_password(
-            Settings.security_realm,
+        security.set_password(
             self.keyring_id(),
             self.password or ''
         )
@@ -96,8 +92,7 @@ class Institution:
         if code == 0:
             return 1
 
-        keyring.set_password(
-            Settings.security_realm,
+        security.set_password(
             self.keyring_id(),
             ''
         )
