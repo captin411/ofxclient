@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+import sys
+sys.path.append('../ofxclient')
+import cherrypy
+from ofxclient import Settings, Account, Institution
+import ofxclient
+import os.path
+from mako.template import Template
+from mako.lookup import TemplateLookup
+
+lookup = TemplateLookup(directories=[Settings.html_path])
+
+def _t(name,**kwargs):
+    return lookup.get_template(name).render(**kwargs)
+
+class Root(object):
+    @cherrypy.expose
+    def index(self):
+        banks = sorted(Institution.list())
+        return _t('index.html',banks=banks)
+
+    @cherrypy.expose
+    def download(self,account_id,filename_arbitrary):
+        account = Account.from_id(account_id)
+        cherrypy.response.headers['Content-Type'] = 'application/vnd.intu.QFX'
+        cherrypy.lib.caching.expires(secs=0,force=True)
+        return account.download().read()
+
+    @cherrypy.expose
+    def search(self,q=None,**kwargs):
+        institutions = sorted(Institution.search(q))
+        return _t('search.html',institutions=institutions)
+
+    @cherrypy.expose
+    def add_bank(self,id=None,username=None,password=None,**kwargs):
+        if id and username and password:
+            i = Institution(id,username=username)
+            i.password = password
+            try:
+                i.auth_test()
+            except Exception as e:
+                return _t('add_bank.html',i=i,error=e)
+            i.save()
+            raise cherrypy.HTTPRedirect("/")
+        else:
+            i = Institution(id)
+            return _t('add_bank.html',i=i)
+
+root = Root()
+
+cherrypy.quickstart(root)

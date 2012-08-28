@@ -1,0 +1,6 @@
+<%namespace name="add_bank" file="add_bank.html"/>
+% for i in institutions:
+<div>
+    ${add_bank.form(i)}
+</div>
+% endfor

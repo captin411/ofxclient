@@ -1,0 +1,17 @@
+<% import time %>
+<ul>
+% for b in banks:
+    <li>${b.description}</li>
+    <ul>
+    % for a in b.accounts():
+        <% name = a.description or a.institution.description %>
+        <li>${name}<a href="/download/${a.guid}/${name}_${time.time()}.ofx">download transactions</a></li>
+    % endfor
+    </ul>
+% endfor
+</ul>
+
+<form action="/search">
+Search banks: <input type="text" name="q" value="" placeholder="Enter bank name"/>
+<input type="submit" name="submit_button" value="Search"/>
+</form>

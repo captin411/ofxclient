@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages
+import ofxclient
 
 setup(name='ofxclient',
-      version="0.1",
+      version=ofxclient.__version__,
       description="OFX client for dowloading transactions from banks",
       long_description=open("./README.md", "r").read(),
       classifiers=[
@@ -22,11 +23,16 @@ setup(name='ofxclient',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
       zip_safe=True,
+      scripts=['scripts/ofxclient'],
       install_requires=[
+          "ofxhome",
           "ofxparse>=0.8",
           "simplejson",
           "BeautifulSoup>=3.0",
+          "cherrypy",
+          "mako"
       ],
+      test_suite='tests',
       entry_points="""
       """,
       )

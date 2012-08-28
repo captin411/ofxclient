@@ -1,0 +1,17 @@
+${form(i)}
+
+<%def name="form(i)">
+<form action="/add_bank" method="POST">
+<div>bank: ${i.description}</div>
+<input type="hidden" name="id" value="${i.id}"/>
+<div>
+    username (or member number): <input type="text" name="username" value=""/>
+</div>
+<div>
+    password (or PIN): <input type="password" name="password" value=""/>
+</div>
+<div>
+    <input type="submit" name="submit" value="Add Bank"/>
+</div>
+</form>
+</%def>
