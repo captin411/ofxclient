@@ -20,11 +20,11 @@ class Root(object):
         return _t('index.html',banks=banks)
 
     @cherrypy.expose
-    def download(self,account_id,filename_arbitrary):
+    def download(self,account_id,filename_arbitrary,days=60):
         account = Account.from_id(account_id)
         cherrypy.response.headers['Content-Type'] = 'application/vnd.intu.QFX'
         cherrypy.lib.caching.expires(secs=0,force=True)
-        return account.download().read()
+        return account.download(days=int(days)).read()
 
     @cherrypy.expose
     def search(self,q=None,**kwargs):
