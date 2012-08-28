@@ -55,7 +55,7 @@ class Settings:
     @staticmethod
     def config_save(config):
         conf = open(CONFFILE,'w')
-        conf.write( json.dumps(config, sort_keys=True, indent=4) )
+        conf.write( json.dumps(config, sort_keys=False, indent=4) )
         conf.close()
         Settings._json = None
         return Settings.config()
