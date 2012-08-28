@@ -14,7 +14,6 @@ CONFFILE_DEFAULT = {
 }
 
 class Settings:
-    html_path = "%s/webapp/html" % os.path.dirname(__file__)
     security_realm = 'Bank Statement Downloader'
     _json = None
 
