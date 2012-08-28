@@ -1,4 +1,5 @@
 import uuid, httplib, time, urllib2
+import logging
 
 class Builder:
     def __init__(self, institution ):
@@ -121,6 +122,7 @@ class Builder:
                                self._invstreq(brokerid, acctid,dtstart))])
 
     def doQuery(self,query):
+        logging.info('Builder.doQuery')
         # N.B. urllib doesn't honor user Content-type, use urllib2
         i = self.institution
         bank = i.dsn

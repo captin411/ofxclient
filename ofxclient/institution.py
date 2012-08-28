@@ -8,6 +8,7 @@ from settings import Settings
 from request import Builder
 from exceptions import LoginException
 import hashlib
+import logging
 
 class Institution:
     def __init__(self, id, username=None, description=None):
@@ -138,13 +139,19 @@ class Institution:
             'guid': self.guid()
         })
 
+bank_config_cache = {}
 def bank_config(guid):
+    if bank_config_cache.has_key(guid):
+        return bank_config_cache[guid]
     path = os.path.join( Settings.fi_cache(), '%s.xml' % guid )
     if not os.path.exists(path) or os.path.getsize(path) == 0:
+        logging.info("uncached bank config %s" % guid)
         institution = OFXHome.lookup(guid)
         file = open(path,'w')
         file.write(institution.xml)
         file.close()
-    return OFXHomeInstitution.from_file(path).__dict__
+    logging.info("parsing file %s" % path)
+    bank_config_cache[guid] = OFXHomeInstitution.from_file(path).__dict__
+    return bank_config_cache[guid]
 
 from account import Account

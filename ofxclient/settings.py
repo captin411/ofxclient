@@ -16,6 +16,7 @@ CONFFILE_DEFAULT = {
 class Settings:
     html_path = "%s/webapp/html" % os.path.dirname(__file__)
     security_realm = 'Bank Statement Downloader'
+    _json = None
 
     @staticmethod
     def fi_cache():
@@ -34,6 +35,8 @@ class Settings:
     
     @staticmethod
     def config():
+        if Settings._json:
+            return Settings._json;
         if not os.path.exists( CONFFILE ) or os.path.getsize(CONFFILE) == 0:
             Settings.config_save(CONFFILE_DEFAULT)
         conf = json.loads( open(CONFFILE,'r').read() )
@@ -46,6 +49,7 @@ class Settings:
         if should_write:
             Settings.config_save(conf)
 
+        Settings._json = conf
         return conf
 
     @staticmethod
@@ -53,6 +57,7 @@ class Settings:
         conf = open(CONFFILE,'w')
         conf.write( json.dumps(config, sort_keys=True, indent=4) )
         conf.close()
+        Settings._json = None
         return Settings.config()
 
     @staticmethod
