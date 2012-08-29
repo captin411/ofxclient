@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='ofxclient',
-      version=0.3,
+      version=0.4,
       description="OFX client for dowloading transactions from banks",
       long_description=open("./README.md", "r").read(),
       classifiers=[
@@ -25,7 +25,7 @@ setup(name='ofxclient',
       scripts=['scripts/ofxclient'],
       install_requires=[
           "ofxhome",
-          "ofxparse>=0.8",
+          "ofxparse>0.8",
           "simplejson",
           "BeautifulSoup>=3.0",
           "cherrypy",
