@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='ofxclient',
-      version=0.4,
+      version=0.5,
       description="OFX client for dowloading transactions from banks",
       long_description=open("./README.md", "r").read(),
       classifiers=[
@@ -21,8 +21,8 @@ setup(name='ofxclient',
       license='MIT License',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
-      zip_safe=True,
-      scripts=['scripts/ofxclient'],
+      zip_safe=False,
+      scripts=['scripts/ofxclientd'],
       install_requires=[
           "ofxhome",
           "ofxparse>0.8",
