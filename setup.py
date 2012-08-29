@@ -1,8 +1,7 @@
 from setuptools import setup, find_packages
-import ofxclient
 
 setup(name='ofxclient',
-      version=ofxclient.__version__,
+      version=0.3,
       description="OFX client for dowloading transactions from banks",
       long_description=open("./README.md", "r").read(),
       classifiers=[
