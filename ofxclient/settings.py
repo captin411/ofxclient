@@ -4,11 +4,11 @@ try:
 except ImportError:
     import simplejson as json
 
-CONFFILE = os.path.expanduser('~/.pyofxclient.conf')
+CONFFILE = os.path.expanduser('~/.ofxclient.conf')
 
 CONFFILE_DEFAULT = {
-    'cache_folder': '~/.pyofxclient',
-    'ofx_folder': '~/.pyofxclient/downloads',
+    'cache_folder': '~/.ofxclient',
+    'ofx_folder': '~/.ofxclient/downloads',
     'banks': [],
     'accounts': [],
 }
