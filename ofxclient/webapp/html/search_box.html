@@ -1,0 +1,67 @@
+<%def name="form(query='',error='')">
+<script language="javascript">
+    $(function(){
+        $('.search_form .submit').button({
+            icons: {primary:'ui-icon-search'} }
+        ).click(function() {
+            $('.search_form form').submit();
+            return false;
+        });
+        $('#q').focus();
+    });
+</script>
+<style type="text/css">
+    .search_form input[type="text"] {
+        width: 435px;
+        height: 100%;
+    }
+    .search_form {
+        width: 550px;
+        height: 300px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .search_form label {
+        display: block;
+    }
+    .search_form form {
+        margin-left: 5px;
+        margin-top: 2em;
+        margin-bottom: 2em;
+    }
+    .search_form .instructions {
+        margin: 0.3em;
+    }
+    .search_form .instructions p {
+        font-size: 0.9em;
+    }
+    .search_form .ui-widget .ui-corner-all {
+        padding-left: 1em;
+        padding-right: 1em;
+    }
+</style>
+<div class="search_form">
+    % if error:
+    <div class="instructions ui-widget">
+        <div class="ui-state-error ui-corner-all">
+            <p><span class="ui-icon ui-icon-alert" style="float: left; margin-right: .3em;"></span>
+                ${error}
+            </p>
+        </div>
+    </div>
+    % endif
+    <form action="/search">
+        <label for="q">Find your financial institution</label>
+        <input id="q" type="text" name="q" value="${query}" placeholder="Search for a bank. eg. 'Wells Fargo'"/>
+        <a href="#" class="submit">Search</a>
+    </form>
+    <div class="instructions ui-widget">
+        <div class="ui-state-highlight ui-corner-all">
+            <p><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>
+            This search service for financial institutions comes courtesy of <a href="www.ofxhome.com">www.ofxhome.com</a>.
+            If for some reason you are having problems finding or connecting to your bank, hop over there and see if there
+            are any discussions on their forums about your bank.</p>
+        </div>
+    </div>
+</div>
+</%def>

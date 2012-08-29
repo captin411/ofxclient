@@ -1,6 +1,11 @@
 import cherrypy, ofxclient, os.path
 from mako.template import Template
 from mako.lookup import TemplateLookup
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 
 current_dir = os.path.abspath( os.path.dirname(__file__) )
 html_dir    = "%s/html" % current_dir
@@ -8,6 +13,36 @@ html_dir    = "%s/html" % current_dir
 lookup = TemplateLookup(directories=[html_dir])
 def _t(name,**kwargs):
     return lookup.get_template(name).render(**kwargs)
+
+class REST(object):
+    @cherrypy.expose
+    def add_bank(self,id=None,username=None,password=None):
+
+        cherrypy.response.headers['Content-Type'] = 'application/json'
+        cherrypy.response.status = 200
+
+        result = {
+            'status': 'ok',
+            'message': ''
+        }
+        if id and username and password:
+            i = ofxclient.Institution(id,username=username)
+            i.password = password
+            try:
+                i.auth_test()
+                i.save()
+            except Exception as e:
+                result['status'] = 'error'
+                result['message'] = 'unable to log into bank with those credentials'
+        else:
+            result['status'] = 'error'
+            result['message'] = 'id, username, and password are all required'
+
+        ret = json.dumps(result)
+        cherrypy.response.body = ret
+        if result['status'] == 'error':
+            cherrypy.response.status = 400
+        return ret
 
 class Root(object):
     @cherrypy.expose
@@ -25,20 +60,6 @@ class Root(object):
     @cherrypy.expose
     def search(self,q=None,**kwargs):
         institutions = sorted(ofxclient.Institution.search(q))
-        return _t('search.html',institutions=institutions)
+        return _t('search.html',institutions=institutions,q=q)
 
-    @cherrypy.expose
-    def add_bank(self,id=None,username=None,password=None,**kwargs):
-        if id and username and password:
-            i = ofxclient.Institution(id,username=username)
-            i.password = password
-            try:
-                i.auth_test()
-            except Exception as e:
-                return _t('add_bank.html',i=i,error=e)
-            i.save()
-            raise cherrypy.HTTPRedirect("/")
-        else:
-            i = ofxclient.Institution(id)
-            return _t('add_bank.html',i=i)
-
+    rest = REST()
