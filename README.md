@@ -29,6 +29,7 @@ Screen Shots
 
 Searching for a bank
 --------------------
+http://cl.ly/image/1u0r3E2z2G0j
 http://cl.ly/image/1J2K391G2104
 
 Adding a bank
