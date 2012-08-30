@@ -110,7 +110,11 @@
 % endfor
 </div>
 % if not institutions:
-${search_box.form(error='Could not find anything with "%s"' % q,query=q)}
+    % if q:
+        ${search_box.form(error='Could not find anything with "%s"' % q,query=q)}
+    % else:
+        ${search_box.form()}
+    % endif
 % endif
 
 <div class="login_dialog">

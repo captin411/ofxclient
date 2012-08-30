@@ -59,7 +59,10 @@ class Root(object):
 
     @cherrypy.expose
     def search(self,q=None,**kwargs):
-        institutions = sorted(ofxclient.Institution.search(q))
+        if q:
+            institutions = sorted(ofxclient.Institution.search(q))
+        else:
+            institutions = []
         return _t('search.html',institutions=institutions,q=q)
 
     rest = REST()
