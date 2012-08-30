@@ -24,6 +24,17 @@ Run this command in the terminal or command prompt
 
 > ofxclientd
 
+If you need to, you can override the port that is bound to (8080)
+
+> ofxclientd -p 8080
+
+And if you don't want the webbrowser opened on start
+
+> ofxclientd -b
+
+Daemonizing on OSX or Linux
+> nohup ofxclient -b &
+
 Screen Shots
 ============
 

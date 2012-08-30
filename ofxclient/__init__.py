@@ -4,4 +4,4 @@ from settings import Settings
 from request import Builder
 import webapp
 
-__version__ = '0.3'
+__version__ = '0.7.1'
