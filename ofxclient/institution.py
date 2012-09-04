@@ -66,6 +66,27 @@ class Institution:
         config['banks'] = new_banks
         Settings.config_save(config)
 
+    def delete(self):
+        # delete the password
+        security.set_password(
+            self.keyring_id(),
+            None
+        )
+
+        accounts = self.local_accounts()
+        for a in accounts:
+            a.delete()
+
+        config = Settings.config()
+        new_banks = []
+        for s in Settings.banks():
+            i = Institution.from_config(s)
+            if i != self:
+                new_banks.append(s)
+        config['banks'] = new_banks
+        Settings.config_save(config)
+
+
     def auth_test(self,username=None,password=None):
         u = username or self.username
         if not u:

@@ -15,6 +15,7 @@ def _t(name,**kwargs):
     return lookup.get_template(name).render(**kwargs)
 
 class REST(object):
+
     @cherrypy.expose
     def add_bank(self,id=None,username=None,password=None):
 
@@ -64,5 +65,23 @@ class Root(object):
         else:
             institutions = []
         return _t('search.html',institutions=institutions,q=q)
+
+    @cherrypy.expose
+    def delete_account(self,id=None):
+        try:
+            a = ofxclient.Account.from_id(id)
+            a.delete()
+        except:
+            pass
+        raise cherrypy.HTTPRedirect("/")
+
+    @cherrypy.expose
+    def delete_bank(self,id=None):
+        try:
+            i = ofxclient.Institution.from_id(id)
+            i.delete()
+        except:
+            pass
+        raise cherrypy.HTTPRedirect("/")
 
     rest = REST()

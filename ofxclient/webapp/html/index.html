@@ -10,6 +10,7 @@
         padding: 0.3em;
         margin: 0;
         font-size: 1.2em;
+        overflow: auto;
     }
     .bank .ui-widget-content {
         margin-left: 1em;
@@ -17,9 +18,6 @@
     }
     .account:first-child {
         border: 0;
-    }
-    .account .actions{
-        font-size: 0.9em;
     }
     .account {
         border: collapse;
@@ -34,26 +32,41 @@
         opacity: 0.5;
         font-weight: bold;
     }
-    .account .actions {
+
+    .actions {
+        font-size: 12px;
+    }
+    .actions {
         float: right;
     }
-    .account .actions label {
+    .actions label {
         font-size: 0.9em;
     }
 </style>
 <script>
     $(function() {
-        $('.account a').button({ icons: {primary:'ui-icon-disk'} })
+        $('.actions a.download').button({ icons: {primary:'ui-icon-disk'} })
+        $('.actions a.delete').button({ icons: {primary:'ui-icon-trash'}, text: false }).click(function() {
+            url = $(this).attr('href');
+            if( confirm('Really delete?') ) {
+                document.location = url;
+            }
+            return false;
+        });
+        $('.actions a.add').button({ icons: {primary:'ui-icon-plusthick'} })
     });
 </script>
 % for b in banks:
 <div class="bank ui-widget">
     <div class="ui-widget-header ui-corner-top ui-corner-bl">
         ${b.description}
+        <div class="actions">
+            <a href="/delete_bank?id=${b.guid()}" class="delete">Delete</a>
+        </div>
     </div>
     <div class="ui-widget-content ui-corner-bottom">
     % for a in b.accounts():
-        <% name = a.description or a.institution.description %>
+        <% name = a.description %>
         <% today = time.strftime('%Y-%m-%d_%H_%M_%S') %>
         <% url = "/download/%s/%s_%s.ofx" % (a.guid,name,today) %>
         <div class="account">
@@ -73,10 +86,12 @@
             </div>
             <div class="actions">
                 <label>Statements:</label>
-                <a href="${url}?days=10">10 days</a>
-                <a href="${url}?days=30">30 days</a>
-                <a href="${url}?days=60">60 days</a>
-                <a href="${url}?days=90">90 days</a>
+                <a href="${url}?days=10" class="download">10 days</a>
+                <a href="${url}?days=30" class="download">30 days</a>
+                <a href="${url}?days=60" class="download">60 days</a>
+                <a href="${url}?days=90" class="download">90 days</a>
+                &nbsp;&nbsp;
+                <a href="/delete_account?id=${a.guid}" class="delete">Delete</a>
             </div>
         </div>
     % endfor
@@ -85,4 +100,8 @@
 % endfor
 % if not banks:
 ${search_box.form(error='No financial institution have been configured yet')}
+% else:
+<div class="actions">
+    <a href="/search" class="add">Add account</a>
+</div>
 % endif

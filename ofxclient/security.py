@@ -25,7 +25,10 @@ def set_password(username,password):
     global cache
     cache = None
     data = retrieve()
-    data[username] = password
+    if password is None:
+        del data[username]
+    else:
+        data[username] = password
     return store(data)
 
 def get_password(username):

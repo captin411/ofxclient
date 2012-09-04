@@ -10,13 +10,16 @@ class Account:
     def __init__(self, institution=None, routing_number=None, account_type=None, broker_id=None, number=None, description=None, guid=None ):
         if guid is None and number is None:
             raise Exception("must provide either a guid or a number")
+
         self.institution = institution
         self.number = number or security.get_password( guid )
         self.guid = guid or account_number_hash(number)
         self.routing_number = routing_number
         self.account_type = account_type
         self.broker_id = broker_id
-        self.description = description or ''
+
+        default_desc = institution.description + ' ****' + self.number[-4:]
+        self.description = description or default_desc
 
         self._statements = {}
 
@@ -86,6 +89,18 @@ class Account:
                 new_accounts.append(a)
         new_accounts.append(struct)
 
+        config['accounts'] = new_accounts
+        Settings.config_save(config)
+
+    def delete(self):
+        # remove the account number from the security store
+        security.set_password( self.guid, None )
+
+        config = Settings.config()
+        new_accounts = []
+        for a in Settings.accounts():
+            if a['guid'] != self.guid:
+                new_accounts.append(a)
         config['accounts'] = new_accounts
         Settings.config_save(config)
 
