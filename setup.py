@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(name='ofxclient',
-      version='0.8.0',
+      version='0.8.1',
       description="OFX client for dowloading transactions from banks",
       long_description=open("./README.md", "r").read(),
       classifiers=[
@@ -29,7 +29,8 @@ setup(name='ofxclient',
           "simplejson",
           "BeautifulSoup>=3.0",
           "cherrypy",
-          "mako"
+          "mako",
+          "keyring"
       ],
       test_suite='tests',
       entry_points="""
