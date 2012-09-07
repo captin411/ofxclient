@@ -6,13 +6,23 @@ Python OFX client libraries and basic web application
 Installing
 ==========
 
-Using easy_install
--------------------
+OSX
+---
+
 > sudo easy_install ofxclient
 
-From source
--------------------
+Windows
+-------
+
+> easy_install  --find-links https://github.com/captin411/ofxparse/downloads ofxclient
+
+Source
+------
+
 > get source from https://github.com/captin411/ofxclient
+
+> unpack it
+
 > sudo python setup.py install
 
 Quick Start
