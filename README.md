@@ -16,6 +16,8 @@ Windows
 
 > easy_install  --find-links https://github.com/captin411/ofxparse/downloads ofxclient
 
+Note: Make sure %PYTHON_HOME%\Scripts is added to your %PATH% otherwise the 'ofxclientd' command will not be found on your path.
+
 Source
 ------
 
