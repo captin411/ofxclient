@@ -20,10 +20,20 @@ class MyApp(NSApplication):
 
 
         accounts = [ i.__json__() for i in ofxclient.Account.list() ]
-        if accounts:
-            self.accountsMain = NSMenuItem.alloc().init()
-            self.accountsMain.setTitle_('Downloads')
 
+        self.accountsMain = NSMenuItem.alloc().init()
+        self.accountsMain.setTitle_('Download')
+        if not accounts:
+            self.accountsMain.setEnabled_(False)
+
+            error = NSMenuItem.alloc().init()
+            error.setTitle_('No Accounts Configured')
+            error.setEnabled_(False)
+            self.menubarMenu.addItem_(error)
+            self.menubarMenu.addItem_(NSMenuItem.separatorItem())
+
+
+        if accounts:
             self.accountsSubMenu = NSMenu.alloc().init()
             for a in accounts:
                 item = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_(a['long_description'],'download:','')
@@ -31,10 +41,14 @@ class MyApp(NSApplication):
                 self.accountsSubMenu.addItem_(item)
             self.accountsMain.setSubmenu_(self.accountsSubMenu)
 
-            self.menubarMenu.addItem_(self.accountsMain)
+        self.menubarMenu.addItem_(self.accountsMain)
 
-        self.menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_('View Web Application', 'open:', '')
+        self.menubarMenu.addItem_(NSMenuItem.separatorItem())
+
+        self.menuItem = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_('Configure...', 'open:', '')
         self.menubarMenu.addItem_(self.menuItem)
+
+        self.menubarMenu.addItem_(NSMenuItem.separatorItem())
 
         self.quit = NSMenuItem.alloc().initWithTitle_action_keyEquivalent_('Quit', 'terminate:', '')
         self.menubarMenu.addItem_(self.quit)
