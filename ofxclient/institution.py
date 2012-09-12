@@ -152,6 +152,13 @@ class Institution:
             return 1
         return -1
 
+    def __json__(self):
+        return {
+            'id': self.id,
+            'description': self.description,
+            'guid': self.guid()
+        }
+
     def __repr__(self):
         return repr({
             'id': self.id,

@@ -122,6 +122,14 @@ class Account:
             return 'bank'
         return 'credit'
 
+    def type_str(self):
+        if self.is_bank_account():
+            return 'Bank Account'
+        if self.is_brokerage_account():
+            return 'Brokerage Account'
+        if self.is_credit_card_account():
+            return 'Credit Card Account'
+
     def download(self,days=60):
         days_ago = datetime.datetime.now() - datetime.timedelta( days=days )
         from_date = time.strftime("%Y%m%d",days_ago.timetuple())
@@ -151,6 +159,18 @@ class Account:
 
     def transactions(self,days=60):
         return self.statement(days=days).transactions
+
+    def __json__(self):
+        return {
+            'type': self.type(),
+            'guid': self.guid,
+            'reouting_number': self.routing_number,
+            'description': self.description,
+            'long_description': '%s: %s' % (self.institution.description,self.description),
+            'account_type': self.account_type,
+            'type_str': self.type_str(),
+            'institution': self.institution.__json__()
+        }
 
     def __repr__(self):
         return str({
