@@ -19,6 +19,12 @@ def _t(name,**kwargs):
 class REST(object):
 
     @cherrypy.expose
+    def accounts(self):
+        cherrypy.response.headers['Content-Type'] = 'application/json'
+        cherrypy.response.status = 200
+        return json.dumps([ a.__json__() for a in ofxclient.Account.list() ])
+
+    @cherrypy.expose
     def add_bank(self,id=None,username=None,password=None):
 
         cherrypy.response.headers['Content-Type'] = 'application/json'
