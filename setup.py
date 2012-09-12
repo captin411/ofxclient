@@ -1,5 +1,14 @@
 from setuptools import setup, find_packages
-import ofxclient.version
+import re
+
+VERSIONFILE="ofxclient/version.py"
+verstrline = open(VERSIONFILE, "rt").read()
+VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
+mo = re.search(VSRE, verstrline, re.M)
+if mo:
+    verstr = mo.group(1)
+else:
+    raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
 
 setup(name='ofxclient',
       app=["osx/OFXClient.py"],
@@ -13,7 +22,7 @@ setup(name='ofxclient',
             }
         }
       },
-      version=ofxclient.version.__version__,
+      version=verstr,
       description="OFX client for dowloading transactions from banks",
       long_description=open("./README.md", "r").read(),
       classifiers=[
