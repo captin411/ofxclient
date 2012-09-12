@@ -14,12 +14,13 @@ class MyApp(NSApplication):
         self.icon.setScalesWhenResized_(True)
         self.icon.setSize_((16, 16))
         self.statusitem.setImage_(self.icon)
+        self.statusitem.setHighlightMode_(True)
 
         #make the menu
         self.menubarMenu = NSMenu.alloc().init()
 
-
-        accounts = [ i.__json__() for i in ofxclient.Account.list() ]
+        unsorted = [ i.__json__() for i in ofxclient.Account.list() ]
+        accounts = sorted(unsorted,key=lambda a: str(a['long_description']).lower())
 
         self.accountsMain = NSMenuItem.alloc().init()
         self.accountsMain.setTitle_('Download')
