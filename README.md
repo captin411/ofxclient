@@ -3,6 +3,11 @@ Overview
 
 Python OFX client libraries and basic web application
 
+I will put all easy to install files here for those who don't feel like typing and stuff:
+
+https://github.com/downloads/captin411/ofxclient/
+
+
 Installing
 ==========
 
