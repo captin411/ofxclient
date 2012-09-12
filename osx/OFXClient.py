@@ -10,7 +10,7 @@ class MyApp(NSApplication):
         # Make statusbar item
         statusbar = NSStatusBar.systemStatusBar()
         self.statusitem = statusbar.statusItemWithLength_(NSVariableStatusItemLength)
-        self.icon = NSImage.alloc().initByReferencingFile_('/Users/dbartle/Documents/image128.png')
+        self.icon = NSImage.alloc().initByReferencingFile_('image128.png')
         self.icon.setScalesWhenResized_(True)
         self.icon.setSize_((16, 16))
         self.statusitem.setImage_(self.icon)
