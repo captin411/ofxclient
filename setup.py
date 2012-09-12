@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages
+import ofxclient.version
 
 setup(name='ofxclient',
-      version='0.8.2',
+      version=ofxclient.version.__version__,
       description="OFX client for dowloading transactions from banks",
       long_description=open("./README.md", "r").read(),
       classifiers=[
@@ -22,7 +23,11 @@ setup(name='ofxclient',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
       zip_safe=False,
-      scripts=['scripts/ofxclientd'],
+      entry_points={
+          'console_scripts': [
+              'ofxclientd = ofxclient.server:cmdline'
+          ]
+      },
       install_requires=[
           "ofxhome",
           "ofxparse>0.8",
@@ -33,6 +38,4 @@ setup(name='ofxclient',
           "keyring"
       ],
       test_suite='tests',
-      entry_points="""
-      """,
       )

@@ -1,29 +1,9 @@
-#!/usr/bin/python
 import cherrypy, ofxclient.webapp, webbrowser, threading, getopt, sys
 
 def browser(url):
     webbrowser.open(url, new=1, autoraise=True)
 
-if __name__ == '__main__':
-
-    args = sys.argv[1:]
-
-
-    host = '127.0.0.1'
-    port = '8080'
-    open_browser = True
-    verbose = False
-
-    optlist, args = getopt.getopt(args, 'vbh:p:')
-    for opt in optlist:
-        if opt[0] == '-p':
-            port = opt[1]
-        if opt[0] == '-h':
-            host = opt[1]
-        if opt[0] == '-v':
-            verbose = True
-        if opt[0] == '-b':
-            open_browser = False
+def server(host='127.0.0.1',port='8080',verbose=False,open_browser=True,quiet=False):
 
     mode = 'development' if verbose else ''
     l2s  = True if verbose else False
@@ -50,10 +30,33 @@ if __name__ == '__main__':
     }
 
     url = "http://%s:%s%s" % (host, port, '/')
-    print "Visit this url in your browser to use the app"
-    print url
+    if not quiet:
+        print "Visit this url in your browser to use the app"
+        print url
 
     if open_browser:
         browser_open = threading.Timer(1.0,browser,args=[ url ])
         browser_open.start()
     cherrypy.quickstart(ofxclient.webapp.Root(),config=config)
+
+def cmdline():
+
+    args = sys.argv[1:]
+
+    host = '127.0.0.1'
+    port = '8080'
+    open_browser = True
+    verbose = False
+
+    optlist, args = getopt.getopt(args, 'vbh:p:')
+    for opt in optlist:
+        if opt[0] == '-p':
+            port = opt[1]
+        if opt[0] == '-h':
+            host = opt[1]
+        if opt[0] == '-v':
+            verbose = True
+        if opt[0] == '-b':
+            open_browser = False
+
+    server(host=host,port=port,verbose=verbose,open_browser=open_browser)
