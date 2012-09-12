@@ -2,6 +2,17 @@ from setuptools import setup, find_packages
 import ofxclient.version
 
 setup(name='ofxclient',
+      app=["osx/OFXClient.py"],
+      options={
+        'py2app': {
+            'iconfile': 'osx/image128.icns',
+            'resources': 'osx/image128.png, ofxclient/webapp/html',
+            'excludes': 'pygments',
+            'plist': {
+                'LSBackgroundOnly': True
+            }
+        }
+      },
       version=ofxclient.version.__version__,
       description="OFX client for dowloading transactions from banks",
       long_description=open("./README.md", "r").read(),

@@ -9,6 +9,8 @@ except ImportError:
 
 current_dir = os.path.abspath( os.path.dirname(__file__) )
 html_dir    = "%s/html" % current_dir
+if not os.path.exists(html_dir):
+    html_dir = '%s/html' % os.path.abspath(os.getcwd())
 
 lookup = TemplateLookup(directories=[html_dir])
 def _t(name,**kwargs):
