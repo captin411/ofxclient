@@ -1,5 +1,48 @@
-from setuptools import setup, find_packages
-import re
+from setuptools import setup, find_packages, Command
+import re, os, tempfile
+
+class DMGCommand(Command):
+    """Command to build a DMG"""
+    description = "Build an OSX DMG"
+    user_options = []
+    def initialize_options(self):
+        pass
+    def finalize_options(self):
+        pass
+    def run(self):
+
+        py2app = self.get_finalized_command('py2app')
+        py2app.run()
+
+        short_app_name = py2app.get_appname()
+        app_path  = py2app.appdir
+        dist_path = os.path.dirname(app_path)
+        app_name  = os.path.basename(app_path)
+
+        tmp_path = tempfile.mkdtemp()
+
+        dmg_src = "%s/%s" % (tmp_path,short_app_name)
+        self.mkpath(dmg_src)
+        os.symlink('/Applications',"%s/Applications" % dmg_src)
+
+        src_path = "%s/%s" % (dmg_src,app_name)
+        self.mkpath(src_path)
+        self.copy_tree(app_path,src_path)
+
+        version = self.distribution.get_version()
+
+        os.system("hdiutil create -srcfolder %s %s/%s-%s.dmg" % (dmg_src,dist_path,short_app_name,version))
+       
+        print "%s %s %s" % (app_path, src_path, tmp_path)
+
+
+ #'app_dir': '/Users/dbartle/Documents/ofxc/dist/',
+ #'app_files': ['/Users/dbartle/Documents/ofxc/dist/ofxclient.app'],
+ #'appdir': '/Users/dbartle/Documents/ofxc/dist/ofxclient.app',
+        
+
+
+        pass
 
 VERSIONFILE="ofxclient/version.py"
 verstrline = open(VERSIONFILE, "rt").read()
@@ -43,6 +86,7 @@ setup(name='ofxclient',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
       zip_safe=False,
+      cmdclass={'dmg':DMGCommand},
       entry_points={
           'console_scripts': [
               'ofxclientd = ofxclient.server:cmdline'
