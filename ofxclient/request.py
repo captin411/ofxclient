@@ -2,16 +2,10 @@ import uuid, httplib, time, urllib2
 import logging
 
 class Builder:
-    def __init__(self, institution ):
+    def __init__(self, institution, app_id='QWIN',app_ver='2200' ):
         self.institution = institution
-        # 'On April 30, of each year, Quicken discontinues its support for
-        # any of its versions more than 2 years old.'
-        # http://microsoftmoneyoffline.wordpress.com/appid-appver/
-        # 1800 == Quicken Windows 2010
-        # 2100 == Quicken Windows 2012
-        # 2200 == Quicken Windows 2013
-        self.app_id = 'QWIN'
-        self.app_ver = '2200'
+        self.app_id = app_id
+        self.app_ver = app_ver
         self.cookie = 3
 
     def _cookie(self):
@@ -21,12 +15,11 @@ class Builder:
     """Generate signon message"""
     def _signOn(self,username=None,password=None):
         i = self.institution
-        bank = i.dsn
         u = username or i.username
         p = password or i.password
-        fidata = [ _field("ORG",bank['org']) ]
-        if bank.has_key("fid"):
-            fidata += [ _field("FID",bank["fid"]) ]
+        fidata = [ _field("ORG",i.org) ]
+        if i.id:
+            fidata += [ _field("FID",i.id) ]
         return _tag("SIGNONMSGSRQV1",
                     _tag("SONRQ",
                          _field("DTCLIENT",_date()),
@@ -131,8 +124,7 @@ class Builder:
         logging.info('Builder.doQuery')
         # N.B. urllib doesn't honor user Content-type, use urllib2
         i = self.institution
-        bank = i.dsn
-        garbage, path = urllib2.splittype(bank['url'])
+        garbage, path = urllib2.splittype(i.url)
         host, selector = urllib2.splithost(path)
         h = httplib.HTTPSConnection(host)
         h.request('POST', selector, query, 
