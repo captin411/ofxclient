@@ -16,6 +16,21 @@ OSX
 
 > sudo easy_install ofxclient
 
+OSX - DMG build
+---------------
+
+Download the source
+
+> get source from https://github.com/captin411/ofxclient
+
+> unpack it
+
+> sudo python setup.py install
+
+> sudo python setup.py py2dmg
+
+> open ./dist
+
 Windows
 -------
 
