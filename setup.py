@@ -34,7 +34,6 @@ setup(name='ofxclient',
       zip_safe=False,
       install_requires=[
           "ofxparse>0.8",
-          "simplejson",
           "BeautifulSoup>=3.0",
       ],
       test_suite='tests',
