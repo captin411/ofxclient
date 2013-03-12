@@ -4,8 +4,14 @@ import logging
 class Builder:
     def __init__(self, institution ):
         self.institution = institution
+        # 'On April 30, of each year, Quicken discontinues its support for
+        # any of its versions more than 2 years old.'
+        # http://microsoftmoneyoffline.wordpress.com/appid-appver/
+        # 1800 == Quicken Windows 2010
+        # 2100 == Quicken Windows 2012
+        # 2200 == Quicken Windows 2013
         self.app_id = 'QWIN'
-        self.app_ver = '2000'
+        self.app_ver = '2200'
         self.cookie = 3
 
     def _cookie(self):
