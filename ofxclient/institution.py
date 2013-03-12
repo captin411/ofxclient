@@ -3,9 +3,16 @@ from account import Account
 from ofxparse import OfxParser
 from BeautifulSoup import BeautifulStoneSoup
 from request import Builder
-import logging
 
 class Institution:
+    """Represents an institution or bank
+
+    This is where you specify all connection details needed
+    for the specific institution.
+
+    For help obtaining the id, org, and url; please see the
+    ofxhome python module and/or the http://ofxhome.com website.
+    """
     def __init__(self, id, org, url, username, password ):
         self.id = id
         self.org = org
@@ -14,6 +21,12 @@ class Institution:
         self.password = password
 
     def authenticate(self,username=None,password=None):
+        """Test the authentication credentials
+
+        Raises a ValueError if there is a problem authenticating
+        with the human readable reason given by the institution.
+        """
+
         u = username or self.username
         p = password or self.password
 
@@ -36,6 +49,11 @@ class Institution:
         raise ValueError(status)
 
     def accounts(self):
+        """Return a list of ofxclient.Account objects for this institution
+
+        These objects let you download statements, transactions, positions,
+        and perform balance checks.
+        """
         builder = Builder( self )
         query   = builder.acctQuery()
         resp    = builder.doQuery(query)
