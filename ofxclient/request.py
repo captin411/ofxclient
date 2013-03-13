@@ -2,10 +2,11 @@ import uuid, httplib, time, urllib2
 import logging
 
 class Builder:
-    def __init__(self, institution, app_id='QWIN',app_ver='2200' ):
+    def __init__(self, institution, app_id='QWIN',app_ver='2200',ofx_version=102):
         self.institution = institution
         self.app_id = app_id
         self.app_ver = app_ver
+        self.ofx_version = ofx_version
         self.cookie = 3
 
     def _cookie(self):
@@ -77,10 +78,10 @@ class Builder:
                          _field("CLTCOOKIE",self._cookie()),
                          request))
     
-    def _header(self):
+    def header(self):
         return str.join("\r\n",[ "OFXHEADER:100",
                            "DATA:OFXSGML",
-                           "VERSION:102",
+                           "VERSION:%d" % self.ofx_version,
                            "SECURITY:NONE",
                            "ENCODING:USASCII",
                            "CHARSET:1252",
@@ -92,30 +93,30 @@ class Builder:
     def authQuery(self, username=None, password=None):
         u = username or self.institution.username
         p = password or self.institution.password
-        return str.join("\r\n",[self._header(), _tag("OFX", self._signOn(username=u,password=p))])
+        return str.join("\r\n",[self.header(), _tag("OFX", self._signOn(username=u,password=p))])
 
     def baQuery(self, acctid, dtstart, accttype, bankid):
         """Bank account statement request"""
-        return str.join("\r\n",[self._header(),
+        return str.join("\r\n",[self.header(),
                        _tag("OFX",
                                 self._signOn(),
                                 self._bareq(acctid, dtstart, accttype, bankid))])
                         
     def ccQuery(self, acctid, dtstart):
         """CC Statement request"""
-        return str.join("\r\n",[self._header(),
+        return str.join("\r\n",[self.header(),
                           _tag("OFX",
                                self._signOn(),
                                self._ccreq(acctid, dtstart))])
 
     def acctQuery(self,dtstart='19700101000000'):
-        return str.join("\r\n",[self._header(),
+        return str.join("\r\n",[self.header(),
                           _tag("OFX",
                                self._signOn(),
                                self._acctreq(dtstart))])
 
     def invstQuery(self, brokerid, acctid, dtstart):
-        return str.join("\r\n",[self._header(),
+        return str.join("\r\n",[self.header(),
                           _tag("OFX",
                                self._signOn(),
                                self._invstreq(brokerid, acctid,dtstart))])
