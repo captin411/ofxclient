@@ -13,14 +13,27 @@ class Institution(object):
 
     For help obtaining the id, org, and url; please see the
     ofxhome python module and/or the http://ofxhome.com website.
+
+    An optional description can be passed in for, well, descriptive
+    purposes.
+
+    The last optional parameter, request_settings, should be a dictionary
+    containing some or all of the parameters that ofxclient.request.Builder
+    takes.  This allows you to override the settings for a particular
+    institution
     """
-    def __init__(self, id, org, url, username, password, description=None ):
+    def __init__(self, id, org, url, username, password, description=None, request_settings={} ):
         self.id = id
         self.org = org
         self.url = url
         self.username = username
         self.password = password
         self.description = description or self.default_description()
+        self.request_settings = request_settings
+
+    def builder(self):
+        settings = self.request_settings
+        return Builder(institution=self,**settings)
 
     def local_id(self):
         """A unique identifier useful when trying to dedupe or otherwise 
@@ -44,7 +57,7 @@ class Institution(object):
         u = username or self.username
         p = password or self.password
 
-        builder = Builder(self)
+        builder = self.builder()
         query = builder.authQuery(username=u,password=p)
         res = builder.doQuery(query)
         ofx = BeautifulStoneSoup(res)
@@ -68,7 +81,7 @@ class Institution(object):
         These objects let you download statements, transactions, positions,
         and perform balance checks.
         """
-        builder = Builder( self )
+        builder = self.builder()
         query   = builder.acctQuery()
         resp    = builder.doQuery(query)
         resp_handle = StringIO.StringIO(resp)

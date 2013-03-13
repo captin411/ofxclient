@@ -1,5 +1,4 @@
 from ofxparse import OfxParser, AccountType
-from request  import Builder
 import datetime
 import StringIO
 import time
@@ -27,9 +26,6 @@ class Account(object):
         self.number      = number
         self.description = description or self.default_description()
 
-    def builder(self):
-        return Builder(self.institution) 
-
     def local_id(self):
         """A unique identifier useful when trying to dedupe or otherwise 
         distinguish one account instance from another.
@@ -55,7 +51,7 @@ class Account(object):
         days_ago  = datetime.datetime.now() - datetime.timedelta( days=days )
         as_of     = time.strftime("%Y%m%d",days_ago.timetuple())
         query     = self.download_query( as_of = as_of )
-        response  = self.builder().doQuery(query)
+        response  = self.institution.builder().doQuery(query)
         return StringIO.StringIO(response)
 
     def download_parsed(self,days=60):
@@ -104,7 +100,7 @@ class BrokerageAccount(Account):
 
     def download_query(self,as_of):
         """formulate the specific query needed for download"""
-        b = self.builder()
+        b = self.institution.builder()
         q = b.invstQuery(self.broker_id,self.number,as_of)
         return q
 
@@ -117,7 +113,7 @@ class BankAccount(Account):
 
     def download_query(self,as_of):
         """formulate the specific query needed for download"""
-        b = self.builder()
+        b = self.institution.builder()
         q = b.baQuery(self.number,as_of,self.account_type,self.routing_number)
         return q
 
@@ -128,6 +124,6 @@ class CreditCardAccount(Account):
 
     def download_query(self,as_of):
         """formulate the specific query needed for download"""
-        b = self.builder()
+        b = self.institution.builder()
         q = b.ccQuery(self.number,as_of)
         return q

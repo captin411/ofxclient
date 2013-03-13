@@ -2,10 +2,10 @@ import uuid, httplib, time, urllib2
 import logging
 
 class Builder:
-    def __init__(self, institution, app_id='QWIN',app_ver='2200',ofx_version=102):
+    def __init__(self, institution, app_id='QWIN',app_version='2200',ofx_version=102):
         self.institution = institution
         self.app_id = app_id
-        self.app_ver = app_ver
+        self.app_version = app_version
         self.ofx_version = ofx_version
         self.cookie = 3
 
@@ -29,7 +29,7 @@ class Builder:
                          _field("LANGUAGE","ENG"),
                          _tag("FI", *fidata),
                          _field("APPID",self.app_id),
-                         _field("APPVER",self.app_ver),
+                         _field("APPVER",self.app_version),
                          ))
 
     def _acctreq(self, dtstart):
