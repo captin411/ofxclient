@@ -70,21 +70,25 @@ class Account(object):
     @staticmethod
     def from_ofxparse( data, institution ):
         """Factory method to return an ofxclient.Account subclass from an ofxparse.Account result"""
+        description = data.desc if hasattr(data,'desc') else None
         if data.type == AccountType.Bank:
             return BankAccount(
                     institution=institution,
                     number=data.account_id,
                     routing_number=data.routing_number,
-                    account_type=data.account_type)
+                    account_type=data.account_type,
+                    description=description )
         elif data.type == AccountType.CreditCard:
             return CreditCardAccount( 
                     institution=institution,
-                    number=data.account_id )
+                    number=data.account_id,
+                    description=description )
         elif data.type == AccountType.Investment:
             return BrokerageAccount(
                     institution=institution,
                     number=data.account_id,
-                    broker_id=data.brokerid)
+                    broker_id=data.brokerid,
+                    description=description )
         raise ValueError("unknown account type: %s" % data.type)
 
 
