@@ -1,10 +1,11 @@
 import StringIO
+import hashlib
 from account import Account
 from ofxparse import OfxParser
 from BeautifulSoup import BeautifulStoneSoup
 from request import Builder
 
-class Institution:
+class Institution(object):
     """Represents an institution or bank
 
     This is where you specify all connection details needed
@@ -19,6 +20,14 @@ class Institution:
         self.url = url
         self.username = username
         self.password = password
+
+    def local_id(self):
+        """A unique identifier useful when trying to dedupe or otherwise 
+        distinguish one institution instance from another.
+        """
+        return hashlib.sha256("%s%s" % (
+                self.id,
+                self.username ))
 
     def authenticate(self,username=None,password=None):
         """Test the authentication credentials

@@ -1,6 +1,9 @@
 from ofxparse import OfxParser, AccountType
-from request import Builder
-import StringIO, time, datetime
+from request  import Builder
+import datetime
+import StringIO
+import time
+import hashlib
 
 class Account(object):
     """Base class for accounts at an institution
@@ -19,9 +22,17 @@ class Account(object):
     CreditCardAccount
     BrokerageAccount
     """
-    def __init__(self, number, institution):
+    def __init__(self, number, institution ):
         self.institution = institution
         self.number      = number
+
+    def local_id(self):
+        """A unique identifier useful when trying to dedupe or otherwise 
+        distinguish one account instance from another.
+        """
+        return hashlib.sha256("%s%s" % (
+                self.institution.local_id(),
+                self.number ))
 
     def builder(self):
         return Builder(self.institution) 
