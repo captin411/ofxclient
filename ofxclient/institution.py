@@ -14,12 +14,13 @@ class Institution(object):
     For help obtaining the id, org, and url; please see the
     ofxhome python module and/or the http://ofxhome.com website.
     """
-    def __init__(self, id, org, url, username, password ):
+    def __init__(self, id, org, url, username, password, description=None ):
         self.id = id
         self.org = org
         self.url = url
         self.username = username
         self.password = password
+        self.description = description or self.default_description()
 
     def local_id(self):
         """A unique identifier useful when trying to dedupe or otherwise 
@@ -28,6 +29,10 @@ class Institution(object):
         return hashlib.sha256("%s%s" % (
                 self.id,
                 self.username ))
+
+    def default_description(self):
+        """Get the default institution description"""
+        return self.org
 
     def authenticate(self,username=None,password=None):
         """Test the authentication credentials

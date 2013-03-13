@@ -22,9 +22,13 @@ class Account(object):
     CreditCardAccount
     BrokerageAccount
     """
-    def __init__(self, number, institution ):
+    def __init__(self, number, institution, description=None ):
         self.institution = institution
         self.number      = number
+        self.description = description or self.default_description()
+
+    def builder(self):
+        return Builder(self.institution) 
 
     def local_id(self):
         """A unique identifier useful when trying to dedupe or otherwise 
@@ -34,8 +38,13 @@ class Account(object):
                 self.institution.local_id(),
                 self.number ))
 
-    def builder(self):
-        return Builder(self.institution) 
+    def number_masked(self):
+        """Get the masked account number"""
+        return "***%s" % self.number[-4:]
+
+    def default_description(self):
+        """Get the default description for the account"""
+        return "%s %s" % (self.institution.description,self.number_masked())
 
     def download(self,days=60):
         """Return a StringIO wrapped string with the raw OFX response"""
