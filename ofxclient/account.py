@@ -42,9 +42,13 @@ class Account(object):
         """Get the masked account number"""
         return "***%s" % self.number[-4:]
 
+    def long_description(self):
+        """Return description with the institution name as well"""
+        return "%s: %s" % (self.institution.description,self.description)
+
     def default_description(self):
         """Get the default description for the account"""
-        return "%s %s" % (self.institution.description,self.number_masked())
+        return self.number_masked()
 
     def download(self,days=60):
         """Return a StringIO wrapped string with the raw OFX response"""
