@@ -36,7 +36,7 @@ class Account(object):
         """
         return hashlib.sha256("%s%s" % (
                 self.institution.local_id(),
-                self.number ))
+                self.number )).hexdigest()
 
     def number_masked(self):
         """Get the masked account number"""

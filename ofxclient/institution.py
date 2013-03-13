@@ -28,7 +28,7 @@ class Institution(object):
         """
         return hashlib.sha256("%s%s" % (
                 self.id,
-                self.username ))
+                self.username )).hexdigest()
 
     def default_description(self):
         """Get the default institution description"""
