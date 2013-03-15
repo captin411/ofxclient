@@ -121,7 +121,7 @@ def login_test_menu(bank_info):
                 id = bank_info['fid'],
                 org = bank_info['org'],
                 url = bank_info['url'],
-                broker_id = bank_info.get('brokerid',''),
+                broker_id = bank_info['brokerid'],
                 username = username,
                 password = password,
                 request_settings = {
