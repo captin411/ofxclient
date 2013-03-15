@@ -22,10 +22,11 @@ class Institution(object):
     takes.  This allows you to override the settings for a particular
     institution
     """
-    def __init__(self, id, org, url, username, password, description=None, request_settings={} ):
+    def __init__(self, id, org, url, username, password, broker_id='', description=None, request_settings={} ):
         self.id = id
         self.org = org
         self.url = url
+        self.broker_id = broker_id
         self.username = username
         self.password = password
         self.description = description or self.default_description()

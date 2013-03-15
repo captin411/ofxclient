@@ -1,8 +1,12 @@
 import uuid, httplib, time, urllib2
 import logging
 
+DEFAULT_APP_ID='QWIN'
+DEFAULT_APP_VERSION='2200'
+DEFAULT_OFX_VERSION='102'
+
 class Builder:
-    def __init__(self, institution, app_id='QWIN',app_version='2200',ofx_version=102):
+    def __init__(self, institution, app_id=DEFAULT_APP_ID,app_version=DEFAULT_APP_VERSION,ofx_version=DEFAULT_OFX_VERSION):
         self.institution = institution
         self.app_id = app_id
         self.app_version = app_version
@@ -81,7 +85,7 @@ class Builder:
     def header(self):
         return str.join("\r\n",[ "OFXHEADER:100",
                            "DATA:OFXSGML",
-                           "VERSION:%d" % self.ofx_version,
+                           "VERSION:%d" % int(self.ofx_version),
                            "SECURITY:NONE",
                            "ENCODING:USASCII",
                            "CHARSET:1252",
