@@ -1,17 +1,17 @@
-from request import Builder
+from request import Client
 from StringIO import StringIO
 
-def combined_download(accounts,days=60,request_settings={}):
+def combined_download(accounts,days=60):
     """Download OFX files and combine them into one
 
     It expects an 'accounts' list of ofxclient.Account objects
     as well as an optional 'days' specifier which defaults to 60
     """
 
-    builder = Builder(institution=None,**request_settings)
+    client = Client(institution=None)
 
     out_file = StringIO()
-    out_file.write(builder.header())
+    out_file.write(client.header())
     for a in accounts:
         ofx = a.download(days=days).read()
         stripped = ofx.partition('<OFX>')[2].partition('</OFX>')[0]

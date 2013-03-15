@@ -1,11 +1,11 @@
-from account import BankAccount, BrokerageAccount, CreditCardAccount
+from account import Account, BankAccount, BrokerageAccount, CreditCardAccount
 from ConfigParser import ConfigParser
 from institution import Institution
 from ofxhome import OFXHome
 from util import combined_download
 import os
 import os.path
-import request
+import client
 import sys
 
 CONF_PATH           = os.path.expanduser('~/ofxclient.ini')
@@ -37,8 +37,7 @@ def main_menu():
             if not accounts:
                 print "no accounts on file"
             else:
-                inst     = accounts[0].institution
-                ofxdata  = combined_download(accounts,days=DOWNLOAD_DAYS,request_settings=inst.request_settings)
+                ofxdata  = combined_download(accounts,days=DOWNLOAD_DAYS)
                 wrote    = write_and_handle_download(ofxdata,'combined_download.ofx')
                 print "wrote: %s" % wrote
         elif choice in ['q','']:
@@ -73,10 +72,14 @@ def add_account_menu():
 def view_account_menu(account):
     while 1:
         menu_title(account.long_description())
+
+        institution = account.institution
+        client      = institution.client()
+
         print "Overview:"
         print "  Name:           %s" % account.description
         print "  Account Number: %s" % account.number_masked()
-        print "  Institution:    %s" % account.institution.description
+        print "  Institution:    %s" % institution.description
         print "  Main Type:      %s" % str(type(account))
         if hasattr(account,'routing_number'):
             print "  Routing Number: %s" % account.routing_number
@@ -86,17 +89,18 @@ def view_account_menu(account):
 
         print "Nerdy Info:"
         print "  Download Up To:        %s days" % DOWNLOAD_DAYS
-        print "  Username:              %s" % account.institution.username
+        print "  Username:              %s" % institution.username
         print "  Local Account ID:      %s" % account.local_id()
-        print "  Local Institution ID:  %s" % account.institution.local_id()
-        print "  FI Id:                 %s" % account.institution.id
-        print "  FI Org:                %s" % account.institution.org
-        print "  FI Url:                %s" % account.institution.url
-        if account.institution.broker_id:
-            print "  FI Broker Id:          %s" % account.institution.broker_id
-        print "  App Ver:               %s" % account.institution.request_settings['app_version']
-        print "  App Id:                %s" % account.institution.request_settings['app_id']
-        print "  OFX Ver:               %s" % account.institution.request_settings['ofx_version']
+        print "  Local Institution ID:  %s" % institution.local_id()
+        print "  FI Id:                 %s" % institution.id
+        print "  FI Org:                %s" % institution.org
+        print "  FI Url:                %s" % institution.url
+        if institution.broker_id:
+            print "  FI Broker Id:          %s" % institution.broker_id
+        print "  Client Id:             %s" % client.id
+        print "  App Ver:               %s" % client.app_version
+        print "  App Id:                %s" % client.app_id
+        print "  OFX Ver:               %s" % client.ofx_version
         print "  Config File:           %s" % CONF_PATH
         
         menu_item('D', 'Download')
@@ -123,12 +127,7 @@ def login_test_menu(bank_info):
                 url = bank_info['url'],
                 broker_id = bank_info['brokerid'],
                 username = username,
-                password = password,
-                request_settings = {
-                    'app_id':      request.DEFAULT_APP_ID,
-                    'app_version': request.DEFAULT_APP_VERSION,
-                    'ofx_version': request.DEFAULT_OFX_VERSION,
-                }
+                password = password
         )
         try:
             i.authenticate()
@@ -142,79 +141,22 @@ def login_test_menu(bank_info):
         return 1
 
 def load_account(sid):
-
     conf = config_load()
-    i = Institution(
-        id = conf.get(sid,'institution_id'),
-        org = conf.get(sid,'institution_org'),
-        url = conf.get(sid,'institution_url'),
-        description = conf.get(sid,'institution_description'),
-        username = conf.get(sid,'institution_username'),
-        password = conf.get(sid,'institution_password'),
-        request_settings = {
-            'app_id': conf.get(sid,'request_app_id'),
-            'app_version': conf.get(sid,'request_app_version'),
-            'ofx_version': conf.get(sid,'request_ofx_version'),
-        }
-    )
-    if conf.has_option(sid,'institution_broker_id'):
-        i.broker_id = conf.get(sid,'institution_broker_id'),
-
-    if   conf.has_option(sid,'account_broker_id'):
-        a = BrokerageAccount(
-            institution = i,
-            number = conf.get(sid,'account_number'),
-            broker_id = conf.get(sid,'broker_id'),
-            description = conf.get(sid,'account_description'),
-        )
-    elif conf.has_option(sid,'account_routing_number'):
-        a = BankAccount(
-            institution = i,
-            number = conf.get(sid,'account_number'),
-            routing_number = conf.get(sid,'account_routing_number'),
-            account_type = conf.get(sid,'account_account_type'),
-            description = conf.get(sid,'account_description'),
-        )
-    else:
-        a = CreditCardAccount(
-            institution = i,
-            number = conf.get(sid,'account_number'),
-            description = conf.get(sid,'account_description'),
-        )
-
-    return a
+    data = unflatten_dict( dict( conf.items(sid) ) )
+    return Account.deserialize(data)
 
 def save_account(a):
-    conf = config_load()
-    section_id = a.local_id()
-    data = {
-      'account_local_id': a.local_id(),
-      'account_description': a.description,
-      'account_number':   a.number,
-      'institution_id':   a.institution.id,
-      'institution_broker_id': a.institution.broker_id,
-      'institution_description':   a.institution.description,
-      'institution_org':  a.institution.org,
-      'institution_url':  a.institution.url,
-      'institution_local_id': a.institution.local_id(),
-      'institution_username': a.institution.username,
-      'institution_password': a.institution.password,
-      'request_app_id':       a.institution.request_settings['app_id'],
-      'request_app_version':  a.institution.request_settings['app_version'],
-      'request_ofx_version':  a.institution.request_settings['ofx_version'],
-    }
-    if hasattr(a,'broker_id'):
-        data['account_broker_id'] = a.broker_id
+    conf       = config_load()
 
-    if hasattr(a,'routing_number'):
-        data['account_routing_number'] = a.routing_number
-        data['account_account_type']   = a.account_type
+    data       = flatten_dict( a.serialize() )
+    section_id = data['local_id']
 
     if not conf.has_section(section_id):
         conf.add_section(section_id)
 
-    for key,value in data.items():
-        conf.set(section_id,key,value)
+    for key in sorted(data):
+        conf.set(section_id,key,data[key])
+
     config_save(conf)
 
 def write_and_handle_download(ofx_data,name):
@@ -270,6 +212,40 @@ def open_with_ofx_handler(filename):
     else: 
         # linux
         os.system("xdg-open '%s'" % filename)
+
+def unflatten_dict(dict,prefix=None,separator='.'):
+    ret = {}
+    for k,v in dict.items():
+        key_parts = k.split(separator)
+
+        if len(key_parts) == 1:
+            ret[k] = v
+        else:
+            first = key_parts[0]
+            rest  = key_parts[1:]
+            temp = ret.setdefault(first,{})
+            for idx,part in enumerate(rest):
+                if (idx+1) == len(rest):
+                    temp[part] = v
+                else:
+                    temp = temp.setdefault(part,{})
+    return ret
+
+def flatten_dict(dict,prefix=None,separator='.'):
+    ret = {}
+    for k,v in dict.items():
+        if prefix:
+            flat_key = separator.join([prefix,k])
+        else:
+            flat_key = k
+        if type(v) == type({}):
+            deflated = flatten_dict(v,prefix=flat_key)
+            for dk,dv in deflated.items():
+                ret[dk]=dv
+        else:
+            ret[flat_key]=v
+    return ret
+
 
 if __name__ == '__main__':
     run()

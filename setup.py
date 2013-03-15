@@ -29,7 +29,7 @@ setup(name='ofxclient',
       author_email='captindave@gmail.com',
       url='https://github.com/captin411/ofxclient',
       license='MIT License',
-      packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+      packages=find_packages(exclude=['ez_setup', 'example', 'tests', 'external']),
       include_package_data=True,
       zip_safe=False,
       entry_points={

@@ -14,7 +14,7 @@ class Account(object):
     which is expected to take an 'as_of' parameter representing
     an effective lower date boundary in 'YYYYMMDD' format.  The
     return value of this function is expected to be a prepared
-    query as returned by the ofxclient.request.Builder
+    query as returned by the ofxclient.client.Client
 
     See these subclasses for more details:
     BankAccount
@@ -51,7 +51,7 @@ class Account(object):
         days_ago  = datetime.datetime.now() - datetime.timedelta( days=days )
         as_of     = time.strftime("%Y%m%d",days_ago.timetuple())
         query     = self.download_query( as_of = as_of )
-        response  = self.institution.builder().doQuery(query)
+        response  = self.institution.client().post(query)
         return StringIO.StringIO(response)
 
     def download_parsed(self,days=60):
@@ -66,6 +66,37 @@ class Account(object):
     def transactions(self,days=60):
         """Return a list of ofxparse.Transaction objects"""
         return self.statement(days=days).transactions
+
+    def serialize(self):
+        data = {
+                'local_id': self.local_id(),
+                'institution': self.institution.serialize(),
+                'number': self.number,
+                'description': self.description
+        }
+        if hasattr(self,'broker_id'):
+            data['broker_id'] = self.broker_id
+        elif hasattr(self,'routing_number'):
+            data['routing_number'] = self.routing_number
+            data['account_type']   = self.account_type
+
+        return data
+
+    @staticmethod
+    def deserialize(raw):
+
+        institution = Institution.deserialize(raw['institution'])
+
+        del raw['institution']
+        del raw['local_id']
+
+        if   raw.has_key('broker_id'):
+            a = BrokerageAccout(institution=institution,**raw)
+        elif raw.has_key('routing_number'):
+            a = BankAccout(institution=institution,**raw)
+        else:
+            a = CreditCardAccount(institution=institution,**raw)
+        return a
 
     @staticmethod
     def from_ofxparse( data, institution ):
@@ -100,8 +131,8 @@ class BrokerageAccount(Account):
 
     def download_query(self,as_of):
         """formulate the specific query needed for download"""
-        b = self.institution.builder()
-        q = b.invstQuery(self.broker_id,self.number,as_of)
+        c = self.institution.client()
+        q = c.brokerage_account_query(number=self.number,date=as_of,broker_id=self.broker_id)
         return q
 
 class BankAccount(Account):
@@ -113,8 +144,12 @@ class BankAccount(Account):
 
     def download_query(self,as_of):
         """formulate the specific query needed for download"""
-        b = self.institution.builder()
-        q = b.baQuery(self.number,as_of,self.account_type,self.routing_number)
+        c = self.institution.client()
+        q = c.bank_account_query(
+                number=self.number,
+                date=as_of,
+                account_type=self.account_type,
+                bank_id=self.routing_number)
         return q
 
 class CreditCardAccount(Account):
@@ -124,6 +159,9 @@ class CreditCardAccount(Account):
 
     def download_query(self,as_of):
         """formulate the specific query needed for download"""
-        b = self.institution.builder()
-        q = b.ccQuery(self.number,as_of)
+        c = self.institution.client()
+        q = c.credit_card_account_query(number=self.number,date=as_of)
         return q
+
+# yep this is here at the bottom for a reason
+from institution import Institution
