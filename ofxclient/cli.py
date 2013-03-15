@@ -18,7 +18,6 @@ def run():
 
 def main_menu():
     while 1:
-
         menu_title("Main\nEdit %s to\nchange descriptions or ofx options" % GlobalConfig.file_name)
 
         accounts = GlobalConfig.accounts()

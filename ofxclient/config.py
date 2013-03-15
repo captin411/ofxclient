@@ -5,16 +5,30 @@ import os.path
 DEFAULT_CONFIG = os.path.expanduser('~/ofxclient.ini')
 
 class OfxConfig(object):
-    def __init__(self, file_name=DEFAULT_CONFIG):
-        self.file_name = file_name
-    
+
+    file_name = DEFAULT_CONFIG
+    parser    = None
+
+    def __init__(self, file_name=None):
+        self.load(file_name)
+
+    def load(self,file_name=None):
+        file_name = file_name or self.file_name
+
         # make sure the file exists
         with file(file_name,'a'):
             os.utime(file_name,None)
-        conf = ConfigParser()
-        conf.readfp(open(self.file_name))
 
+        conf = ConfigParser()
+        conf.readfp(open(file_name))
         self.parser = conf
+
+        # just in case we passed a new file_name in
+        self.file_name = file_name
+        return self
+
+    def reload(self):
+        return self.load()
 
     def accounts(self):
         return [ self.section_to_account(s) for s in self.parser.sections() ]
@@ -31,12 +45,12 @@ class OfxConfig(object):
             value = section_items[key]
             self.parser.set(section_id,key,value)
 
-        self.save()
+        return self
 
     def save(self):
         with file(self.file_name,'w') as fp:
             self.parser.write(fp)
-
+        return self
 
     def section_to_account(self,section):
         section_items = self.parser.items(section)
