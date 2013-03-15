@@ -1,16 +1,17 @@
-from account import Account, BankAccount, BrokerageAccount, CreditCardAccount
-from ConfigParser import ConfigParser
+from account import BankAccount, BrokerageAccount, CreditCardAccount
 from institution import Institution
 from ofxhome import OFXHome
 from util import combined_download
+import config
 import os
 import os.path
 import client
 import sys
 
-CONF_PATH           = os.path.expanduser('~/ofxclient.ini')
 AUTO_OPEN_DOWNLOADS = 1
 DOWNLOAD_DAYS       = 30
+
+GlobalConfig = config.OfxConfig()
 
 def run():
     main_menu()
@@ -18,9 +19,9 @@ def run():
 def main_menu():
     while 1:
 
-        menu_title("Main\nEdit %s to\nchange descriptions or ofx options" % CONF_PATH)
+        menu_title("Main\nEdit %s to\nchange descriptions or ofx options" % GlobalConfig.file_name)
 
-        accounts = configured_accounts()
+        accounts = GlobalConfig.accounts()
         for idx,account in enumerate(accounts):
             menu_item(idx,account.long_description())
 
@@ -101,7 +102,7 @@ def view_account_menu(account):
         print "  App Ver:               %s" % client.app_version
         print "  App Id:                %s" % client.app_id
         print "  OFX Ver:               %s" % client.ofx_version
-        print "  Config File:           %s" % CONF_PATH
+        print "  Config File:           %s" % GlobalConfig.file_name
         
         menu_item('D', 'Download')
         choice = prompt().lower()
@@ -137,27 +138,9 @@ def login_test_menu(bank_info):
 
         accounts = i.accounts()
         for a in accounts:
-            save_account(a)
+            GlobalConfig.add_account(a)
+        GlobalConfig.save()
         return 1
-
-def load_account(sid):
-    conf = config_load()
-    data = unflatten_dict( dict( conf.items(sid) ) )
-    return Account.deserialize(data)
-
-def save_account(a):
-    conf       = config_load()
-
-    data       = flatten_dict( a.serialize() )
-    section_id = data['local_id']
-
-    if not conf.has_section(section_id):
-        conf.add_section(section_id)
-
-    for key in sorted(data):
-        conf.set(section_id,key,data[key])
-
-    config_save(conf)
 
 def write_and_handle_download(ofx_data,name):
     outfile = open(name,'w')
@@ -166,26 +149,6 @@ def write_and_handle_download(ofx_data,name):
     if AUTO_OPEN_DOWNLOADS:
         open_with_ofx_handler(name)
     return os.path.abspath(name)
-
-def config_load():
-    # ensure the file exists
-    with file(CONF_PATH,'a'):
-        os.utime(CONF_PATH,None)
-
-    conf = ConfigParser()
-    conf.readfp(open(CONF_PATH))
-    return conf
-
-def config_save(conf):
-    with file(CONF_PATH,'w') as fp:
-        conf.write(fp)
-
-def configured_accounts():
-    accounts = []
-    conf = config_load()
-    for section in conf.sections():
-        accounts.append( load_account(section)  )
-    return accounts
 
 def prompt(text='choice> '):
     got = raw_input(text)
@@ -212,40 +175,6 @@ def open_with_ofx_handler(filename):
     else: 
         # linux
         os.system("xdg-open '%s'" % filename)
-
-def unflatten_dict(dict,prefix=None,separator='.'):
-    ret = {}
-    for k,v in dict.items():
-        key_parts = k.split(separator)
-
-        if len(key_parts) == 1:
-            ret[k] = v
-        else:
-            first = key_parts[0]
-            rest  = key_parts[1:]
-            temp = ret.setdefault(first,{})
-            for idx,part in enumerate(rest):
-                if (idx+1) == len(rest):
-                    temp[part] = v
-                else:
-                    temp = temp.setdefault(part,{})
-    return ret
-
-def flatten_dict(dict,prefix=None,separator='.'):
-    ret = {}
-    for k,v in dict.items():
-        if prefix:
-            flat_key = separator.join([prefix,k])
-        else:
-            flat_key = k
-        if type(v) == type({}):
-            deflated = flatten_dict(v,prefix=flat_key)
-            for dk,dv in deflated.items():
-                ret[dk]=dv
-        else:
-            ret[flat_key]=v
-    return ret
-
 
 if __name__ == '__main__':
     run()
