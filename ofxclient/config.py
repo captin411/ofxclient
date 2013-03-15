@@ -1,4 +1,4 @@
-from account import Account
+from ofxclient.account import Account
 from ConfigParser import ConfigParser
 import os.path
 

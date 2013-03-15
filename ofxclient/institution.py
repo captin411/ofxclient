@@ -1,9 +1,8 @@
 import StringIO
 import hashlib
-from account import Account
+from ofxclient.client import Client
 from ofxparse import OfxParser
 from BeautifulSoup import BeautifulStoneSoup
-from client import Client
 
 class Institution(object):
     """Represents an institution or bank
@@ -82,6 +81,7 @@ class Institution(object):
         These objects let you download statements, transactions, positions,
         and perform balance checks.
         """
+        from ofxclient.account import Account
         client  = self.client()
         query   = client.account_list_query()
         resp    = client.post(query)

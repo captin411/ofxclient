@@ -84,7 +84,7 @@ class Account(object):
 
     @staticmethod
     def deserialize(raw):
-
+        from ofxclient.institution import Institution
         institution = Institution.deserialize(raw['institution'])
 
         del raw['institution']
@@ -162,6 +162,3 @@ class CreditCardAccount(Account):
         c = self.institution.client()
         q = c.credit_card_account_query(number=self.number,date=as_of)
         return q
-
-# yep this is here at the bottom for a reason
-from institution import Institution
