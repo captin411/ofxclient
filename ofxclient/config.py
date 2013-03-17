@@ -17,7 +17,7 @@ class SecurableConfigParser(ConfigParser):
     _secure_placeholder = '%{secured}'
     _unsaved            = {}
 
-    def __init__(self, keyring_name='SecurableConfigParser', **kwargs):
+    def __init__(self, keyring_name='ofxclient', **kwargs):
         ConfigParser.__init__(self)
         self.keyring_name = keyring_name
 
