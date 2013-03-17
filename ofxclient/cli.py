@@ -3,6 +3,7 @@ from ofxclient.institution import Institution
 from ofxclient.util import combined_download
 from ofxhome import OFXHome
 import config
+import getpass
 import os
 import os.path
 import client
@@ -119,13 +120,14 @@ def login_test_menu(bank_info):
 
         password = ''
         while not password:
-            password = prompt('password> ')
+            password = getpass.getpass('password> ')
 
         i = Institution(
                 id = bank_info['fid'],
                 org = bank_info['org'],
                 url = bank_info['url'],
                 broker_id = bank_info['brokerid'],
+                description = bank_info['name'],
                 username = username,
                 password = password
         )
