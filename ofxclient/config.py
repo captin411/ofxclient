@@ -115,6 +115,11 @@ class OfxConfig(object):
     def accounts(self):
         return [ self.section_to_account(s) for s in self.parser.sections() ]
 
+    def account(self, id):
+        if self.parser.has_section(id):
+            return self.section_to_account(id)
+        return None
+
     def add_account(self,account):
         serialized    = account.serialize()
         section_items = flatten_dict( serialized )
@@ -131,6 +136,12 @@ class OfxConfig(object):
                 self.parser.set(section_id,key,value)
 
         return self
+
+    def remove_account(self,id):
+        if self.parser.has_section(id):
+            self.parser.remove_section(id)
+            return True
+        return False
 
     def section_to_account(self,section):
         section_items = dict(self.parser.items(section))
