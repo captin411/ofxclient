@@ -38,6 +38,7 @@ setup(name='ofxclient',
           ]
       },
       install_requires=[
+          "keyring",
           "ofxhome",
           "ofxparse>0.8",
           "BeautifulSoup>=3.0",
