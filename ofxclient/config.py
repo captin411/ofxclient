@@ -74,7 +74,8 @@ class SecurableConfigParser(ConfigParser):
         """
         if self.is_secure_option(section,option):
             self.set_secure(section, option, value)
-        ConfigParser.set(self,section,option,value)
+        else:
+            ConfigParser.set(self,section,option,value)
 
     def set_secure(self, section, option, value):
         """Set an option and mark it as secure.
@@ -105,9 +106,10 @@ class SecurableConfigParser(ConfigParser):
         """Removes the option from ConfigParser as well as
         the secure storage backend>
         """
+        if self.is_secure_option(section,option):
+            s_option = "%s%s" % (section,option)
+            self._unsaved[s_option] = ('delete',None)
         ConfigParser.remove_option(self,section,option)
-        s_option = "%s%s" % (section,option)
-        self._unsaved[s_option] = ('delete',None)
 
     def write(self,*args):
         """Write a-la ConfigParse but also writes
