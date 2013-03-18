@@ -2,8 +2,9 @@ import unittest
 from ofxclient.config import SecurableConfigParser
 from ConfigParser import ConfigParser, NoOptionError
 
-def makeConfig(**kwargs):
-    conf = SecurableConfigParser(**kwargs)
+def makeConfig(keyring_available=True,**kwargs):
+    conf = None
+    conf = SecurableConfigParser(keyring_available=keyring_available,**kwargs)
     conf.add_section('section1')
     conf.add_section('section2')
     conf.set('section1','username','USERNAME')
@@ -86,5 +87,21 @@ class IdentifySecureOptionTests(unittest.TestCase):
         self.assertTrue( c._unsaved[s_option][0] == 'delete' )
         self.assertTrue( c._unsaved[s_option][1] == None )
 
+    def testKeyringOffSet(self):
+        c = makeConfig(keyring_available=False)
+        self.assertFalse( c.is_secure_option('section1','username') )
+        self.assertFalse( c.is_secure_option('section1','password') )
+
+        self.assertEqual( c._unsaved, {} )
+
+        c.set_secure('section1','password','PASSWORD')
+        self.assertFalse( c.is_secure_option('section1','password') )
+
+        self.assertEqual( c.get('section1','password'),'PASSWORD' )
+        self.assertEqual( c.get('section1','username'),'USERNAME' )
+
+        c.remove_option('section1','password')
+        self.assertFalse( c.is_secure_option('section1','password') )
+        self.assertEqual( c._unsaved, {} )
 
     pass

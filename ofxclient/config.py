@@ -4,9 +4,9 @@ import os.path
 
 try:
     import keyring
-    KEYRING_AVAILABLE = 1
+    KEYRING_AVAILABLE = True
 except ImportError:
-    KEYRING_AVAILABLE = 0
+    KEYRING_AVAILABLE = False
 
 DEFAULT_CONFIG = os.path.expanduser('~/ofxclient.ini')
 
@@ -21,14 +21,14 @@ class SecurableConfigParser(ConfigParser):
     and will be stored / retrieved from the keychain.
     """
 
-    keyring_name  = ''
-
     _secure_placeholder = '%{secured}'
-    _unsaved            = {}
 
-    def __init__(self, keyring_name='ofxclient', **kwargs):
+    def __init__(self, keyring_name='ofxclient',keyring_available=KEYRING_AVAILABLE, **kwargs):
         ConfigParser.__init__(self)
-        self.keyring_name = keyring_name
+        self.keyring_name      = keyring_name
+        self.keyring_available = keyring_available
+        self._unsaved          = {}
+        self.keyring_name      = keyring_name
 
     def is_secure_option(self,section,option):
         """return True if the option is secure, False
@@ -83,7 +83,7 @@ class SecurableConfigParser(ConfigParser):
         Any subsequent uses of 'set' or 'get' will also
         now know that this option is secure as well.
         """
-        if KEYRING_AVAILABLE:
+        if self.keyring_available:
             s_option = "%s%s" % (section,option)
             self._unsaved[s_option] = ('set',value)
             value    = self._secure_placeholder
@@ -94,7 +94,7 @@ class SecurableConfigParser(ConfigParser):
         from the secure storage backend. Otherwise this
         acts just like ConfigParser.get
         """
-        if self.is_secure_option(section,option):
+        if self.is_secure_option(section,option) and self.keyring_available:
             s_option = "%s%s" % (section,option)
             if self._unsaved.get(s_option,[''])[0] == 'set':
                 return self._unsaved[s_option][1]
@@ -106,7 +106,7 @@ class SecurableConfigParser(ConfigParser):
         """Removes the option from ConfigParser as well as
         the secure storage backend>
         """
-        if self.is_secure_option(section,option):
+        if self.is_secure_option(section,option) and self.keyring_available:
             s_option = "%s%s" % (section,option)
             self._unsaved[s_option] = ('delete',None)
         ConfigParser.remove_option(self,section,option)
@@ -117,7 +117,7 @@ class SecurableConfigParser(ConfigParser):
         backend.
         """
         ConfigParser.write(self,*args)
-        if KEYRING_AVAILABLE:
+        if self.keyring_available:
             for key,thing in self._unsaved.items():
                 action = thing[0]
                 value  = thing[1]
