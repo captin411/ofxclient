@@ -11,6 +11,15 @@ except ImportError:
 DEFAULT_CONFIG = os.path.expanduser('~/ofxclient.ini')
 
 class SecurableConfigParser(ConfigParser):
+    """ConfigParse subclass that knows how to store
+    options marked as secure into the OS specific
+    keyring/keychain.
+
+    To mark an option as secure, the caller must call
+    'set_secure' at least one time for the particular
+    option and from then on it will be seen as secure
+    and will be stored / retrieved from the keychain.
+    """
 
     keyring_name  = ''
 
@@ -22,6 +31,9 @@ class SecurableConfigParser(ConfigParser):
         self.keyring_name = keyring_name
 
     def is_secure_option(self,section,option):
+        """return True if the option is secure, False
+        otherwise.
+        """
         if not self.has_section(section):
             return False
         if not self.has_option(section,option):
@@ -31,9 +43,17 @@ class SecurableConfigParser(ConfigParser):
         return False
 
     def has_secure_option(self,section,option):
+        """Like 'has_option' but also tests whether
+        the option is secure.
+        """
         return self.is_secure_option(section,option)
 
     def items(self, section):
+        """Subclassed items method which knows how to
+        detect secured options and will retrieve the
+        information in the clear from the secure storage
+        backend
+        """
         items = []
         for k,v in ConfigParser.items(self,section):
             if self.is_secure_option(section,k):
@@ -42,14 +62,26 @@ class SecurableConfigParser(ConfigParser):
         return items
 
     def secure_items(self, section):
+        """Return a list of options marked as secure for 
+        the given section.  See the documentation for 
+        'ConfigParser.items' for more information.
+        """
         return [ x for x in self.items(section) if self.is_secure_option(section,x[0]) ]
 
     def set(self, section, option, value):
+        """Just like ConfigParser set except that it
+        knows about secure options.
+        """
         if self.is_secure_option(section,option):
             self.set_secure(section, option, value)
         ConfigParser.set(self,section,option,value)
 
     def set_secure(self, section, option, value):
+        """Set an option and mark it as secure.
+
+        Any subsequent uses of 'set' or 'get' will also
+        now know that this option is secure as well.
+        """
         if KEYRING_AVAILABLE:
             s_option = "%s%s" % (section,option)
             self._unsaved[s_option] = ('set',value)
@@ -57,6 +89,10 @@ class SecurableConfigParser(ConfigParser):
         ConfigParser.set(self,section,option,value)
 
     def get(self, section, option,*args):
+        """If an option is secure, return the plain text
+        from the secure storage backend. Otherwise this
+        acts just like ConfigParser.get
+        """
         if self.is_secure_option(section,option):
             s_option = "%s%s" % (section,option)
             if self._unsaved.get(s_option,[''])[0] == 'set':
@@ -66,11 +102,18 @@ class SecurableConfigParser(ConfigParser):
         return ConfigParser.get(self,section,option,*args)
 
     def remove_option(self, section, option):
+        """Removes the option from ConfigParser as well as
+        the secure storage backend>
+        """
         ConfigParser.remove_option(self,section,option)
         s_option = "%s%s" % (section,option)
         self._unsaved[s_option] = ('delete',None)
 
     def write(self,*args):
+        """Write a-la ConfigParse but also writes
+        out any unsaved changes to the secure storage
+        backend.
+        """
         ConfigParser.write(self,*args)
         if KEYRING_AVAILABLE:
             for key,thing in self._unsaved.items():
