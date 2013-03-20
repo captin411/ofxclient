@@ -108,6 +108,7 @@ class Institution(object):
         """Serialize predictably for use in configuration storage.
 
         Output looks like this::
+
           {
             'local_id':    'unique local identifier',
             'id':          'FI Id',

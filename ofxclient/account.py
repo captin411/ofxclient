@@ -98,6 +98,7 @@ class Account(object):
         """Serialize predictably for use in configuration storage.
 
         Output look like this::
+
           {
             'local_id':       'string',
             'number':         'account num',
