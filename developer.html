@@ -1,0 +1,308 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Modules &mdash; ofxclient 1.3.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-2.3.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-2.3.0/css/bootstrap-responsive.min.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.3.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-2.3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ofxclient 1.3.2 documentation" href="index.html" />
+    <link rel="next" title="FAQ" href="faq.html" />
+    <link rel="prev" title="Users Guide" href="usage.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+<div class="container">
+  
+  <div id="navbar" class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <a class="brand" href="index.html">ofxclient</a>
+      <span class="navbar-text pull-left"><b>1.3</b></span>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li class="divider-vertical"></li>
+          
+            <li class="dropdown globaltoc-container">
+  <a href="index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Users Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+</ul>
+</li>
+            <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"><ul>
+<li><a class="reference internal" href="#">Modules</a></li>
+</ul>
+</ul>
+</li>
+          
+          
+            
+  <li><a href="usage.html"
+         title="previous chapter">&laquo; Users Guide</a></li>
+  <li><a href="faq.html"
+         title="next chapter">FAQ &raquo;</a></li>
+          
+          
+            <li>
+  <a href="_sources/developer.txt"
+     rel="nofollow">Source</a></li>
+          
+        </ul>
+
+        
+          
+<form class="navbar-search pull-right" style="margin-bottom:-3px;" action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="section" id="modules">
+<h1>Modules<a class="headerlink" href="#modules" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="ofxclient.Account">
+<em class="property">class </em><tt class="descclassname">ofxclient.</tt><tt class="descname">Account</tt><big>(</big><em>number</em>, <em>institution</em>, <em>description=None</em><big>)</big><a class="headerlink" href="#ofxclient.Account" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for accounts at an institution</p>
+<p>It provides basic methods for retrieving transactions
+that are common to all different types of accounts.</p>
+<p>Subclasses only need to implement the download_query method
+which is expected to take an &#8216;as_of&#8217; parameter representing
+an effective lower date boundary in &#8216;YYYYMMDD&#8217; format.  The
+return value of this function is expected to be a prepared
+query as returned by the ofxclient.client.Client</p>
+<p>See these subclasses for more details:
+BankAccount
+CreditCardAccount
+BrokerageAccount</p>
+<dl class="method">
+<dt id="ofxclient.Account.default_description">
+<tt class="descname">default_description</tt><big>(</big><big>)</big><a class="headerlink" href="#ofxclient.Account.default_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default description for the account</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ofxclient.Account.download">
+<tt class="descname">download</tt><big>(</big><em>days=60</em><big>)</big><a class="headerlink" href="#ofxclient.Account.download" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a StringIO wrapped string with the raw OFX response</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ofxclient.Account.download_parsed">
+<tt class="descname">download_parsed</tt><big>(</big><em>days=60</em><big>)</big><a class="headerlink" href="#ofxclient.Account.download_parsed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the downloaded OFX response parsed by ofxparse.OfxParser</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ofxclient.Account.from_ofxparse">
+<em class="property">static </em><tt class="descname">from_ofxparse</tt><big>(</big><em>data</em>, <em>institution</em><big>)</big><a class="headerlink" href="#ofxclient.Account.from_ofxparse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Factory method to return an ofxclient.Account subclass from an ofxparse.Account result</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ofxclient.Account.local_id">
+<tt class="descname">local_id</tt><big>(</big><big>)</big><a class="headerlink" href="#ofxclient.Account.local_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A unique identifier useful when trying to dedupe or otherwise 
+distinguish one account instance from another.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ofxclient.Account.long_description">
+<tt class="descname">long_description</tt><big>(</big><big>)</big><a class="headerlink" href="#ofxclient.Account.long_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return description with the institution name as well</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ofxclient.Account.number_masked">
+<tt class="descname">number_masked</tt><big>(</big><big>)</big><a class="headerlink" href="#ofxclient.Account.number_masked" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the masked account number</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ofxclient.Account.statement">
+<tt class="descname">statement</tt><big>(</big><em>days=60</em><big>)</big><a class="headerlink" href="#ofxclient.Account.statement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the ofxparse.Statement for this account</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ofxclient.Account.transactions">
+<tt class="descname">transactions</tt><big>(</big><em>days=60</em><big>)</big><a class="headerlink" href="#ofxclient.Account.transactions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of ofxparse.Transaction objects</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ofxclient.BankAccount">
+<em class="property">class </em><tt class="descclassname">ofxclient.</tt><tt class="descname">BankAccount</tt><big>(</big><em>routing_number</em>, <em>account_type</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ofxclient.BankAccount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementation representing a checking or savings account</p>
+<dl class="method">
+<dt id="ofxclient.BankAccount.download_query">
+<tt class="descname">download_query</tt><big>(</big><em>as_of</em><big>)</big><a class="headerlink" href="#ofxclient.BankAccount.download_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>formulate the specific query needed for download</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ofxclient.BrokerageAccount">
+<em class="property">class </em><tt class="descclassname">ofxclient.</tt><tt class="descname">BrokerageAccount</tt><big>(</big><em>broker_id</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ofxclient.BrokerageAccount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementation representing a brokerage/investment account</p>
+<dl class="method">
+<dt id="ofxclient.BrokerageAccount.download_query">
+<tt class="descname">download_query</tt><big>(</big><em>as_of</em><big>)</big><a class="headerlink" href="#ofxclient.BrokerageAccount.download_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>formulate the specific query needed for download</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ofxclient.CreditCardAccount">
+<em class="property">class </em><tt class="descclassname">ofxclient.</tt><tt class="descname">CreditCardAccount</tt><big>(</big><em>**kwargs</em><big>)</big><a class="headerlink" href="#ofxclient.CreditCardAccount" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementation representing a credit card account</p>
+<dl class="method">
+<dt id="ofxclient.CreditCardAccount.download_query">
+<tt class="descname">download_query</tt><big>(</big><em>as_of</em><big>)</big><a class="headerlink" href="#ofxclient.CreditCardAccount.download_query" title="Permalink to this definition">¶</a></dt>
+<dd><p>formulate the specific query needed for download</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ofxclient.Institution">
+<em class="property">class </em><tt class="descclassname">ofxclient.</tt><tt class="descname">Institution</tt><big>(</big><em>id</em>, <em>org</em>, <em>url</em>, <em>username</em>, <em>password</em>, <em>broker_id=''</em>, <em>description=None</em>, <em>client_args={}</em><big>)</big><a class="headerlink" href="#ofxclient.Institution" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents an institution or bank</p>
+<p>This is where you specify all connection details needed
+for the specific institution.</p>
+<p>For help obtaining the id, org, and url; please see the
+ofxhome python module and/or the <a class="reference external" href="http://ofxhome.com">http://ofxhome.com</a> website.</p>
+<p>An optional description can be passed in for, well, descriptive
+purposes.</p>
+<p>The last optional parameter, client_args, should be a dictionary
+containing some or all of the parameters that ofxclient.client.Client
+takes.  This allows you to override the settings for a particular
+institution</p>
+<dl class="method">
+<dt id="ofxclient.Institution.accounts">
+<tt class="descname">accounts</tt><big>(</big><big>)</big><a class="headerlink" href="#ofxclient.Institution.accounts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list of ofxclient.Account objects for this institution</p>
+<p>These objects let you download statements, transactions, positions,
+and perform balance checks.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ofxclient.Institution.authenticate">
+<tt class="descname">authenticate</tt><big>(</big><em>username=None</em>, <em>password=None</em><big>)</big><a class="headerlink" href="#ofxclient.Institution.authenticate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test the authentication credentials</p>
+<p>Raises a ValueError if there is a problem authenticating
+with the human readable reason given by the institution.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ofxclient.Institution.default_description">
+<tt class="descname">default_description</tt><big>(</big><big>)</big><a class="headerlink" href="#ofxclient.Institution.default_description" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the default institution description</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ofxclient.Institution.deserialize">
+<em class="property">static </em><tt class="descname">deserialize</tt><big>(</big><em>raw</em><big>)</big><a class="headerlink" href="#ofxclient.Institution.deserialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an Institution instance from the serialized data</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ofxclient.Institution.local_id">
+<tt class="descname">local_id</tt><big>(</big><big>)</big><a class="headerlink" href="#ofxclient.Institution.local_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>A unique identifier useful when trying to dedupe or otherwise 
+distinguish one institution instance from another.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ofxclient.Institution.serialize">
+<tt class="descname">serialize</tt><big>(</big><big>)</big><a class="headerlink" href="#ofxclient.Institution.serialize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a dict suitable for recreation of the object</p>
+<p>This dict can be fed back into Institution.deserialize().
+The __repr__ method was avoided to help prevent accidental leakage
+(in logs for example) of sensitive information like usernames,
+passwords and account numbers.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="ofxclient.OfxConfig">
+<em class="property">class </em><tt class="descclassname">ofxclient.</tt><tt class="descname">OfxConfig</tt><big>(</big><em>file_name=None</em><big>)</big><a class="headerlink" href="#ofxclient.OfxConfig" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="ofxclient.config.SecurableConfigParser">
+<em class="property">class </em><tt class="descclassname">ofxclient.config.</tt><tt class="descname">SecurableConfigParser</tt><big>(</big><em>keyring_name='ofxclient'</em>, <em>**kwargs</em><big>)</big><a class="reference internal" href="_modules/ofxclient/config.html#SecurableConfigParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ofxclient.config.SecurableConfigParser" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2013, David Bartle.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

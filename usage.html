@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Users Guide &mdash; ofxclient 1.3.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-2.3.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-2.3.0/css/bootstrap-responsive.min.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '1.3.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-2.3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ofxclient 1.3.2 documentation" href="index.html" />
+    <link rel="next" title="Modules" href="developer.html" />
+    <link rel="prev" title="Installation" href="installation.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+<div class="container">
+  
+  <div id="navbar" class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <a class="brand" href="index.html">ofxclient</a>
+      <span class="navbar-text pull-left"><b>1.3</b></span>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li class="divider-vertical"></li>
+          
+            <li class="dropdown globaltoc-container">
+  <a href="index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Users Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
+</ul>
+</ul>
+</li>
+            <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"><ul>
+<li><a class="reference internal" href="#">Users Guide</a><ul>
+<li><a class="reference internal" href="#running">Running</a></li>
+<li><a class="reference internal" href="#adding-accounts">Adding Accounts</a></li>
+<li><a class="reference internal" href="#advanced-configuration">Advanced configuration</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+          
+          
+            
+  <li><a href="installation.html"
+         title="previous chapter">&laquo; Installation</a></li>
+  <li><a href="developer.html"
+         title="next chapter">Modules &raquo;</a></li>
+          
+          
+            <li>
+  <a href="_sources/usage.txt"
+     rel="nofollow">Source</a></li>
+          
+        </ul>
+
+        
+          
+<form class="navbar-search pull-right" style="margin-bottom:-3px;" action="search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        
+      </div>
+    </div>
+  </div>
+
+  
+  <div class="section" id="users-guide">
+<h1>Users Guide<a class="headerlink" href="#users-guide" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="running">
+<h2>Running<a class="headerlink" href="#running" title="Permalink to this headline">¶</a></h2>
+<p>Open up the <a class="reference external" href="http://www.ehow.com/how_6762372_open-terminal-apple.html">terminal on OS X</a>, or the <a class="reference external" href="http://windows.microsoft.com/en-US/windows-vista/Open-a-Command-Prompt-window">command prompt on Windows</a>.</p>
+<ol class="arabic">
+<li><p class="first">Run the program:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ofxclient</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">Follow the prompts at the main menu:</p>
+<div class="highlight-python"><pre>+----------------------------------
+Main
+Edit ofxclient.ini to
+change descriptions or ofx options
++----------------------------------
+(A) Add an account
+(Q) Quit
+choice&gt;</pre>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="adding-accounts">
+<h2>Adding Accounts<a class="headerlink" href="#adding-accounts" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic">
+<li><p class="first">Hitting <cite>A</cite> on the main menu will allow you to search for an bank name:</p>
+<div class="highlight-python"><pre>choice&gt; A
++----------------------------------
+Add account
++----------------------------------
+enter part of a bank name eg. express&gt;</pre>
+</div>
+</li>
+<li><p class="first">Then you can search for a part of a bank name:</p>
+<div class="highlight-python"><pre>enter part of a bank name eg. express&gt; wells
+(0) Wells Fargo
+(1) Wells Fargo Advantage Funds
+(2) Wells Fargo Advisor
+(3) Wells Fargo Advisors
+(4) Wells Fargo Bank
+(5) Wells Fargo Bank 2013
+(6) Wells Fargo Investments, LLC
+(7) Wells Fargo Trust-Investment Mgt</pre>
+</div>
+</li>
+<li><p class="first">Enter the number of your choice and then enter the username and password for the bank:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">choice</span><span class="o">&gt;</span> <span class="mi">0</span>
+<span class="n">username</span><span class="o">&gt;</span> <span class="n">happy</span>
+<span class="n">password</span><span class="o">&gt;</span> <span class="n">times</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">All accounts at that bank are configured automatically and stored in the config file:</p>
+<div class="highlight-python"><pre>+----------------------------------
+Main
+Edit ofxclient.ini to
+change descriptions or ofx options
++----------------------------------
+(0) WF: Checking
+(A) Add an account
+(D) Download all combined
+(Q) Quit
+choice&gt; q</pre>
+</div>
+</li>
+</ol>
+</div>
+<div class="section" id="advanced-configuration">
+<h2>Advanced configuration<a class="headerlink" href="#advanced-configuration" title="Permalink to this headline">¶</a></h2>
+<p>Sometimes, financial institutions have specific low level tweaks to <em>application ids</em>, <em>version numbers</em>, or <em>ofx protocol versions</em>.  In most cases you
+will not have to mess with these values.</p>
+<p>If you run into problems, take a look at the forums at <a class="reference external" href="http://ofxhome.com">ofxhome.com</a>.  Often times others will have run into issues and have posted
+specific configuration settings that have worked for them.</p>
+<p>Note:</p>
+<p>You are probably only interested in the <tt class="docutils literal"><span class="pre">institution.client_args.*</span></tt> settings but feel free to also mess
+around with the <tt class="docutils literal"><span class="pre">description</span></tt> and <tt class="docutils literal"><span class="pre">institution.description</span></tt> settings.  Those control the name of the
+account in the applications.  Do not ever modify the <tt class="docutils literal"><span class="pre">local_id</span></tt> options.</p>
+<p>You will need to edit the $HOME/ofxclient.ini file.  Here is an example excerpt from that file:</p>
+<div class="highlight-python"><pre>[f0a14074d33cdf83b4a099bc322dbe2fe19680ca1719425b33de50229586895b]
+account_type = CHECKING
+description = Checking
+institution.broker_id =
+institution.client_args.app_id = QWIN
+institution.client_args.app_version = 2200
+institution.client_args.id = 4fa6f700154f49839b869492f99c883f
+institution.client_args.ofx_version = 102
+institution.description = WF
+institution.id = 3000
+institution.local_id = e51fb78f88580a1c2e3bb65bd59495384383e58abda8796c9bf06dcf6877cbb1
+institution.org = WF
+institution.password = %{secured}
+institution.url = https://ofxdc.wellsfargo.com/ofx/process.ofx
+institution.username = %{secured}
+local_id = f0a14074d33cdf83b4a099bc322dbe2fe19680ca1719425b33de50229586895b
+number = ******
+routing_number = ******</pre>
+</div>
+</div>
+</div>
+
+
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2013, David Bartle.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

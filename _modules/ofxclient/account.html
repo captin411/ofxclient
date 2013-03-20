@@ -1,0 +1,281 @@
+
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ofxclient.account &mdash; ofxclient 1.3.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-2.3.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-2.3.0/css/bootstrap-responsive.min.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.3.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-2.3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ofxclient 1.3.2 documentation" href="../../index.html" />
+    <link rel="up" title="ofxclient" href="../ofxclient.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body>
+<div class="container">
+  
+  <div id="navbar" class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+
+      <a class="brand" href="../../index.html">ofxclient</a>
+      <span class="navbar-text pull-left"><b>1.3</b></span>
+
+      <div class="nav-collapse">
+        <ul class="nav">
+          <li class="divider-vertical"></li>
+          
+            <li class="dropdown globaltoc-container">
+  <a href="../../index.html"
+     class="dropdown-toggle"
+     data-toggle="dropdown">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+    ><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Users Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer.html">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+</ul>
+</li>
+            <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"></ul>
+</li>
+          
+          
+            
+          
+          
+            <li></li>
+          
+        </ul>
+
+        
+          
+<form class="navbar-search pull-right" style="margin-bottom:-3px;" action="../../search.html" method="get">
+  <input type="text" name="q" placeholder="Search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        
+      </div>
+    </div>
+  </div>
+
+  
+  <h1>Source code for ofxclient.account</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">ofxparse</span> <span class="kn">import</span> <span class="n">OfxParser</span><span class="p">,</span> <span class="n">AccountType</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">StringIO</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+
+<div class="viewcode-block" id="Account"><a class="viewcode-back" href="../../developer.html#ofxclient.account.Account">[docs]</a><span class="k">class</span> <span class="nc">Account</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Base class for accounts at an institution</span>
+
+<span class="sd">    It provides basic methods for retrieving transactions</span>
+<span class="sd">    that are common to all different types of accounts.</span>
+
+<span class="sd">    Subclasses only need to implement the download_query method</span>
+<span class="sd">    which is expected to take an &#39;as_of&#39; parameter representing</span>
+<span class="sd">    an effective lower date boundary in &#39;YYYYMMDD&#39; format.  The</span>
+<span class="sd">    return value of this function is expected to be a prepared</span>
+<span class="sd">    query as returned by the ofxclient.client.Client</span>
+
+<span class="sd">    See these subclasses for more details:</span>
+<span class="sd">    BankAccount</span>
+<span class="sd">    CreditCardAccount</span>
+<span class="sd">    BrokerageAccount</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">,</span> <span class="n">institution</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="bp">None</span> <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">institution</span> <span class="o">=</span> <span class="n">institution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span>      <span class="o">=</span> <span class="n">number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_description</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">local_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;A unique identifier useful when trying to dedupe or otherwise </span>
+<span class="sd">        distinguish one account instance from another.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="s">&quot;</span><span class="si">%s%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">institution</span><span class="o">.</span><span class="n">local_id</span><span class="p">(),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="p">))</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">number_masked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the masked account number&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&quot;***</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span>
+
+    <span class="k">def</span> <span class="nf">long_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return description with the institution name as well&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s">&quot;</span><span class="si">%s</span><span class="s">: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">institution</span><span class="o">.</span><span class="n">description</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">default_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the default description for the account&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_masked</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">download</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">days</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a StringIO wrapped string with the raw OFX response&quot;&quot;&quot;</span>
+        <span class="n">days_ago</span>  <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span> <span class="o">-</span> <span class="n">datetime</span><span class="o">.</span><span class="n">timedelta</span><span class="p">(</span> <span class="n">days</span><span class="o">=</span><span class="n">days</span> <span class="p">)</span>
+        <span class="n">as_of</span>     <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s">&quot;%Y%m</span><span class="si">%d</span><span class="s">&quot;</span><span class="p">,</span><span class="n">days_ago</span><span class="o">.</span><span class="n">timetuple</span><span class="p">())</span>
+        <span class="n">query</span>     <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_query</span><span class="p">(</span> <span class="n">as_of</span> <span class="o">=</span> <span class="n">as_of</span> <span class="p">)</span>
+        <span class="n">response</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">institution</span><span class="o">.</span><span class="n">client</span><span class="p">()</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">StringIO</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">download_parsed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">days</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the downloaded OFX response parsed by ofxparse.OfxParser&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">OfxParser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">download</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span> <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">statement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">days</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the ofxparse.Statement for this account&quot;&quot;&quot;</span>
+        <span class="n">parsed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">download_parsed</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parsed</span><span class="o">.</span><span class="n">account</span><span class="o">.</span><span class="n">statement</span>
+
+    <span class="k">def</span> <span class="nf">transactions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">days</span><span class="o">=</span><span class="mi">60</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return a list of ofxparse.Transaction objects&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">statement</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">days</span><span class="p">)</span><span class="o">.</span><span class="n">transactions</span>
+
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">&#39;local_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_id</span><span class="p">(),</span>
+                <span class="s">&#39;institution&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">institution</span><span class="o">.</span><span class="n">serialize</span><span class="p">(),</span>
+                <span class="s">&#39;number&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">,</span>
+                <span class="s">&#39;description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s">&#39;broker_id&#39;</span><span class="p">):</span>
+            <span class="n">data</span><span class="p">[</span><span class="s">&#39;broker_id&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">broker_id</span>
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s">&#39;routing_number&#39;</span><span class="p">):</span>
+            <span class="n">data</span><span class="p">[</span><span class="s">&#39;routing_number&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">routing_number</span>
+            <span class="n">data</span><span class="p">[</span><span class="s">&#39;account_type&#39;</span><span class="p">]</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">account_type</span>
+
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="n">raw</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">ofxclient.institution</span> <span class="kn">import</span> <span class="n">Institution</span>
+        <span class="n">institution</span> <span class="o">=</span> <span class="n">Institution</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">raw</span><span class="p">[</span><span class="s">&#39;institution&#39;</span><span class="p">])</span>
+
+        <span class="k">del</span> <span class="n">raw</span><span class="p">[</span><span class="s">&#39;institution&#39;</span><span class="p">]</span>
+        <span class="k">del</span> <span class="n">raw</span><span class="p">[</span><span class="s">&#39;local_id&#39;</span><span class="p">]</span>
+
+        <span class="k">if</span>   <span class="n">raw</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&#39;broker_id&#39;</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">BrokerageAccount</span><span class="p">(</span><span class="n">institution</span><span class="o">=</span><span class="n">institution</span><span class="p">,</span><span class="o">**</span><span class="n">raw</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">raw</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="s">&#39;routing_number&#39;</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">BankAccount</span><span class="p">(</span><span class="n">institution</span><span class="o">=</span><span class="n">institution</span><span class="p">,</span><span class="o">**</span><span class="n">raw</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="n">CreditCardAccount</span><span class="p">(</span><span class="n">institution</span><span class="o">=</span><span class="n">institution</span><span class="p">,</span><span class="o">**</span><span class="n">raw</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">a</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_ofxparse</span><span class="p">(</span> <span class="n">data</span><span class="p">,</span> <span class="n">institution</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Factory method to return an ofxclient.Account subclass from an ofxparse.Account result&quot;&quot;&quot;</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">desc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="s">&#39;desc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="bp">None</span>
+        <span class="k">if</span> <span class="n">data</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">AccountType</span><span class="o">.</span><span class="n">Bank</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">BankAccount</span><span class="p">(</span>
+                    <span class="n">institution</span><span class="o">=</span><span class="n">institution</span><span class="p">,</span>
+                    <span class="n">number</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+                    <span class="n">routing_number</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">routing_number</span><span class="p">,</span>
+                    <span class="n">account_type</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">account_type</span><span class="p">,</span>
+                    <span class="n">description</span><span class="o">=</span><span class="n">description</span> <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">AccountType</span><span class="o">.</span><span class="n">CreditCard</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">CreditCardAccount</span><span class="p">(</span> 
+                    <span class="n">institution</span><span class="o">=</span><span class="n">institution</span><span class="p">,</span>
+                    <span class="n">number</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+                    <span class="n">description</span><span class="o">=</span><span class="n">description</span> <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">data</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">AccountType</span><span class="o">.</span><span class="n">Investment</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">BrokerageAccount</span><span class="p">(</span>
+                    <span class="n">institution</span><span class="o">=</span><span class="n">institution</span><span class="p">,</span>
+                    <span class="n">number</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">account_id</span><span class="p">,</span>
+                    <span class="n">broker_id</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">brokerid</span><span class="p">,</span>
+                    <span class="n">description</span><span class="o">=</span><span class="n">description</span> <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s">&quot;unknown account type: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">data</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+
+</div>
+<span class="k">class</span> <span class="nc">BrokerageAccount</span><span class="p">(</span><span class="n">Account</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Implementation representing a brokerage/investment account&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">broker_id</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span> <span class="n">BrokerageAccount</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">broker_id</span> <span class="o">=</span> <span class="n">broker_id</span>
+
+    <span class="k">def</span> <span class="nf">download_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">as_of</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;formulate the specific query needed for download&quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">institution</span><span class="o">.</span><span class="n">client</span><span class="p">()</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">brokerage_account_query</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">,</span><span class="n">date</span><span class="o">=</span><span class="n">as_of</span><span class="p">,</span><span class="n">broker_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">broker_id</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">q</span>
+
+<span class="k">class</span> <span class="nc">BankAccount</span><span class="p">(</span><span class="n">Account</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Implementation representing a checking or savings account&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">routing_number</span><span class="p">,</span> <span class="n">account_type</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span> <span class="n">BankAccount</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">routing_number</span> <span class="o">=</span> <span class="n">routing_number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">account_type</span>   <span class="o">=</span> <span class="n">account_type</span>
+
+    <span class="k">def</span> <span class="nf">download_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">as_of</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;formulate the specific query needed for download&quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">institution</span><span class="o">.</span><span class="n">client</span><span class="p">()</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">bank_account_query</span><span class="p">(</span>
+                <span class="n">number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">,</span>
+                <span class="n">date</span><span class="o">=</span><span class="n">as_of</span><span class="p">,</span>
+                <span class="n">account_type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">account_type</span><span class="p">,</span>
+                <span class="n">bank_id</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">routing_number</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">q</span>
+
+<span class="k">class</span> <span class="nc">CreditCardAccount</span><span class="p">(</span><span class="n">Account</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Implementation representing a credit card account&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span> <span class="n">CreditCardAccount</span><span class="p">,</span> <span class="bp">self</span> <span class="p">)</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">download_query</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">as_of</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;formulate the specific query needed for download&quot;&quot;&quot;</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">institution</span><span class="o">.</span><span class="n">client</span><span class="p">()</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">credit_card_account_query</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">,</span><span class="n">date</span><span class="o">=</span><span class="n">as_of</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">q</span>
+</pre></div>
+
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2013, David Bartle.<br/>
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
