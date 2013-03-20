@@ -1,5 +1,8 @@
+Developer Guide
+===============
+
 Modules
-=======
+-------
 
 .. autoclass:: ofxclient.Account
    :members:
