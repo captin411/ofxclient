@@ -1,3 +1,6 @@
+.buildinfo
+.doctrees
+
 *.py[co]
 
 # Packages

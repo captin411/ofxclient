@@ -28,30 +28,42 @@ class Institution(object):
         self.broker_id = broker_id
         self.username = username
         self.password = password
-        self.description = description or self.default_description()
+        self.description = description or self._default_description()
         self.client_args = client_args
 
     def client(self):
+        """Build a client for talking with the bank
+
+        It implicitly passes in the ``self.client_args`` that were passed
+        when instantiating this ``Institution``.
+
+        :rtype: :py:class:`ofxclient.client.Client`
+        """
         settings = self.client_args
         return Client(institution=self,**settings)
 
     def local_id(self):
-        """A unique identifier useful when trying to dedupe or otherwise 
-        distinguish one institution instance from another.
+        """Locally generated unique account identifier.
+
+        :rtype: string
         """
         return hashlib.sha256("%s%s" % (
                 self.id,
                 self.username )).hexdigest()
 
-    def default_description(self):
-        """Get the default institution description"""
+    def _default_description(self):
         return self.org
 
     def authenticate(self,username=None,password=None):
         """Test the authentication credentials
 
-        Raises a ValueError if there is a problem authenticating
+        Raises a ``ValueError`` if there is a problem authenticating
         with the human readable reason given by the institution.
+
+        :param username: optional username (use self.username by default)
+        :type username: string or None
+        :param password: optional password (use self.password by default)
+        :type password: string or None
         """
 
         u = username or self.username
@@ -76,10 +88,9 @@ class Institution(object):
         raise ValueError(status)
 
     def accounts(self):
-        """Return a list of ofxclient.Account objects for this institution
-
-        These objects let you download statements, transactions, positions,
-        and perform balance checks.
+        """Ask the bank for the known accounts.
+        
+        :rtype: list of :py:class:`ofxclient.Account` objects
         """
         from ofxclient.account import Account
         client  = self.client()
@@ -94,12 +105,27 @@ class Institution(object):
         return accounts
 
     def serialize(self):
-        """Return a dict suitable for recreation of the object
+        """Serialize predictably for use in configuration storage.
 
-        This dict can be fed back into Institution.deserialize().
-        The __repr__ method was avoided to help prevent accidental leakage
-        (in logs for example) of sensitive information like usernames,
-        passwords and account numbers.
+        Output looks like this::
+          {
+            'local_id':    'unique local identifier',
+            'id':          'FI Id',
+            'org':         'FI Org',
+            'url':         'FI OFX Endpoint Url',
+            'broker_id':   'FI Broker Id',
+            'username':    'Customer username',
+            'password':    'Customer password',
+            'description': 'descr',
+            'client_args': {
+                'id':          'random client id - see Client() for default',
+                'app_id':      'app name - see Client() for default',
+                'app_version': 'app version - see Client() for default',
+                'ofx_version': 'ofx version - see Client() for default',
+            }
+          }
+
+        :rtype: nested dictionary
         """
         client = self.client()
         client_args = {
@@ -122,7 +148,12 @@ class Institution(object):
 
     @staticmethod
     def deserialize(raw):
-        """Return an Institution instance from the serialized data"""
+        """Instantiate :py:class:`ofxclient.Institution` from dictionary
+
+        :param raw: serialized ``Institution``
+        :param type: dict as given by :py:method:`~ofxclient.Institution.serialize`
+        :rtype: subclass of :py:class:`ofxclient.Institution`
+        """
         return Institution(
                 id = raw['id'],
                 org = raw['org'],

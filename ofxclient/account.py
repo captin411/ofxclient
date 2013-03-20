@@ -24,30 +24,42 @@ class Account(object):
     def __init__(self, number, institution, description=None ):
         self.institution = institution
         self.number      = number
-        self.description = description or self.default_description()
+        self.description = description or self._default_description()
 
     def local_id(self):
-        """A unique identifier useful when trying to dedupe or otherwise 
-        distinguish one account instance from another.
+        """Locally generated unique account identifier.
+
+        :rtype: string
         """
         return hashlib.sha256("%s%s" % (
                 self.institution.local_id(),
                 self.number )).hexdigest()
 
     def number_masked(self):
-        """Get the masked account number"""
+        """Masked version of the account number for privacy.
+
+        :rtype: string
+        """
         return "***%s" % self.number[-4:]
 
     def long_description(self):
-        """Return description with the institution name as well"""
+        """Long description of the account (includes institution description).
+
+        :rtype: string
+        """
         return "%s: %s" % (self.institution.description,self.description)
 
-    def default_description(self):
-        """Get the default description for the account"""
+    def _default_description(self):
         return self.number_masked()
 
     def download(self,days=60):
-        """Return a StringIO wrapped string with the raw OFX response"""
+        """Downloaded OFX response for the given time range
+
+        :param days: Number of days to look back at
+        :type days: integer
+        :rtype: :py:class:`StringIO.StringIO`
+
+        """
         days_ago  = datetime.datetime.now() - datetime.timedelta( days=days )
         as_of     = time.strftime("%Y%m%d",days_ago.timetuple())
         query     = self.download_query( as_of = as_of )
@@ -55,19 +67,51 @@ class Account(object):
         return StringIO.StringIO(response)
 
     def download_parsed(self,days=60):
-        """Return the downloaded OFX response parsed by ofxparse.OfxParser"""
+        """Downloaded OFX response parsed by :py:meth:`ofxparser.OfxParser.parse`
+
+        :param days: Number of days to look back at
+        :type days: integer
+        :rtype: :py:class:`ofxparser.Ofx`
+        """
         return OfxParser.parse( self.download(days=days) )
 
     def statement(self,days=60):
-        """Return the ofxparse.Statement for this account"""
+        """Download the :py:class:`ofxparse.Statement` given the time range
+
+        :param days: Number of days to look back at
+        :type days: integer
+        :rtype: :py:class:`ofxparser.Statement`
+        """
         parsed = self.download_parsed(days=days)
         return parsed.account.statement
 
     def transactions(self,days=60):
-        """Return a list of ofxparse.Transaction objects"""
+        """Download a a list of :py:class:`ofxparse.Transaction` objects
+        
+        :param days: Number of days to look back at
+        :type days: integer
+        :rtype: list of :py:class:`ofxparser.Transaction` objects
+        """
         return self.statement(days=days).transactions
 
     def serialize(self):
+        """Serialize predictably for use in configuration storage.
+
+        Output look like this::
+          {
+            'local_id':       'string',
+            'number':         'account num',
+            'description':    'descr',
+            'broker_id':      'may be missing - type dependent',
+            'routing_number': 'may be missing - type dependent,
+            'account_type':   'may be missing - type dependent,
+            'institution': {
+                # ... see :py:meth:`ofxclient.Institution.serialize`
+            }
+          }
+
+        :rtype: nested dictionary
+        """
         data = {
                 'local_id': self.local_id(),
                 'institution': self.institution.serialize(),
@@ -84,6 +128,12 @@ class Account(object):
 
     @staticmethod
     def deserialize(raw):
+        """Instantiate :py:class:`ofxclient.Account` subclass from dictionary
+
+        :param raw: serilized Account
+        :param type: dict as  given by :py:method:`~ofxclient.Account.serialize`
+        :rtype: subclass of :py:class:`ofxclient.Account`
+        """
         from ofxclient.institution import Institution
         institution = Institution.deserialize(raw['institution'])
 
@@ -100,7 +150,14 @@ class Account(object):
 
     @staticmethod
     def from_ofxparse( data, institution ):
-        """Factory method to return an ofxclient.Account subclass from an ofxparse.Account result"""
+        """Instantiate :py:class:`ofxclient.Account` subclass from ofxparse module
+
+        :param data: an ofxparse account
+        :type data: An :py:class:`ofxparse.Account` object
+        :param institution: The parent institution of the account
+        :type institution: :py:class:`ofxclient.Institution` object
+        """
+
         description = data.desc if hasattr(data,'desc') else None
         if data.type == AccountType.Bank:
             return BankAccount(
