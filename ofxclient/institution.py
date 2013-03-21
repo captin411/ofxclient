@@ -16,13 +16,13 @@ class Institution(object):
     :param username: Customer username or member id
     :type username: string
     :param password: Customer password or PIN
-    :type password:
+    :type password: string
     :param broker_id: FI Broker ID (optional)
     :type broker_id: string
     :param description: Description of the bank (optional)
     :type description: string or None
-    :param client_args: connection/application information override (optional)
-    :type client_args: kwargs for :py:class:`ofxclient.Client`
+    :param client_args: override :py:class:`ofxclient.Client` kwargs for init (optional)
+    :type client_args: dict
 
     Values for many of the parameters need to come from some sort of
     OFX registry which knows about each banks particular setup.
@@ -30,6 +30,23 @@ class Institution(object):
     For help obtaining this sort of information; please see the
     :py:mod:`ofxhome` python module and/or the `OFX Home <http://ofxhome.com>`_
     website.
+
+    Example::
+
+      from ofxclient import Institution
+
+      inst = Institution(
+                id       = '3101',
+                org      = 'AMEX',
+                url      = 'https://online.americanexpress.com/myca/ofxdl/desktop/desktopDownload.do?request_type=nl_ofxdownload',
+                username = 'gene',
+                password = 'wilder'
+      )
+
+      for a in inst.accounts():
+          print a.statement(days=5).balance
+
+
     """
     def __init__(self, id, org, url, username, password, broker_id='', description=None, client_args={} ):
         self.id = id
