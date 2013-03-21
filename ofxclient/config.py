@@ -8,7 +8,10 @@ try:
 except ImportError:
     KEYRING_AVAILABLE = False
 
-DEFAULT_CONFIG = os.path.expanduser('~/ofxclient.ini')
+try:
+    DEFAULT_CONFIG = os.path.expanduser( os.path.join('~','ofxclient.ini') )
+except:
+    DEFAULT_CONFIG = None
 
 class SecurableConfigParser(ConfigParser):
     """:py:class:`ConfigParser.ConfigParser` subclass that knows how to store
@@ -151,7 +154,7 @@ class OfxConfig(object):
 
     Example usage::
 
-      from ofxclient import OfxConfig
+      from ofxclient.config import OfxConfig
       from ofxclient import Account
 
       a = Account()
@@ -166,7 +169,9 @@ class OfxConfig(object):
 
     def __init__(self, file_name=None):
         f = file_name or DEFAULT_CONFIG
-        self._load(file_name)
+        if f is None:
+            raise ValueError('file_name is required')
+        self._load(f)
 
     def reload(self):
         """Reload the config file from disk"""

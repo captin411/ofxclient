@@ -1,5 +1,4 @@
 import httplib, time, urllib2
-import logging
 
 DEFAULT_APP_ID='QWIN'
 DEFAULT_APP_VERSION='2200'
@@ -68,7 +67,6 @@ class Client:
         return self.authenticated_query( self._acctreq(date) )
 
     def post(self,query):
-        logging.info('Client.post')
         # N.B. urllib doesn't honor user Content-type, use urllib2
         i = self.institution
         garbage, path = urllib2.splittype(i.url)

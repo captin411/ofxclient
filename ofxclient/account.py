@@ -23,7 +23,7 @@ class Account(object):
 
     Example from a saved config entry::
 
-      from ofxclient import OfxConfig
+      from ofxclient.config import OfxConfig
       account = OfxConfig().account('local_id() string')
 
     Example of deserialization::
