@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Developer Guide &mdash; ofxclient 1.3.5 documentation</title>
+    <title>Developer Guide &mdash; ofxclient 1.3.6 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.3.5',
+        VERSION:     '1.3.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,7 +30,7 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-2.3.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="ofxclient 1.3.5 documentation" href="index.html" />
+    <link rel="top" title="ofxclient 1.3.6 documentation" href="index.html" />
     <link rel="next" title="ofxclient.Account" href="ofxclient.Account.html" />
     <link rel="prev" title="Users Guide" href="usage.html" />
 <meta charset='utf-8'>
@@ -77,6 +77,17 @@
   <ul class="dropdown-menu localtoc"><ul>
 <li><a class="reference internal" href="#">Developer Guide</a><ul>
 <li><a class="reference internal" href="#module-list">Module List</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#config-file">Config File</a><ul>
+<li><a class="reference internal" href="#location">Location</a></li>
+<li><a class="reference internal" href="#items">Items</a><ul>
+<li><a class="reference internal" href="#section-header">Section Header</a></li>
+<li><a class="reference internal" href="#account-options">Account Options</a></li>
+<li><a class="reference internal" href="#institution-options">Institution Options</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#example">Example</a></li>
 </ul>
 </li>
 </ul>
@@ -148,6 +159,120 @@
 </tr>
 </tbody>
 </table>
+</div>
+<div class="section" id="config-file">
+<h2>Config File<a class="headerlink" href="#config-file" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="location">
+<h3>Location<a class="headerlink" href="#location" title="Permalink to this headline">¶</a></h3>
+<p>Look for a file named:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ofxclient</span><span class="o">.</span><span class="n">ini</span>
+</pre></div>
+</div>
+<p>The config file, as created the the <tt class="docutils literal"><span class="pre">ofxclient</span></tt> CLI exists in your home folder or documents folder.  This is OS dependent.</p>
+</div>
+<div class="section" id="items">
+<h3>Items<a class="headerlink" href="#items" title="Permalink to this headline">¶</a></h3>
+<p>The <em>ini</em> format consists of a section header, followed by a number of option = value pairs, each on new lines.</p>
+<div class="section" id="section-header">
+<h4>Section Header<a class="headerlink" href="#section-header" title="Permalink to this headline">¶</a></h4>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">section header:</th><td class="field-body">This is the account local_id. See <a class="reference internal" href="ofxclient.Account.html#ofxclient.Account" title="ofxclient.Account"><tt class="xref py py-class docutils literal"><span class="pre">ofxclient.Account</span></tt></a> object. Don&#8217;t change this.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="account-options">
+<h4>Account Options<a class="headerlink" href="#account-options" title="Permalink to this headline">¶</a></h4>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">account_type:</th><td class="field-body">The OFX account type at the protocol level. Don&#8217;t change this - it is not part of the &#8220;description&#8221;. <em>May not be present.</em></td>
+</tr>
+<tr class="field-even field"><th class="field-name">broker_id:</th><td class="field-body">The OFX broker id at the protocol level. Don&#8217;t change this. <em>May not be present.</em></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">description:</th><td class="field-body">Human readable description of the account. Very safe to edit.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">local_id:</th><td class="field-body">This is the account local_id. See <a class="reference internal" href="ofxclient.Account.html#ofxclient.Account" title="ofxclient.Account"><tt class="xref py py-class docutils literal"><span class="pre">ofxclient.Account</span></tt></a> object. Don&#8217;t change this.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">number:</th><td class="field-body">The account number. Don&#8217;t change this.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">routing_number:</th><td class="field-body">The OFX routing number / bank id. Don&#8217;t change this. <em>May not be present.</em></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="institution-options">
+<h4>Institution Options<a class="headerlink" href="#institution-options" title="Permalink to this headline">¶</a></h4>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name" colspan="2">institution.client_args.app_id:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">The emulated desktop app. &#8216;QWIN&#8217; means quicken and you probably should not touch this.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">institution.client_args.app_version:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">The emulated version of the desktop app. &#8216;2200&#8217; is Quickens way of meaning &#8216;version 2013&#8217;.  It&#8217;s possible you may need to bump this up by &#8216;100&#8217; (for each year) since Quicken discontinues two year old products.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">institution.client_args.id:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">The unique client ID.  You probably don&#8217;t need to change this.  It is only pertinent if the OFX protocol version by your bank has to be &#8216;103&#8217; or higher.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">institution.client_args.ofx_version:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">The OFX protocol version. &#8216;102&#8217; is usually ok for most banks.  Some require &#8216;103&#8217;.  It is rare but you may need to tweak this.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">institution.local_id:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">This is the institution local_id. See <a class="reference internal" href="ofxclient.Institution.html#ofxclient.Institution" title="ofxclient.Institution"><tt class="xref py py-class docutils literal"><span class="pre">ofxclient.Institution</span></tt></a> object. Don&#8217;t change this.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">institution.description:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">Human readable description of the bank. Very safe to edit.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">institution.id:</th><td class="field-body">The FI Id assigned to the bank. Typically don&#8217;t need to change this.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">institution.org:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">The FI Org assigned to the bank. Typically don&#8217;t need to change this.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">institution.url:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">This FI Url assigned to the bank. Typically don&#8217;t need to change this.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">institution.broker_id:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">The FI broker id assigned to the bank.  Typically don&#8217;t need to change this.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name" colspan="2">institution.username:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">Your username is securely stored so this is a placeholder.  If you username and password changed and things are breaking, set this to your username as a string to <em>unsecure</em> it.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">institution.password:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body">Your password is securely stored so this is a placeholder.  If you username and password changed and things are breaking, set this to your password as a string to <em>unsecure</em> it.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="example">
+<h3>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h3>
+<p>Here is an example entry from the <tt class="docutils literal"><span class="pre">ofxclient.ini</span></tt>:</p>
+<div class="highlight-python"><pre>[f0a14074d33cdf83b4a099bc322dbe2fe19680ca1719425b33de5022]
+account_type = CHECKING
+description = Checking
+institution.broker_id =
+institution.client_args.app_id = QWIN
+institution.client_args.app_version = 2200
+institution.client_args.id = 4fa6f700154f49839b869492f99c883f
+institution.client_args.ofx_version = 102
+institution.description = WF
+institution.id = 3000
+institution.local_id = e51fb78f88580a1c2e3bb65bd59495384383e58abda8796c9bf06dcf
+institution.org = WF
+institution.password = %{secured}
+institution.url = https://ofxdc.wellsfargo.com/ofx/process.ofx
+institution.username = %{secured}
+local_id = f0a14074d33cdf83b4a099bc322dbe2fe19680ca1719425b33de5022
+number = ******
+routing_number = ******</pre>
+</div>
+</div>
 </div>
 </div>
 

@@ -81,7 +81,7 @@ account in the applications.  Do not ever modify the ``local_id`` options.
 
 You will need to edit the $HOME/ofxclient.ini file.  Here is an example excerpt from that file::
 
-  [f0a14074d33cdf83b4a099bc322dbe2fe19680ca1719425b33de50229586895b]
+  [f0a14074d33cdf83b4a099bc322dbe2fe19680ca1719425b33de5022]
   account_type = CHECKING
   description = Checking
   institution.broker_id = 
@@ -91,11 +91,11 @@ You will need to edit the $HOME/ofxclient.ini file.  Here is an example excerpt 
   institution.client_args.ofx_version = 102
   institution.description = WF
   institution.id = 3000
-  institution.local_id = e51fb78f88580a1c2e3bb65bd59495384383e58abda8796c9bf06dcf6877cbb1
+  institution.local_id = e51fb78f88580a1c2e3bb65bd59495384383e58abda8796c9bf06dcf
   institution.org = WF
   institution.password = %{secured}
   institution.url = https://ofxdc.wellsfargo.com/ofx/process.ofx
   institution.username = %{secured}
-  local_id = f0a14074d33cdf83b4a099bc322dbe2fe19680ca1719425b33de50229586895b
+  local_id = f0a14074d33cdf83b4a099bc322dbe2fe19680ca1719425b33de5022
   number = ******
   routing_number = ******
