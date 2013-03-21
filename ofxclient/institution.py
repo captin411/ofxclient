@@ -7,19 +7,29 @@ from BeautifulSoup import BeautifulStoneSoup
 class Institution(object):
     """Represents an institution or bank
 
-    This is where you specify all connection details needed
-    for the specific institution.
+    :param id: FI Id
+    :type id: string
+    :param org: FI Org
+    :type org: string
+    :param url: FI Url
+    :type url: string
+    :param username: Customer username or member id
+    :type username: string
+    :param password: Customer password or PIN
+    :type password:
+    :param broker_id: FI Broker ID (optional)
+    :type broker_id: string
+    :param description: Description of the bank (optional)
+    :type description: string or None
+    :param client_args: connection/application information override (optional)
+    :type client_args: kwargs for :py:class:`ofxclient.Client`
 
-    For help obtaining the id, org, and url; please see the
-    ofxhome python module and/or the http://ofxhome.com website.
+    Values for many of the parameters need to come from some sort of
+    OFX registry which knows about each banks particular setup.
 
-    An optional description can be passed in for, well, descriptive
-    purposes.
-
-    The last optional parameter, client_args, should be a dictionary
-    containing some or all of the parameters that ofxclient.client.Client
-    takes.  This allows you to override the settings for a particular
-    institution
+    For help obtaining this sort of information; please see the
+    :py:mod:`ofxhome` python module and/or the `OFX Home <http://ofxhome.com>`_
+    website.
     """
     def __init__(self, id, org, url, username, password, broker_id='', description=None, client_args={} ):
         self.id = id
@@ -32,12 +42,12 @@ class Institution(object):
         self.client_args = client_args
 
     def client(self):
-        """Build a client for talking with the bank
+        """Build a :py:class:`ofxclient.Client` for talking with the bank
 
         It implicitly passes in the ``self.client_args`` that were passed
         when instantiating this ``Institution``.
 
-        :rtype: :py:class:`ofxclient.client.Client`
+        :rtype: :py:class:`ofxclient.Client`
         """
         settings = self.client_args
         return Client(institution=self,**settings)
@@ -88,7 +98,7 @@ class Institution(object):
         raise ValueError(status)
 
     def accounts(self):
-        """Ask the bank for the known accounts.
+        """Ask the bank for the known :py:class:`ofxclient.Account` list.
         
         :rtype: list of :py:class:`ofxclient.Account` objects
         """

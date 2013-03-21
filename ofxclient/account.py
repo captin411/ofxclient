@@ -7,19 +7,46 @@ import hashlib
 class Account(object):
     """Base class for accounts at an institution
 
-    It provides basic methods for retrieving transactions
-    that are common to all different types of accounts.
+    :param number: The account number
+    :type number: string
+    :param institution: The bank this belongs to
+    :type institution: :py:class:`ofxclient.Institution` object
+    :param description: optional account description
+    :type description: string or None
 
-    Subclasses only need to implement the download_query method
-    which is expected to take an 'as_of' parameter representing
-    an effective lower date boundary in 'YYYYMMDD' format.  The
-    return value of this function is expected to be a prepared
-    query as returned by the ofxclient.client.Client
+    This class is almost never never instantiated on it's own. Instead,
+    sub-classes are instantiated.
 
-    See these subclasses for more details:
-    BankAccount
-    CreditCardAccount
-    BrokerageAccount
+    In most cases these subclasses are either being deserialized from a
+    config file entry, a serialization hash, or returned by the
+    :py:meth:`ofxclient.Institution.accounts` method.
+
+    Example from a saved config entry::
+
+      from ofxclient import OfxConfig
+      account = OfxConfig().account('local_id() string')
+
+    Example of deserialization::
+
+      from ofxclient import BankAccount
+      # assume 'inst' is an Institution()
+      a1    = BankAccount(number='asdf',institution=inst)
+      data1 = a1.serialize()
+      a2    = Account.deserialize(data1)
+
+    Example by querying the bank directly::
+
+      from ofxclient import Institution
+      # assume an Institution() is configured with
+      # a username/password etc
+      accounts = institution.accounts()
+
+    .. seealso::
+
+       :py:class:`ofxclient.BankAccount`
+       :py:class:`ofxclient.BrokerageAccount`
+       :py:class:`ofxclient.CreditCardAccount`
+
     """
     def __init__(self, number, institution, description=None ):
         self.institution = institution
@@ -62,7 +89,7 @@ class Account(object):
         """
         days_ago  = datetime.datetime.now() - datetime.timedelta( days=days )
         as_of     = time.strftime("%Y%m%d",days_ago.timetuple())
-        query     = self.download_query( as_of = as_of )
+        query     = self._download_query( as_of = as_of )
         response  = self.institution.client().post(query)
         return StringIO.StringIO(response)
 
@@ -132,7 +159,7 @@ class Account(object):
         """Instantiate :py:class:`ofxclient.Account` subclass from dictionary
 
         :param raw: serilized Account
-        :param type: dict as  given by :py:method:`~ofxclient.Account.serialize`
+        :param type: dict as  given by :py:meth:`~ofxclient.Account.serialize`
         :rtype: subclass of :py:class:`ofxclient.Account`
         """
         from ofxclient.institution import Institution
@@ -182,26 +209,62 @@ class Account(object):
 
 
 class BrokerageAccount(Account):
-    """Implementation representing a brokerage/investment account"""
+    """:py:class:`ofxclient.Account` subclass for brokerage/investment accounts
+
+    In addition to the parameters it's superclass requires, the following
+    parameters are needed.
+
+    :param broker_id: Broker ID of the account
+    :type broker_id: string
+
+    .. seealso::
+
+       :py:class:`ofxclient.Account`
+    """
     def __init__(self, broker_id, **kwargs):
         super( BrokerageAccount, self ).__init__(**kwargs)
         self.broker_id = broker_id
 
-    def download_query(self,as_of):
-        """formulate the specific query needed for download"""
+    def _download_query(self,as_of):
+        """Formulate the specific query needed for download
+
+        Not intended to be called by developers directly.
+
+        :param as_of: Date in 'YYYYMMDD' format
+        :type as_of: string
+        """
         c = self.institution.client()
         q = c.brokerage_account_query(number=self.number,date=as_of,broker_id=self.broker_id)
         return q
 
 class BankAccount(Account):
-    """Implementation representing a checking or savings account"""
+    """:py:class:`ofxclient.Account` subclass for a checking/savings account
+
+    In addition to the parameters it's superclass requires, the following
+    parameters are needed.
+
+    :param routing_number: Routing number or account number of the account
+    :type routing_number: string
+    :param account_type: Account type per OFX spec which can be empty but not None
+    :type account_type: string
+
+    .. seealso::
+
+       :py:class:`ofxclient.Account`
+    """
     def __init__(self, routing_number, account_type, **kwargs):
         super( BankAccount, self ).__init__(**kwargs)
         self.routing_number = routing_number
         self.account_type   = account_type
 
-    def download_query(self,as_of):
-        """formulate the specific query needed for download"""
+    def _download_query(self,as_of):
+        """Formulate the specific query needed for download
+
+        Not intended to be called by developers directly.
+
+        :param as_of: Date in 'YYYYMMDD' format
+        :type as_of: string
+        """
         c = self.institution.client()
         q = c.bank_account_query(
                 number=self.number,
@@ -211,12 +274,25 @@ class BankAccount(Account):
         return q
 
 class CreditCardAccount(Account):
-    """Implementation representing a credit card account"""
+    """:py:class:`ofxclient.Account` subclass for a credit card account
+
+    No additional parameters to the constructor are needed.
+
+    .. seealso::
+
+       :py:class:`ofxclient.Account`
+    """
     def __init__(self, **kwargs):
         super( CreditCardAccount, self ).__init__(**kwargs)
 
-    def download_query(self,as_of):
-        """formulate the specific query needed for download"""
+    def _download_query(self,as_of):
+        """Formulate the specific query needed for download
+
+        Not intended to be called by developers directly.
+
+        :param as_of: Date in 'YYYYMMDD' format
+        :type as_of: string
+        """
         c = self.institution.client()
         q = c.credit_card_account_query(number=self.number,date=as_of)
         return q

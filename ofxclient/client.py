@@ -12,6 +12,20 @@ def ofx_uid():
     return str(uuid.uuid4().hex)
 
 class Client:
+    """This communicates with the banks via the OFX protocol
+
+    :param institution: institution to connect to
+    :type institution: :py:class:`ofxclient.Institution`
+    :param id: client id (optional need for OFX version >= 103)
+    :type id: string
+    :param app_id: OFX app id
+    :type app_id: string
+    :param app_version: OFX app version
+    :type app_version: string
+    :param ofx_version: OFX spec version
+    :type ofx_version: string
+    """
+
     def __init__(self, institution, id=ofx_uid(), app_id=DEFAULT_APP_ID,app_version=DEFAULT_APP_VERSION,ofx_version=DEFAULT_OFX_VERSION):
         self.institution = institution
         self.id = id

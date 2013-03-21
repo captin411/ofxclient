@@ -11,7 +11,7 @@ except ImportError:
 DEFAULT_CONFIG = os.path.expanduser('~/ofxclient.ini')
 
 class SecurableConfigParser(ConfigParser):
-    """ConfigParse subclass that knows how to store
+    """:py:class:`ConfigParser.ConfigParser` subclass that knows how to store
     options marked as secure into the OS specific
     keyring/keychain.
 
@@ -19,6 +19,19 @@ class SecurableConfigParser(ConfigParser):
     'set_secure' at least one time for the particular
     option and from then on it will be seen as secure
     and will be stored / retrieved from the keychain.
+
+    Example::
+
+      from ofxclient.config import SecurableConfigParser
+
+      # password will not be saved in the config file
+
+      c = SecurableConfigParser()
+      c.add_section('Info')
+      c.set('Info','username','bill')
+      c.set_secure('Info','password','s3cre7')
+      with file('config.ini') as fp:
+        c.write(fp)
     """
 
     _secure_placeholder = '%{secured}'
@@ -31,7 +44,13 @@ class SecurableConfigParser(ConfigParser):
         self.keyring_name      = keyring_name
 
     def is_secure_option(self,section,option):
-        """return True if the option is secure, False
+        """Test an option to see if it is secured or not.
+
+        :param section: section id
+        :type section: string
+        :param option: option name
+        :type option: string
+        :rtype: boolean
         otherwise.
         """
         if not self.has_section(section):
@@ -43,16 +62,14 @@ class SecurableConfigParser(ConfigParser):
         return False
 
     def has_secure_option(self,section,option):
-        """Like 'has_option' but also tests whether
-        the option is secure.
-        """
+        """See is_secure_option"""
         return self.is_secure_option(section,option)
 
     def items(self, section):
-        """Subclassed items method which knows how to
-        detect secured options and will retrieve the
-        information in the clear from the secure storage
-        backend
+        """Get all items for a section. Subclassed, to ensure secure items come back with the unencrypted data.
+
+        :param section: section id
+        :type section: string
         """
         items = []
         for k,v in ConfigParser.items(self,section):
@@ -62,16 +79,15 @@ class SecurableConfigParser(ConfigParser):
         return items
 
     def secure_items(self, section):
-        """Return a list of options marked as secure for 
-        the given section.  See the documentation for 
-        'ConfigParser.items' for more information.
+        """Like items() but only return secure items.
+
+        :param section: section id
+        :type section: string
         """
         return [ x for x in self.items(section) if self.is_secure_option(section,x[0]) ]
 
     def set(self, section, option, value):
-        """Just like ConfigParser set except that it
-        knows about secure options.
-        """
+        """Set an option value. Knows how to set options properly marked as secure."""
         if self.is_secure_option(section,option):
             self.set_secure(section, option, value)
         else:
@@ -90,10 +106,7 @@ class SecurableConfigParser(ConfigParser):
         ConfigParser.set(self,section,option,value)
 
     def get(self, section, option,*args):
-        """If an option is secure, return the plain text
-        from the secure storage backend. Otherwise this
-        acts just like ConfigParser.get
-        """
+        """Get option value from section. If an option is secure, populates the plain text."""
         if self.is_secure_option(section,option) and self.keyring_available:
             s_option = "%s%s" % (section,option)
             if self._unsaved.get(s_option,[''])[0] == 'set':
@@ -104,7 +117,7 @@ class SecurableConfigParser(ConfigParser):
 
     def remove_option(self, section, option):
         """Removes the option from ConfigParser as well as
-        the secure storage backend>
+        the secure storage backend
         """
         if self.is_secure_option(section,option) and self.keyring_available:
             s_option = "%s%s" % (section,option)
@@ -112,10 +125,7 @@ class SecurableConfigParser(ConfigParser):
         ConfigParser.remove_option(self,section,option)
 
     def write(self,*args):
-        """Write a-la ConfigParse but also writes
-        out any unsaved changes to the secure storage
-        backend.
-        """
+        """See ConfigParser.write().  This also writes unwritten secure items to the keystore."""
         ConfigParser.write(self,*args)
         if self.keyring_available:
             for key,thing in self._unsaved.items():
@@ -131,41 +141,49 @@ class SecurableConfigParser(ConfigParser):
         self._unsaved = {}
 
 class OfxConfig(object):
+    """Default config file handler for other tools to use.
 
-    file_name = DEFAULT_CONFIG
-    parser    = None
-    accounts  = []
+    This can read and write from the default config which is
+    $USERS_HOME/ofxclient.ini
+
+    :param file_name: absolute path to a config file (optional)
+    :type file_name: string or None
+
+    Example usage::
+
+      from ofxclient import OfxConfig
+      from ofxclient import Account
+
+      a = Account()
+
+      c = OfxConfig(file_name='/tmp/new.ini')
+      c.add_account(a)
+      c.save()
+
+      account_list = c.accounts()
+      one_account  = c.account( a.local_id() )
+    """
 
     def __init__(self, file_name=None):
-        self.load(file_name)
-
-    def load(self,file_name=None):
-        file_name = file_name or self.file_name
-
-        # make sure the file exists
-        with file(file_name,'a'):
-            os.utime(file_name,None)
-
-        conf = SecurableConfigParser()
-        conf.readfp(open(file_name))
-        self.parser = conf
-
-        # just in case we passed a new file_name in
-        self.file_name = file_name
-        return self
+        f = file_name or DEFAULT_CONFIG
+        self._load(file_name)
 
     def reload(self):
-        return self.load()
+        """Reload the config file from disk"""
+        return self._load()
 
     def accounts(self):
-        return [ self.section_to_account(s) for s in self.parser.sections() ]
+        """List of confgured :py:class:`ofxclient.Account` objects"""
+        return [ self._section_to_account(s) for s in self.parser.sections() ]
 
     def account(self, id):
+        """Get :py:class:`ofxclient.Account` by section id"""
         if self.parser.has_section(id):
-            return self.section_to_account(id)
+            return self._section_to_account(id)
         return None
 
     def add_account(self,account):
+        """Add Account to config (does not save)"""
         serialized    = account.serialize()
         section_items = flatten_dict( serialized )
         section_id    = section_items['local_id']
@@ -183,20 +201,40 @@ class OfxConfig(object):
         return self
 
     def remove_account(self,id):
+        """Add Account from config (does not save)"""
         if self.parser.has_section(id):
             self.parser.remove_section(id)
             return True
         return False
 
-    def section_to_account(self,section):
+    def save(self):
+        """Save changes to config file"""
+        with file(self.file_name,'w') as fp:
+            self.parser.write(fp)
+        return self
+
+    def _load(self,file_name=None):
+        self.parser    = None
+
+        file_name = file_name or self.file_name
+
+        # make sure the file exists
+        with file(file_name,'a'):
+            os.utime(file_name,None)
+
+        self.file_name = file_name
+
+        conf = SecurableConfigParser()
+        conf.readfp(open(self.file_name))
+        self.parser = conf
+
+        return self
+
+    def _section_to_account(self,section):
         section_items = dict(self.parser.items(section))
         serialized    = unflatten_dict( section_items )
         return Account.deserialize(serialized)
 
-    def save(self):
-        with file(self.file_name,'w') as fp:
-            self.parser.write(fp)
-        return self
 
 def unflatten_dict(dict,prefix=None,separator='.'):
     ret = {}
