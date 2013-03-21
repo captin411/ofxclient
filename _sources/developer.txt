@@ -1,26 +1,19 @@
 Developer Guide
 ===============
 
-Modules
--------
+Module List
+-----------
 
-.. autoclass:: ofxclient.Account
-   :members:
+.. autosummary::
+   :toctree:
+   :nosignatures:
 
-.. autoclass:: ofxclient.BankAccount
-   :members:
+   ofxclient.Account
+   ofxclient.BankAccount
+   ofxclient.BrokerageAccount
+   ofxclient.CreditCardAccount
+   ofxclient.Institution
+   ofxclient.OfxConfig
+   ofxclient.Client
+   ofxclient.config.SecurableConfigParser
 
-.. autoclass:: ofxclient.BrokerageAccount
-   :members:
-
-.. autoclass:: ofxclient.CreditCardAccount
-   :members:
-
-.. autoclass:: ofxclient.Institution
-   :members:
-
-.. autoclass:: ofxclient.OfxConfig
-   :members:
-
-.. autoclass:: ofxclient.config.SecurableConfigParser
-   :members:
