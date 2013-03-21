@@ -24,5 +24,6 @@ Read More
    installation
    usage
    developer
+   contact
    faq
    glossary

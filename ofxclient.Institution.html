@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>ofxclient.Institution &mdash; ofxclient 1.3.6 documentation</title>
+    <title>ofxclient.Institution &mdash; ofxclient 1.3.7 documentation</title>
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,7 +17,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '1.3.6',
+        VERSION:     '1.3.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -30,9 +30,9 @@
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
     <script type="text/javascript" src="_static/bootstrap-2.3.0/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
-    <link rel="top" title="ofxclient 1.3.6 documentation" href="index.html" />
+    <link rel="top" title="ofxclient 1.3.7 documentation" href="index.html" />
     <link rel="up" title="Developer Guide" href="developer.html" />
-    <link rel="next" title="ofxclient.OfxConfig" href="ofxclient.OfxConfig.html" />
+    <link rel="next" title="ofxclient.Client" href="ofxclient.Client.html" />
     <link rel="prev" title="ofxclient.CreditCardAccount" href="ofxclient.CreditCardAccount.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
@@ -68,6 +68,7 @@
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Users Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
@@ -85,8 +86,8 @@
             
   <li><a href="ofxclient.CreditCardAccount.html"
          title="previous chapter">&laquo; ofxclient.CreditCardAccount</a></li>
-  <li><a href="ofxclient.OfxConfig.html"
-         title="next chapter">ofxclient.OfxConfig &raquo;</a></li>
+  <li><a href="ofxclient.Client.html"
+         title="next chapter">ofxclient.Client &raquo;</a></li>
           
           
             <li>
@@ -123,10 +124,10 @@
 <li><strong>org</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#string" title="(in Python v2.7)"><em>string</em></a>) &#8211; FI Org</li>
 <li><strong>url</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#string" title="(in Python v2.7)"><em>string</em></a>) &#8211; FI Url</li>
 <li><strong>username</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#string" title="(in Python v2.7)"><em>string</em></a>) &#8211; Customer username or member id</li>
-<li><strong>password</strong> &#8211; Customer password or PIN</li>
+<li><strong>password</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#string" title="(in Python v2.7)"><em>string</em></a>) &#8211; Customer password or PIN</li>
 <li><strong>broker_id</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#string" title="(in Python v2.7)"><em>string</em></a>) &#8211; FI Broker ID (optional)</li>
 <li><strong>description</strong> (<em>string or None</em>) &#8211; Description of the bank (optional)</li>
-<li><strong>client_args</strong> (kwargs for <a class="reference internal" href="ofxclient.Client.html#ofxclient.Client" title="ofxclient.Client"><tt class="xref py py-class docutils literal"><span class="pre">ofxclient.Client</span></tt></a>) &#8211; connection/application information override (optional)</li>
+<li><strong>client_args</strong> (<a class="reference external" href="http://docs.python.org/library/stdtypes.html#dict" title="(in Python v2.7)"><em>dict</em></a>) &#8211; override <a class="reference internal" href="ofxclient.Client.html#ofxclient.Client" title="ofxclient.Client"><tt class="xref py py-class docutils literal"><span class="pre">ofxclient.Client</span></tt></a> kwargs for init (optional)</li>
 </ul>
 </td>
 </tr>
@@ -137,6 +138,21 @@ OFX registry which knows about each banks particular setup.</p>
 <p>For help obtaining this sort of information; please see the
 <tt class="xref py py-mod docutils literal"><span class="pre">ofxhome</span></tt> python module and/or the <a class="reference external" href="http://ofxhome.com">OFX Home</a>
 website.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">ofxclient</span> <span class="kn">import</span> <span class="n">Institution</span>
+
+<span class="n">inst</span> <span class="o">=</span> <span class="n">Institution</span><span class="p">(</span>
+          <span class="nb">id</span>       <span class="o">=</span> <span class="s">&#39;3101&#39;</span><span class="p">,</span>
+          <span class="n">org</span>      <span class="o">=</span> <span class="s">&#39;AMEX&#39;</span><span class="p">,</span>
+          <span class="n">url</span>      <span class="o">=</span> <span class="s">&#39;https://online.americanexpress.com/myca/ofxdl/desktop/desktopDownload.do?request_type=nl_ofxdownload&#39;</span><span class="p">,</span>
+          <span class="n">username</span> <span class="o">=</span> <span class="s">&#39;gene&#39;</span><span class="p">,</span>
+          <span class="n">password</span> <span class="o">=</span> <span class="s">&#39;wilder&#39;</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">inst</span><span class="o">.</span><span class="n">accounts</span><span class="p">():</span>
+    <span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">statement</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">balance</span>
+</pre></div>
+</div>
 <dl class="method">
 <dt id="ofxclient.Institution.__init__">
 <tt class="descname">__init__</tt><big>(</big><em>id</em>, <em>org</em>, <em>url</em>, <em>username</em>, <em>password</em>, <em>broker_id=''</em>, <em>description=None</em>, <em>client_args={}</em><big>)</big><a class="headerlink" href="#ofxclient.Institution.__init__" title="Permalink to this definition">¶</a></dt>

@@ -13,8 +13,8 @@ Module List
    ofxclient.BrokerageAccount
    ofxclient.CreditCardAccount
    ofxclient.Institution
-   ofxclient.OfxConfig
    ofxclient.Client
+   ofxclient.config.OfxConfig
    ofxclient.config.SecurableConfigParser
 
 Config File

@@ -1,7 +1,7 @@
-ofxclient.OfxConfig
-===================
+ofxclient.config.OfxConfig
+==========================
 
-.. currentmodule:: ofxclient
+.. currentmodule:: ofxclient.config
 
 .. autoclass:: OfxConfig
 

@@ -30,3 +30,18 @@ Windows
   The `OFX Mate project <http://github.com/captin411/ofxmate>`_ provides you with
   a local HTTP based API that you can use to further integrate OFX data.
 
+Source Code
+-----------
+
+Source code is hosted on github.
+
+:Url: https://github.com/captin411/ofxclient
+
+Basic build instructions (run in a terminal)::
+
+  git clone git://github.com/captin411/ofxclient.git
+  cd ofxclient
+  python setup.py build
+  python setup.py test
+  sudo python setup.py install
+
