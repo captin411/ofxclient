@@ -168,6 +168,12 @@ class OfxConfig(object):
     """
 
     def __init__(self, file_name=None):
+
+        self.secured_field_names = [
+                'institution.username',
+                'institution.password'
+        ]
+
         f = file_name or DEFAULT_CONFIG
         if f is None:
             raise ValueError('file_name is required')
@@ -180,6 +186,12 @@ class OfxConfig(object):
     def accounts(self):
         """List of confgured :py:class:`ofxclient.Account` objects"""
         return [ self._section_to_account(s) for s in self.parser.sections() ]
+
+    def encrypted_accounts(self):
+        return [ a for a in self.accounts() if self.is_encrypted_account(a.local_id()) ]
+
+    def unencrypted_accounts(self):
+        return [ a for a in self.accounts() if not self.is_encrypted_account(a.local_id()) ]
 
     def account(self, id):
         """Get :py:class:`ofxclient.Account` by section id"""
@@ -197,13 +209,25 @@ class OfxConfig(object):
             self.parser.add_section(section_id)
 
         for key in sorted(section_items):
-            value = section_items[key]
-            if key in ['institution.username','institution.password']:
-                self.parser.set_secure(section_id,key,value)
-            else:
-                self.parser.set(section_id,key,value)
+            self.parser.set(section_id,key,section_items[key])
+
+        self.encrypt_account(id=section_id)
 
         return self
+
+    def encrypt_account(self,id):
+        """Make sure that certain fields are encrypted."""
+        for key in self.secured_field_names:
+            value = self.parser.get(id,key)
+            self.parser.set_secure(id,key,value)
+        return self
+
+    def is_encrypted_account(self,id):
+        """Are all fields for the account id encrypted?"""
+        for key in self.secured_field_names:
+            if not self.parser.is_secure_option(id,key):
+                return False
+        return True
 
     def remove_account(self,id):
         """Add Account from config (does not save)"""
