@@ -1,6 +1,6 @@
 from ofxclient.account import Account
 from ConfigParser import ConfigParser
-import os.path
+import os, os.path
 
 try:
     import keyring
@@ -223,9 +223,9 @@ class OfxConfig(object):
 
         file_name = file_name or self.file_name
 
-        # make sure the file exists
-        with file(file_name,'a'):
-            os.utime(file_name,None)
+        if not os.path.exists(file_name):
+            with file(file_name,'a'):
+                os.utime(file_name,None)
 
         self.file_name = file_name
 
