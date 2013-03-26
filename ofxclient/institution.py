@@ -61,13 +61,12 @@ class Institution(object):
     def client(self):
         """Build a :py:class:`ofxclient.Client` for talking with the bank
 
-        It implicitly passes in the ``self.client_args`` that were passed
+        It implicitly passes in the ``client_args`` that were passed
         when instantiating this ``Institution``.
 
         :rtype: :py:class:`ofxclient.Client`
         """
-        settings = self.client_args
-        return Client(institution=self,**settings)
+        return Client(institution=self,**self.client_args)
 
     def local_id(self):
         """Locally generated unique account identifier.
@@ -93,8 +92,11 @@ class Institution(object):
         :type password: string or None
         """
 
-        u = username or self.username
-        p = password or self.password
+        u = self.username
+        p = self.password
+        if username and password:
+            u = username
+            p = password
 
         client = self.client()
         query  = client.authenticated_query(username=u,password=p)
@@ -125,11 +127,9 @@ class Institution(object):
         resp    = client.post(query)
         resp_handle = StringIO.StringIO(resp)
 
-        accounts = []
+        parsed = OfxParser.parse(resp_handle)
 
-        for a in OfxParser.parse(resp_handle).accounts:
-            accounts.append( Account.from_ofxparse(a,institution=self) )
-        return accounts
+        return [ Account.from_ofxparse(a,institution=self) for a in parsed.accounts ]
 
     def serialize(self):
         """Serialize predictably for use in configuration storage.
