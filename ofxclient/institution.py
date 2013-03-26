@@ -4,6 +4,7 @@ from ofxclient.client import Client
 from ofxparse import OfxParser
 from BeautifulSoup import BeautifulStoneSoup
 
+
 class Institution(object):
     """Represents an institution or bank
 
@@ -21,7 +22,7 @@ class Institution(object):
     :type broker_id: string
     :param description: Description of the bank (optional)
     :type description: string or None
-    :param client_args: override :py:class:`ofxclient.Client` kwargs for init (optional)
+    :param client_args: :py:class:`ofxclient.Client` kwargs (optional)
     :type client_args: dict
 
     Values for many of the parameters need to come from some sort of
@@ -38,7 +39,9 @@ class Institution(object):
       inst = Institution(
                 id       = '3101',
                 org      = 'AMEX',
-                url      = 'https://online.americanexpress.com/myca/ofxdl/desktop/desktopDownload.do?request_type=nl_ofxdownload',
+                url      = 'https://online.americanexpress.com/myca\
+                            /ofxdl/desktop/desktop Download.do?\
+                            request_type=nl_ofxdownload',
                 username = 'gene',
                 password = 'wilder'
       )
@@ -48,7 +51,8 @@ class Institution(object):
 
 
     """
-    def __init__(self, id, org, url, username, password, broker_id='', description=None, client_args={} ):
+    def __init__(self, id, org, url, username, password,
+                 broker_id='', description=None, client_args={}):
         self.id = id
         self.org = org
         self.url = url
@@ -66,7 +70,7 @@ class Institution(object):
 
         :rtype: :py:class:`ofxclient.Client`
         """
-        return Client(institution=self,**self.client_args)
+        return Client(institution=self, **self.client_args)
 
     def local_id(self):
         """Locally generated unique account identifier.
@@ -74,13 +78,13 @@ class Institution(object):
         :rtype: string
         """
         return hashlib.sha256("%s%s" % (
-                self.id,
-                self.username )).hexdigest()
+            self.id,
+            self.username)).hexdigest()
 
     def _default_description(self):
         return self.org
 
-    def authenticate(self,username=None,password=None):
+    def authenticate(self, username=None, password=None):
         """Test the authentication credentials
 
         Raises a ``ValueError`` if there is a problem authenticating
@@ -99,9 +103,9 @@ class Institution(object):
             p = password
 
         client = self.client()
-        query  = client.authenticated_query(username=u,password=p)
-        res    = client.post(query)
-        ofx    = BeautifulStoneSoup(res)
+        query = client.authenticated_query(username=u, password=p)
+        res = client.post(query)
+        ofx = BeautifulStoneSoup(res)
 
         sonrs = ofx.find('sonrs')
         code = int(sonrs.find('code').contents[0].strip())
@@ -118,18 +122,19 @@ class Institution(object):
 
     def accounts(self):
         """Ask the bank for the known :py:class:`ofxclient.Account` list.
-        
+
         :rtype: list of :py:class:`ofxclient.Account` objects
         """
         from ofxclient.account import Account
-        client  = self.client()
-        query   = client.account_list_query()
-        resp    = client.post(query)
+        client = self.client()
+        query = client.account_list_query()
+        resp = client.post(query)
         resp_handle = StringIO.StringIO(resp)
 
         parsed = OfxParser.parse(resp_handle)
 
-        return [ Account.from_ofxparse(a,institution=self) for a in parsed.accounts ]
+        return [Account.from_ofxparse(a, institution=self)
+                for a in parsed.accounts]
 
     def serialize(self):
         """Serialize predictably for use in configuration storage.
@@ -157,21 +162,21 @@ class Institution(object):
         """
         client = self.client()
         client_args = {
-                'id': client.id,
-                'app_id': client.app_id,
-                'app_version': client.app_version,
-                'ofx_version': client.ofx_version,
+            'id': client.id,
+            'app_id': client.app_id,
+            'app_version': client.app_version,
+            'ofx_version': client.ofx_version,
         }
         return {
-                'id': self.id,
-                'org': self.org,
-                'url': self.url,
-                'broker_id': self.broker_id,
-                'username': self.username,
-                'password': self.password,
-                'description': self.description,
-                'client_args': client_args,
-                'local_id': self.local_id()
+            'id': self.id,
+            'org': self.org,
+            'url': self.url,
+            'broker_id': self.broker_id,
+            'username': self.username,
+            'password': self.password,
+            'description': self.description,
+            'client_args': client_args,
+            'local_id': self.local_id()
         }
 
     @staticmethod
@@ -179,16 +184,16 @@ class Institution(object):
         """Instantiate :py:class:`ofxclient.Institution` from dictionary
 
         :param raw: serialized ``Institution``
-        :param type: dict as given by :py:method:`~ofxclient.Institution.serialize`
+        :param type: dict per :py:method:`~Institution.serialize`
         :rtype: subclass of :py:class:`ofxclient.Institution`
         """
         return Institution(
-                id = raw['id'],
-                org = raw['org'],
-                url = raw['url'],
-                broker_id = raw.get('broker_id',''),
-                username = raw['username'],
-                password = raw['password'],
-                description = raw.get('description',None),
-                client_args = raw.get('client_args',{}),
+            id=raw['id'],
+            org=raw['org'],
+            url=raw['url'],
+            broker_id=raw.get('broker_id', ''),
+            username=raw['username'],
+            password=raw['password'],
+            description=raw.get('description', None),
+            client_args=raw.get('client_args', {})
         )

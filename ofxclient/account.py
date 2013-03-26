@@ -4,6 +4,7 @@ import StringIO
 import time
 import hashlib
 
+
 class Account(object):
     """Base class for accounts at an institution
 
@@ -48,9 +49,9 @@ class Account(object):
        :py:class:`ofxclient.CreditCardAccount`
 
     """
-    def __init__(self, number, institution, description=None ):
+    def __init__(self, number, institution, description=None):
         self.institution = institution
-        self.number      = number
+        self.number = number
         self.description = description or self._default_description()
 
     def local_id(self):
@@ -59,8 +60,8 @@ class Account(object):
         :rtype: string
         """
         return hashlib.sha256("%s%s" % (
-                self.institution.local_id(),
-                self.number )).hexdigest()
+            self.institution.local_id(),
+            self.number)).hexdigest()
 
     def number_masked(self):
         """Masked version of the account number for privacy.
@@ -74,12 +75,12 @@ class Account(object):
 
         :rtype: string
         """
-        return "%s: %s" % (self.institution.description,self.description)
+        return "%s: %s" % (self.institution.description, self.description)
 
     def _default_description(self):
         return self.number_masked()
 
-    def download(self,days=60):
+    def download(self, days=60):
         """Downloaded OFX response for the given time range
 
         :param days: Number of days to look back at
@@ -87,22 +88,22 @@ class Account(object):
         :rtype: :py:class:`StringIO.StringIO`
 
         """
-        days_ago  = datetime.datetime.now() - datetime.timedelta( days=days )
-        as_of     = time.strftime("%Y%m%d",days_ago.timetuple())
-        query     = self._download_query( as_of = as_of )
-        response  = self.institution.client().post(query)
+        days_ago = datetime.datetime.now() - datetime.timedelta(days=days)
+        as_of = time.strftime("%Y%m%d", days_ago.timetuple())
+        query = self._download_query(as_of=as_of)
+        response = self.institution.client().post(query)
         return StringIO.StringIO(response)
 
-    def download_parsed(self,days=60):
-        """Downloaded OFX response parsed by :py:meth:`ofxparser.OfxParser.parse`
+    def download_parsed(self, days=60):
+        """Downloaded OFX response parsed by :py:meth:`OfxParser.parse`
 
         :param days: Number of days to look back at
         :type days: integer
         :rtype: :py:class:`ofxparser.Ofx`
         """
-        return OfxParser.parse( self.download(days=days) )
+        return OfxParser.parse(self.download(days=days))
 
-    def statement(self,days=60):
+    def statement(self, days=60):
         """Download the :py:class:`ofxparse.Statement` given the time range
 
         :param days: Number of days to look back at
@@ -112,9 +113,9 @@ class Account(object):
         parsed = self.download_parsed(days=days)
         return parsed.account.statement
 
-    def transactions(self,days=60):
+    def transactions(self, days=60):
         """Download a a list of :py:class:`ofxparse.Transaction` objects
-        
+
         :param days: Number of days to look back at
         :type days: integer
         :rtype: list of :py:class:`ofxparser.Transaction` objects
@@ -141,16 +142,16 @@ class Account(object):
         :rtype: nested dictionary
         """
         data = {
-                'local_id': self.local_id(),
-                'institution': self.institution.serialize(),
-                'number': self.number,
-                'description': self.description
+            'local_id': self.local_id(),
+            'institution': self.institution.serialize(),
+            'number': self.number,
+            'description': self.description
         }
-        if hasattr(self,'broker_id'):
+        if hasattr(self, 'broker_id'):
             data['broker_id'] = self.broker_id
-        elif hasattr(self,'routing_number'):
+        elif hasattr(self, 'routing_number'):
             data['routing_number'] = self.routing_number
-            data['account_type']   = self.account_type
+            data['account_type'] = self.account_type
 
         return data
 
@@ -168,17 +169,18 @@ class Account(object):
         del raw['institution']
         del raw['local_id']
 
-        if   raw.has_key('broker_id'):
-            a = BrokerageAccount(institution=institution,**raw)
-        elif raw.has_key('routing_number'):
-            a = BankAccount(institution=institution,**raw)
+        if 'broker_id' in raw:
+            a = BrokerageAccount(institution=institution, **raw)
+        elif 'routing_number' in raw:
+            a = BankAccount(institution=institution, **raw)
         else:
-            a = CreditCardAccount(institution=institution,**raw)
+            a = CreditCardAccount(institution=institution, **raw)
         return a
 
     @staticmethod
-    def from_ofxparse( data, institution ):
-        """Instantiate :py:class:`ofxclient.Account` subclass from ofxparse module
+    def from_ofxparse(data, institution):
+        """Instantiate :py:class:`ofxclient.Account` subclass from ofxparse
+        module
 
         :param data: an ofxparse account
         :type data: An :py:class:`ofxparse.Account` object
@@ -186,25 +188,25 @@ class Account(object):
         :type institution: :py:class:`ofxclient.Institution` object
         """
 
-        description = data.desc if hasattr(data,'desc') else None
+        description = data.desc if hasattr(data, 'desc') else None
         if data.type == AccountType.Bank:
             return BankAccount(
-                    institution=institution,
-                    number=data.account_id,
-                    routing_number=data.routing_number,
-                    account_type=data.account_type,
-                    description=description )
+                institution=institution,
+                number=data.account_id,
+                routing_number=data.routing_number,
+                account_type=data.account_type,
+                description=description)
         elif data.type == AccountType.CreditCard:
-            return CreditCardAccount( 
-                    institution=institution,
-                    number=data.account_id,
-                    description=description )
+            return CreditCardAccount(
+                institution=institution,
+                number=data.account_id,
+                description=description)
         elif data.type == AccountType.Investment:
             return BrokerageAccount(
-                    institution=institution,
-                    number=data.account_id,
-                    broker_id=data.brokerid,
-                    description=description )
+                institution=institution,
+                number=data.account_id,
+                broker_id=data.brokerid,
+                description=description)
         raise ValueError("unknown account type: %s" % data.type)
 
 
@@ -222,10 +224,10 @@ class BrokerageAccount(Account):
        :py:class:`ofxclient.Account`
     """
     def __init__(self, broker_id, **kwargs):
-        super( BrokerageAccount, self ).__init__(**kwargs)
+        super(BrokerageAccount, self).__init__(**kwargs)
         self.broker_id = broker_id
 
-    def _download_query(self,as_of):
+    def _download_query(self, as_of):
         """Formulate the specific query needed for download
 
         Not intended to be called by developers directly.
@@ -234,8 +236,10 @@ class BrokerageAccount(Account):
         :type as_of: string
         """
         c = self.institution.client()
-        q = c.brokerage_account_query(number=self.number,date=as_of,broker_id=self.broker_id)
+        q = c.brokerage_account_query(
+            number=self.number, date=as_of, broker_id=self.broker_id)
         return q
+
 
 class BankAccount(Account):
     """:py:class:`ofxclient.Account` subclass for a checking/savings account
@@ -245,7 +249,7 @@ class BankAccount(Account):
 
     :param routing_number: Routing number or account number of the account
     :type routing_number: string
-    :param account_type: Account type per OFX spec which can be empty but not None
+    :param account_type: Account type per OFX spec can be empty but not None
     :type account_type: string
 
     .. seealso::
@@ -253,11 +257,11 @@ class BankAccount(Account):
        :py:class:`ofxclient.Account`
     """
     def __init__(self, routing_number, account_type, **kwargs):
-        super( BankAccount, self ).__init__(**kwargs)
+        super(BankAccount, self).__init__(**kwargs)
         self.routing_number = routing_number
-        self.account_type   = account_type
+        self.account_type = account_type
 
-    def _download_query(self,as_of):
+    def _download_query(self, as_of):
         """Formulate the specific query needed for download
 
         Not intended to be called by developers directly.
@@ -267,11 +271,12 @@ class BankAccount(Account):
         """
         c = self.institution.client()
         q = c.bank_account_query(
-                number=self.number,
-                date=as_of,
-                account_type=self.account_type,
-                bank_id=self.routing_number)
+            number=self.number,
+            date=as_of,
+            account_type=self.account_type,
+            bank_id=self.routing_number)
         return q
+
 
 class CreditCardAccount(Account):
     """:py:class:`ofxclient.Account` subclass for a credit card account
@@ -283,9 +288,9 @@ class CreditCardAccount(Account):
        :py:class:`ofxclient.Account`
     """
     def __init__(self, **kwargs):
-        super( CreditCardAccount, self ).__init__(**kwargs)
+        super(CreditCardAccount, self).__init__(**kwargs)
 
-    def _download_query(self,as_of):
+    def _download_query(self, as_of):
         """Formulate the specific query needed for download
 
         Not intended to be called by developers directly.
@@ -294,5 +299,5 @@ class CreditCardAccount(Account):
         :type as_of: string
         """
         c = self.institution.client()
-        q = c.credit_card_account_query(number=self.number,date=as_of)
+        q = c.credit_card_account_query(number=self.number, date=as_of)
         return q

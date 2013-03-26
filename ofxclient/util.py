@@ -1,7 +1,8 @@
 from ofxclient.client import Client
 from StringIO import StringIO
 
-def combined_download(accounts,days=60):
+
+def combined_download(accounts, days=60):
     """Download OFX files and combine them into one
 
     It expects an 'accounts' list of ofxclient.Account objects
