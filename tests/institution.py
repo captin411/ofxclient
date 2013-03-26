@@ -63,26 +63,16 @@ class OfxInstitutionTests(unittest.TestCase):
         self.assertEqual( c.ofx_version, 'cofx_version' )
 
     def testRequiredParams(self):
-        with self.assertRaises(TypeError):
-            Institution()
-        with self.assertRaises(TypeError):
-            Institution(id='1')
-        with self.assertRaises(TypeError):
-            Institution(
-                    id='1',
-                    org='org'
-            )
-        with self.assertRaises(TypeError):
-            Institution(
-                    id='1',
-                    org='org',
-                    url='url',
-            )
-        with self.assertRaises(TypeError):
-            Institution(
-                    id='1',
-                    org='org',
-                    url='url',
-                    username='username'
-            )
+        self.assertRaises(TypeError,Institution.__init__)
 
+        a = { 'id': '1' }
+        self.assertRaises(TypeError,Institution,**a)
+
+        a = { 'id': '1', 'org': 'org' }
+        self.assertRaises(TypeError,Institution,**a)
+
+        a = { 'id': '1', 'org': 'org', 'url': 'url' }
+        self.assertRaises(TypeError,Institution,**a)
+
+        a = { 'id': '1', 'org': 'org', 'url': 'url', 'username': 'username' }
+        self.assertRaises(TypeError,Institution,**a)

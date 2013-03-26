@@ -18,16 +18,12 @@ class OfxAccountTests(unittest.TestCase):
         self.institution = institution
 
     def testNumberRequired(self):
-        with self.assertRaises(TypeError):
-            account = Account(
-                    institution = self.institution
-            )
+        a = { 'institution': self.institution }
+        self.assertRaises(TypeError,Account,**a)
 
     def testInstitutionRequired(self):
-        with self.assertRaises(TypeError):
-            account = Account(
-                    number = '12345'
-            )
+        a = { 'number': '12345' }
+        self.assertRaises(TypeError,Account,**a)
 
     def testMasked(self):
         account = Account(

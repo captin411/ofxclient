@@ -64,8 +64,7 @@ class IdentifySecureOptionTests(unittest.TestCase):
         self.assertNotEqual( ConfigParser.get(c,'section1','password'), 'PASSWORD' )
         self.assertEqual( c.get('section1','username'), 'USERNAME' )
         c.remove_option('section1','password')
-        with self.assertRaises(NoOptionError):
-            c.get('section1','password')
+        self.assertRaises(NoOptionError,c.get,'section1','password')
 
     def testUnsavedOptions(self):
         c = makeConfig()
