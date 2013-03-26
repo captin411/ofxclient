@@ -1,7 +1,8 @@
 from setuptools import setup, find_packages
-import re, os
+import os
+import re
 
-VERSIONFILE="ofxclient/version.py"
+VERSIONFILE = "ofxclient/version.py"
 verstrline = open(VERSIONFILE, "rt").read()
 VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
 mo = re.search(VSRE, verstrline, re.M)
@@ -23,13 +24,14 @@ setup(name='ofxclient',
           "Topic :: Software Development :: Libraries :: Python Modules",
           "Topic :: Utilities",
           "License :: OSI Approved :: MIT License",
-          ],
+      ],
       keywords='ofx, Open Financial Exchange, download transactions',
       author='David Bartle',
       author_email='captindave@gmail.com',
       url='https://github.com/captin411/ofxclient',
       license='MIT License',
-      packages=find_packages(exclude=['ez_setup', 'example', 'tests', 'external']),
+      packages=find_packages(exclude=[
+          'ez_setup', 'example', 'tests', 'external']),
       include_package_data=True,
       zip_safe=False,
       entry_points={
@@ -38,6 +40,7 @@ setup(name='ofxclient',
           ]
       },
       install_requires=[
+          "argparse",
           "keyring",
           "ofxhome",
           "ofxparse>0.8",

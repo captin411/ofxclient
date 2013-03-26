@@ -2,6 +2,7 @@ from ofxclient.account import BankAccount, BrokerageAccount, CreditCardAccount
 from ofxclient.institution import Institution
 from ofxclient.util import combined_download
 from ofxhome import OFXHome
+import argparse
 import config
 import getpass
 import os
@@ -74,7 +75,7 @@ def add_account_menu():
                 return
             elif int(choice) < len(found):
                 bank = OFXHome.lookup(found[int(choice)]['id'])
-                if login_test_menu(bank):
+                if login_check_menu(bank):
                     return
 
 
@@ -122,7 +123,7 @@ def view_account_menu(account):
         return
 
 
-def login_test_menu(bank_info):
+def login_check_menu(bank_info):
     while 1:
         username = ''
         while not username:
@@ -194,4 +195,28 @@ def open_with_ofx_handler(filename):
         os.system("xdg-open '%s'" % filename)
 
 if __name__ == '__main__':
+
+    accounts = GlobalConfig.accounts()
+    account_ids = [a.local_id() for a in accounts]
+
+    parser = argparse.ArgumentParser(prog='ofxclient')
+    parser.add_argument('-a', '--account', choices=account_ids)
+    parser.add_argument('-d', '--download', type=argparse.FileType('wb', 0))
+    parser.add_argument('-o', '--open', action='store_true')
+    args = parser.parse_args()
+
+    if args.download:
+        if accounts:
+            if args.account:
+                a = GlobalConfig.account(args.account)
+                ofxdata = a.download(days=DOWNLOAD_DAYS)
+            else:
+                ofxdata = combined_download(accounts, days=DOWNLOAD_DAYS)
+            args.download.write(ofxdata.read())
+            if args.open:
+                open_with_ofx_handler(args.download.name)
+            sys.exit(0)
+        else:
+            print "no accounts configured"
+
     run()
