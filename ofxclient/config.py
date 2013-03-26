@@ -299,9 +299,9 @@ def unflatten_dict(dict, prefix=None, separator='.'):
     return ret
 
 
-def flatten_dict(dict, prefix=None, separator='.'):
+def flatten_dict(dict_, prefix=None, separator='.'):
     ret = {}
-    for k, v in dict.items():
+    for k, v in dict_.items():
         if prefix:
             flat_key = separator.join([prefix, k])
         else:
