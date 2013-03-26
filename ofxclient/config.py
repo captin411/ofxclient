@@ -1,3 +1,4 @@
+from __future__ import with_statement
 from ofxclient.account import Account
 from ConfigParser import ConfigParser
 import os, os.path
@@ -5,7 +6,7 @@ import os, os.path
 try:
     import keyring
     KEYRING_AVAILABLE = True
-except ImportError:
+except:
     KEYRING_AVAILABLE = False
 
 try:
@@ -33,7 +34,7 @@ class SecurableConfigParser(ConfigParser):
       c.add_section('Info')
       c.set('Info','username','bill')
       c.set_secure('Info','password','s3cre7')
-      with file('config.ini') as fp:
+      with open('config.ini','w') as fp:
         c.write(fp)
     """
 
@@ -238,7 +239,7 @@ class OfxConfig(object):
 
     def save(self):
         """Save changes to config file"""
-        with file(self.file_name,'w') as fp:
+        with open(self.file_name,'w') as fp:
             self.parser.write(fp)
         return self
 
@@ -248,7 +249,7 @@ class OfxConfig(object):
         file_name = file_name or self.file_name
 
         if not os.path.exists(file_name):
-            with file(file_name,'a'):
+            with open(file_name,'a'):
                 os.utime(file_name,None)
 
         self.file_name = file_name

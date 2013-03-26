@@ -2,6 +2,7 @@ import unittest
 import tempfile
 import os
 import os.path
+import ofxclient.config
 from ofxclient.config import OfxConfig
 from ofxclient import Institution, CreditCardAccount
 import StringIO
@@ -57,6 +58,9 @@ class OfxConfigTests(unittest.TestCase):
         self.assertEqual( got.institution.password, a.institution.password )
 
     def testFieldsSecured(self):
+        if not ofxclient.config.KEYRING_AVAILABLE:
+            return
+
         c = OfxConfig(file_name=self.temp_file.name)
 
         i = Institution(id='1',org='org',url='url',username='user',password='pass')
@@ -67,6 +71,9 @@ class OfxConfigTests(unittest.TestCase):
         self.assertTrue( c.parser.is_secure_option(a.local_id(),'institution.password') )
 
     def testFieldsRemainUnsecure(self):
+        if not ofxclient.config.KEYRING_AVAILABLE:
+            return
+
         c = OfxConfig(file_name=self.temp_file.name)
         i = Institution(id='1',org='org',url='url',username='user',password='pass')
         a = CreditCardAccount(institution=i,number='12345')
@@ -82,6 +89,9 @@ class OfxConfigTests(unittest.TestCase):
         self.assertFalse( c.parser.is_secure_option(a.local_id(),'institution.password') )
 
     def testResecuredAfterEncryptAccount(self):
+        if not ofxclient.config.KEYRING_AVAILABLE:
+            return
+
         c = OfxConfig(file_name=self.temp_file.name)
         i = Institution(id='1',org='org',url='url',username='user',password='pass')
         a1 = CreditCardAccount(institution=i,number='12345')
