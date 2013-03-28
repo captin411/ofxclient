@@ -13,12 +13,13 @@ def combined_download(accounts, days=60):
 
     out_file = StringIO()
     out_file.write(client.header())
+    out_file.write('<OFX>')
     for a in accounts:
         ofx = a.download(days=days).read()
         stripped = ofx.partition('<OFX>')[2].partition('</OFX>')[0]
         out_file.write(stripped)
 
-    out_file.write("<OFX>")
+    out_file.write("</OFX>")
     out_file.seek(0)
 
     return out_file
