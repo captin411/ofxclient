@@ -1,6 +1,7 @@
 import httplib
 import time
 import urllib2
+import logging
 
 DEFAULT_APP_ID = 'QWIN'
 DEFAULT_APP_VERSION = '2200'
@@ -86,6 +87,9 @@ class Client:
     def post(self, query):
         # N.B. urllib doesn't honor user Content-type, use urllib2
         i = self.institution
+        logging.debug('posting data to %s' % i.url)
+        logging.debug('---- request ----')
+        logging.debug(query)
         garbage, path = urllib2.splittype(i.url)
         host, selector = urllib2.splithost(path)
         h = httplib.HTTPSConnection(host)
@@ -96,6 +100,9 @@ class Client:
                   })
         res = h.getresponse()
         response = res.read()
+        logging.debug('---- response ----')
+        logging.debug(res.__dict__)
+        logging.debug(response)
         res.close()
 
         return response
