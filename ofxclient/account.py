@@ -1,6 +1,6 @@
 from ofxparse import OfxParser, AccountType
 import datetime
-import StringIO
+from io import BytesIO
 import time
 import hashlib
 
@@ -59,9 +59,9 @@ class Account(object):
 
         :rtype: string
         """
-        return hashlib.sha256("%s%s" % (
+        return hashlib.sha256(("%s%s" % (
             self.institution.local_id(),
-            self.number)).hexdigest()
+            self.number)).encode()).hexdigest()
 
     def number_masked(self):
         """Masked version of the account number for privacy.
@@ -85,14 +85,14 @@ class Account(object):
 
         :param days: Number of days to look back at
         :type days: integer
-        :rtype: :py:class:`StringIO.StringIO`
+        :rtype: :py:class:`BytesIO`
 
         """
         days_ago = datetime.datetime.now() - datetime.timedelta(days=days)
         as_of = time.strftime("%Y%m%d", days_ago.timetuple())
         query = self._download_query(as_of=as_of)
         response = self.institution.client().post(query)
-        return StringIO.StringIO(response)
+        return BytesIO(response)
 
     def download_parsed(self, days=60):
         """Downloaded OFX response parsed by :py:meth:`OfxParser.parse`

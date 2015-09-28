@@ -1,5 +1,5 @@
 from ofxclient.client import Client
-from StringIO import StringIO
+from io import StringIO
 
 
 def combined_download(accounts, days=60):

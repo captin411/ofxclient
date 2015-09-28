@@ -1,6 +1,6 @@
 from __future__ import with_statement
 from ofxclient.account import Account
-from ConfigParser import ConfigParser
+from configparser import ConfigParser
 import os
 import os.path
 
@@ -44,7 +44,7 @@ class SecurableConfigParser(ConfigParser):
 
     def __init__(self, keyring_name='ofxclient',
                  keyring_available=KEYRING_AVAILABLE, **kwargs):
-        ConfigParser.__init__(self)
+        ConfigParser.__init__(self, interpolation = None)
         self.keyring_name = keyring_name
         self.keyring_available = keyring_available
         self._unsaved = {}

@@ -1,6 +1,6 @@
 import unittest
 from ofxclient.config import SecurableConfigParser
-from ConfigParser import ConfigParser, NoOptionError
+from configparser import ConfigParser, NoOptionError
 
 def makeConfig(keyring_available=True,**kwargs):
     conf = None
