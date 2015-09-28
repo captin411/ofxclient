@@ -1,6 +1,14 @@
-import httplib
+import http.client
 import time
-import urllib2
+
+try:
+    # Python3 case
+    from urllib.parse import splittype, splithost
+except ImportError:
+    # Python2 case
+    # N.B. urllib doesn't honor user Content-type, use urllib2
+    from urllib2 import splittype, splithost
+
 import logging
 
 DEFAULT_APP_ID = 'QWIN'
@@ -85,14 +93,13 @@ class Client:
         return self.authenticated_query(self._acctreq(date))
 
     def post(self, query):
-        # N.B. urllib doesn't honor user Content-type, use urllib2
         i = self.institution
         logging.debug('posting data to %s' % i.url)
         logging.debug('---- request ----')
         logging.debug(query)
-        garbage, path = urllib2.splittype(i.url)
-        host, selector = urllib2.splithost(path)
-        h = httplib.HTTPSConnection(host)
+        garbage, path = splittype(i.url)
+        host, selector = splithost(path)
+        h = http.client.HTTPSConnection(host)
         h.request('POST', selector, query,
                   {
                       "Content-type": "application/x-ofx",

@@ -1,8 +1,8 @@
-import StringIO
+from io import BytesIO
 import hashlib
 from ofxclient.client import Client
 from ofxparse import OfxParser
-from BeautifulSoup import BeautifulStoneSoup
+from bs4 import BeautifulSoup
 
 
 class Institution(object):
@@ -77,9 +77,9 @@ class Institution(object):
 
         :rtype: string
         """
-        return hashlib.sha256("%s%s" % (
+        return hashlib.sha256(("%s%s" % (
             self.id,
-            self.username)).hexdigest()
+            self.username)).encode()).hexdigest()
 
     def _default_description(self):
         return self.org
@@ -105,7 +105,7 @@ class Institution(object):
         client = self.client()
         query = client.authenticated_query(username=u, password=p)
         res = client.post(query)
-        ofx = BeautifulStoneSoup(res)
+        ofx = BeautifulSoup(res, 'lxml')
 
         sonrs = ofx.find('sonrs')
         code = int(sonrs.find('code').contents[0].strip())
@@ -129,7 +129,7 @@ class Institution(object):
         client = self.client()
         query = client.account_list_query()
         resp = client.post(query)
-        resp_handle = StringIO.StringIO(resp)
+        resp_handle = BytesIO(resp)
 
         parsed = OfxParser.parse(resp_handle)
 
