@@ -7,5 +7,5 @@ python:
   - "3.4"
   - "3.5"
 install:
-  - pip install . --use-mirrors
+  - pip install .
 script: nosetests --verbose tests/*.py
