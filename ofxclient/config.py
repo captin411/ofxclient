@@ -6,8 +6,12 @@ import os.path
 
 try:
     import keyring
+    keyring.get_password('is-backend','configured?')
     KEYRING_AVAILABLE = True
-except:
+except RuntimeError:
+    # no keyring backend found
+    KEYRING_AVAILABLE = False
+except ImportError:
     KEYRING_AVAILABLE = False
 
 try:
