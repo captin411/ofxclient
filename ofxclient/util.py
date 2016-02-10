@@ -1,5 +1,13 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
+try:
+    # python 3
+    from io import StringIO
+except ImportError:
+    # python 2
+    from StringIO import StringIO
+
 from ofxclient.client import Client
-from StringIO import StringIO
 
 
 def combined_download(accounts, days=60):

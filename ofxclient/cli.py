@@ -1,19 +1,24 @@
-from ofxclient.account import BankAccount, BrokerageAccount, CreditCardAccount
-from ofxclient.institution import Institution
-from ofxclient.util import combined_download
-from ofxhome import OFXHome
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import argparse
-import config
 import getpass
+import io
+import logging
 import os
 import os.path
-import client
 import sys
+
+from ofxhome import OFXHome
+
+from ofxclient.account import BankAccount, BrokerageAccount, CreditCardAccount
+from ofxclient.config import OfxConfig
+from ofxclient.institution import Institution
+from ofxclient.util import combined_download
 
 AUTO_OPEN_DOWNLOADS = 1
 DOWNLOAD_DAYS = 30
 
-GlobalConfig = config.OfxConfig()
+GlobalConfig = OfxConfig()
 
 
 def run():
@@ -24,7 +29,11 @@ def run():
     parser.add_argument('-a', '--account', choices=account_ids)
     parser.add_argument('-d', '--download', type=argparse.FileType('wb', 0))
     parser.add_argument('-o', '--open', action='store_true')
+    parser.add_argument('-v', '--verbose', action='store_true')
     args = parser.parse_args()
+
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
 
     if args.download:
         if accounts:
@@ -38,7 +47,7 @@ def run():
                 open_with_ofx_handler(args.download.name)
             sys.exit(0)
         else:
-            print "no accounts configured"
+            print("no accounts configured")
 
     main_menu()
 
@@ -63,14 +72,14 @@ def main_menu():
             add_account_menu()
         elif choice == 'd':
             if not accounts:
-                print "no accounts on file"
+                print("no accounts on file")
             else:
                 ofxdata = combined_download(accounts, days=DOWNLOAD_DAYS)
                 wrote = write_and_handle_download(
                     ofxdata,
                     'combined_download.ofx'
                 )
-                print "wrote: %s" % wrote
+                print("wrote: %s" % wrote)
         elif choice in ['q', '']:
             return
         elif int(choice) < len(accounts):
@@ -109,32 +118,32 @@ def view_account_menu(account):
         institution = account.institution
         client = institution.client()
 
-        print "Overview:"
-        print "  Name:           %s" % account.description
-        print "  Account Number: %s" % account.number_masked()
-        print "  Institution:    %s" % institution.description
-        print "  Main Type:      %s" % str(type(account))
+        print("Overview:")
+        print("  Name:           %s" % account.description)
+        print("  Account Number: %s" % account.number_masked())
+        print("  Institution:    %s" % institution.description)
+        print("  Main Type:      %s" % str(type(account)))
         if hasattr(account, 'routing_number'):
-            print "  Routing Number: %s" % account.routing_number
-            print "  Sub Type:       %s" % account.account_type
+            print("  Routing Number: %s" % account.routing_number)
+            print("  Sub Type:       %s" % account.account_type)
         if hasattr(account, 'broker_id'):
-            print "  Broker ID:      %s" % account.broker_id
+            print("  Broker ID:      %s" % account.broker_id)
 
-        print "Nerdy Info:"
-        print "  Download Up To:        %s days" % DOWNLOAD_DAYS
-        print "  Username:              %s" % institution.username
-        print "  Local Account ID:      %s" % account.local_id()
-        print "  Local Institution ID:  %s" % institution.local_id()
-        print "  FI Id:                 %s" % institution.id
-        print "  FI Org:                %s" % institution.org
-        print "  FI Url:                %s" % institution.url
+        print("Nerdy Info:")
+        print("  Download Up To:        %s days" % DOWNLOAD_DAYS)
+        print("  Username:              %s" % institution.username)
+        print("  Local Account ID:      %s" % account.local_id())
+        print("  Local Institution ID:  %s" % institution.local_id())
+        print("  FI Id:                 %s" % institution.id)
+        print("  FI Org:                %s" % institution.org)
+        print("  FI Url:                %s" % institution.url)
         if institution.broker_id:
-            print "  FI Broker Id:          %s" % institution.broker_id
-        print "  Client Id:             %s" % client.id
-        print "  App Ver:               %s" % client.app_version
-        print "  App Id:                %s" % client.app_id
-        print "  OFX Ver:               %s" % client.ofx_version
-        print "  Config File:           %s" % GlobalConfig.file_name
+            print("  FI Broker Id:          %s" % institution.broker_id)
+        print("  Client Id:             %s" % client.id)
+        print("  App Ver:               %s" % client.app_version)
+        print("  App Id:                %s" % client.app_id)
+        print("  OFX Ver:               %s" % client.ofx_version)
+        print("  Config File:           %s" % GlobalConfig.file_name)
 
         menu_item('D', 'Download')
         choice = prompt().lower()
@@ -142,7 +151,7 @@ def view_account_menu(account):
             out = account.download(days=DOWNLOAD_DAYS)
             wrote = write_and_handle_download(out,
                                               "%s.ofx" % account.local_id())
-            print "wrote: %s" % wrote
+            print("wrote: %s" % wrote)
         return
 
 
@@ -167,8 +176,8 @@ def login_check_menu(bank_info):
         )
         try:
             i.authenticate()
-        except Exception, e:
-            print "authentication failed: %s" % e
+        except Exception as e:
+            print("authentication failed: %s" % e)
             continue
 
         accounts = i.accounts()
@@ -179,7 +188,7 @@ def login_check_menu(bank_info):
 
 
 def write_and_handle_download(ofx_data, name):
-    outfile = open(name, 'w')
+    outfile = io.open(name, 'w')
     outfile.write(ofx_data.read())
     outfile.close()
     if AUTO_OPEN_DOWNLOADS:
@@ -188,22 +197,27 @@ def write_and_handle_download(ofx_data, name):
 
 
 def prompt(text='choice> '):
-    got = raw_input(text)
+    try:
+        # python 2
+        got = raw_input(text)
+    except NameError:
+        # python 3
+        got = input(text)
     return got
 
 
 def error(text=''):
-    print "!! %s" % text
+    print("!! %s" % text)
 
 
 def menu_item(key, description):
-    print "(%s) %s" % (key, description)
+    print("(%s) %s" % (key, description))
 
 
 def menu_title(name):
-    print "+----------------------------------"
-    print "%s" % name
-    print "+----------------------------------"
+    print("+----------------------------------")
+    print("%s" % name)
+    print("+----------------------------------")
 
 
 def open_with_ofx_handler(filename):

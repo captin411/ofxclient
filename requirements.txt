@@ -1,0 +1,5 @@
+argparse
+beautifulsoup4
+keyring
+ofxhome
+ofxparse

@@ -44,7 +44,7 @@ setup(name='ofxclient',
           "keyring",
           "ofxhome",
           "ofxparse>0.8",
-          "BeautifulSoup>=3.0",
+          "beautifulsoup4",
       ],
       test_suite='tests',
       )

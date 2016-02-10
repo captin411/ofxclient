@@ -23,6 +23,9 @@ pip-log.txt
 .coverage
 .tox
 
+# ofx files in root folder
+/*.ofx
+
 #Translations
 *.mo
 
