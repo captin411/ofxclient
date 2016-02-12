@@ -1,7 +1,7 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [2.0.1] - 2016-02-11
 ### Added
 - Use unicode instead of byte string wherever possible
 - Dropping Python 2.5 support
