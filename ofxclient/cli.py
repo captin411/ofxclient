@@ -90,7 +90,16 @@ def main_menu():
 def add_account_menu():
     menu_title("Add account")
     while 1:
-        query = prompt('enter part of a bank name eg. express> ')
+        print('------')
+        print('Notice')
+        print('------')
+        print('You are about to search for bank connection information')
+        print('on a third party website.  This means you are trusting')
+        print('http://ofxhome.com and their security policies.')
+        print('')
+        print('You will be sending your bank name to this website.')
+        print('------')
+        query = prompt('bank name eg. "express" (enter to exit)> ')
         if query.lower() in ['']:
             return
 
@@ -156,6 +165,16 @@ def view_account_menu(account):
 
 
 def login_check_menu(bank_info):
+    print('------')
+    print('Notice')
+    print('------')
+    print('You are about to test to make sure your username and password')
+    print('are correct.  This means you will be sending it to the URL below.')
+    print('If the URL does not appear to belong to your bank then you should')
+    print('exit this program by hitting CTRL-C.')
+    print('  bank name: %s' % (bank_info['name']))
+    print('  bank url:  %s' % (bank_info['url']))
+    print('------')
     while 1:
         username = ''
         while not username:
