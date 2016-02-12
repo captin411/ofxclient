@@ -1,7 +1,20 @@
-import httplib
-import time
-import urllib2
+from __future__ import absolute_import
+from __future__ import unicode_literals
+try:
+    # python 3
+    from http.client import HTTPSConnection
+except ImportError:
+    # python 2
+    from httplib import HTTPSConnection
 import logging
+import time
+try:
+    # python 3
+    from urllib.parse import splittype, splithost
+except ImportError:
+    # python 2
+    from urllib import splittype, splithost
+import uuid
 
 DEFAULT_APP_ID = 'QWIN'
 DEFAULT_APP_VERSION = '2200'
@@ -11,7 +24,6 @@ LINE_ENDING = "\r\n"
 
 
 def ofx_uid():
-    import uuid
     return str(uuid.uuid4().hex)
 
 
@@ -62,10 +74,7 @@ class Client:
         contents = ['OFX', self._signOn(username=u, password=p)]
         if with_message:
             contents.append(with_message)
-        return str.join(LINE_ENDING, [
-            self.header(),
-            _tag(*contents)
-        ])
+        return LINE_ENDING.join([self.header(), _tag(*contents)])
 
     def bank_account_query(self, number, date, account_type, bank_id):
         """Bank account statement request"""
@@ -85,21 +94,20 @@ class Client:
         return self.authenticated_query(self._acctreq(date))
 
     def post(self, query):
-        # N.B. urllib doesn't honor user Content-type, use urllib2
         i = self.institution
         logging.debug('posting data to %s' % i.url)
         logging.debug('---- request ----')
         logging.debug(query)
-        garbage, path = urllib2.splittype(i.url)
-        host, selector = urllib2.splithost(path)
-        h = httplib.HTTPSConnection(host)
+        garbage, path = splittype(i.url)
+        host, selector = splithost(path)
+        h = HTTPSConnection(host)
         h.request('POST', selector, query,
                   {
                       "Content-type": "application/x-ofx",
                       "Accept": "*/*, application/x-ofx"
                   })
         res = h.getresponse()
-        response = res.read()
+        response = res.read().decode('ascii')
         logging.debug('---- response ----')
         logging.debug(res.__dict__)
         logging.debug(response)
@@ -124,7 +132,7 @@ class Client:
             "NEWFILEUID:"+ofx_uid(),
             ""
         ]
-        return str.join(LINE_ENDING, parts)
+        return LINE_ENDING.join(parts)
 
     """Generate signon message"""
     def _signOn(self, username=None, password=None):
@@ -203,7 +211,7 @@ def _field(tag, value):
 
 
 def _tag(tag, *contents):
-    return str.join(LINE_ENDING, ["<"+tag+">"]+list(contents)+["</"+tag+">"])
+    return LINE_ENDING.join(['<'+tag+'>']+list(contents)+['</'+tag+'>'])
 
 
 def now():

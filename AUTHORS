@@ -1,9 +1,9 @@
-Developers:
+Maintainers:
 David Bartle <captindave@gmail.com>
 
-Shoutouts:
-Big thanks to Jeremy Jongsma for first writing the ofx-ba.py script.  
-
-Jeffrey Paul, thie one other person on the planet that uses my library
-recommended a restructure of the code.  Thanks for waking me from my
-slumber and making me do *actual* work
+Thanks:
+Jeremy Jongsma - The first ofx-ba.py script
+Jeffrey Paul - Encouraging my to improve this module past homebrew status
+@jbms - Jumpstarting the python 3 support
+Rudd-O - Encouraging security review and communication
+Everyone who uses this - I'm honored that you find this hobby project useful

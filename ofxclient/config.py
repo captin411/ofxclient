@@ -1,18 +1,26 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
 from __future__ import with_statement
-from ofxclient.account import Account
-from ConfigParser import ConfigParser
-import os
-import os.path
-
+try:
+    # python 3
+    from configparser import ConfigParser
+except ImportError:
+    # python 2
+    from ConfigParser import ConfigParser
 try:
     import keyring
-    keyring.get_password('is-backend','configured?')
+    keyring.get_password('is-backend', 'configured?')
     KEYRING_AVAILABLE = True
 except RuntimeError:
     # no keyring backend found
     KEYRING_AVAILABLE = False
 except ImportError:
     KEYRING_AVAILABLE = False
+import os
+import os.path
+import sys
+
+from ofxclient.account import Account
 
 try:
     DEFAULT_CONFIG = os.path.expanduser(os.path.join('~', 'ofxclient.ini'))
@@ -21,7 +29,7 @@ except:
 
 
 class SecurableConfigParser(ConfigParser):
-    """:py:class:`ConfigParser.ConfigParser` subclass that knows how to store
+    """:py:class:`ConfigParser` subclass that knows how to store
     options marked as secure into the OS specific
     keyring/keychain.
 
@@ -40,7 +48,7 @@ class SecurableConfigParser(ConfigParser):
       c.add_section('Info')
       c.set('Info','username','bill')
       c.set_secure('Info','password','s3cre7')
-      with open('config.ini','w') as fp:
+      with open('config.ini','wb') as fp:
         c.write(fp)
     """
 
@@ -48,7 +56,12 @@ class SecurableConfigParser(ConfigParser):
 
     def __init__(self, keyring_name='ofxclient',
                  keyring_available=KEYRING_AVAILABLE, **kwargs):
-        ConfigParser.__init__(self)
+        if sys.version_info >= (3,):
+            # python 3
+            ConfigParser.__init__(self, interpolation=None)
+        else:
+            # python 2
+            ConfigParser.__init__(self)
         self.keyring_name = keyring_name
         self.keyring_available = keyring_available
         self._unsaved = {}
@@ -273,7 +286,13 @@ class OfxConfig(object):
         self.file_name = file_name
 
         conf = SecurableConfigParser()
-        conf.readfp(open(self.file_name))
+        with open(self.file_name) as f:
+            if hasattr(conf, 'read_file'):
+                # python 3
+                conf.read_file(f)
+            else:
+                # python 2
+                conf.readfp(f)
         self.parser = conf
 
         return self

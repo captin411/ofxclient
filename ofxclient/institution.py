@@ -1,8 +1,17 @@
-import StringIO
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import hashlib
-from ofxclient.client import Client
+try:
+    # python 3
+    from io import StringIO
+except ImportError:
+    # python 2
+    from StringIO import StringIO
+
+from bs4 import BeautifulSoup
 from ofxparse import OfxParser
-from BeautifulSoup import BeautifulStoneSoup
+
+from ofxclient.client import Client
 
 
 class Institution(object):
@@ -47,7 +56,7 @@ class Institution(object):
       )
 
       for a in inst.accounts():
-          print a.statement(days=5).balance
+          print(a.statement(days=5).balance)
 
 
     """
@@ -77,9 +86,9 @@ class Institution(object):
 
         :rtype: string
         """
-        return hashlib.sha256("%s%s" % (
+        return hashlib.sha256(("%s%s" % (
             self.id,
-            self.username)).hexdigest()
+            self.username)).encode()).hexdigest()
 
     def _default_description(self):
         return self.org
@@ -105,7 +114,7 @@ class Institution(object):
         client = self.client()
         query = client.authenticated_query(username=u, password=p)
         res = client.post(query)
-        ofx = BeautifulStoneSoup(res)
+        ofx = BeautifulSoup(res, 'xml')
 
         sonrs = ofx.find('sonrs')
         code = int(sonrs.find('code').contents[0].strip())
@@ -129,7 +138,7 @@ class Institution(object):
         client = self.client()
         query = client.account_list_query()
         resp = client.post(query)
-        resp_handle = StringIO.StringIO(resp)
+        resp_handle = StringIO(resp)
 
         parsed = OfxParser.parse(resp_handle)
 
