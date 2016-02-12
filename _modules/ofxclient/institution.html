@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>ofxclient.institution &mdash; ofxclient 1.3.7 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/basic.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.3.7',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="top" title="ofxclient 1.3.7 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head>
+  <body role="document">
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html">
+          ofxclient</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Users Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../developer.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contact.html">Contact</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../faq.html">FAQ</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"></ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+              <li class="hidden-sm"></li>
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
+  <h1>Source code for ofxclient.institution</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">unicode_literals</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># python 3</span>
+    <span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="c1"># python 2</span>
+    <span class="kn">from</span> <span class="nn">StringIO</span> <span class="kn">import</span> <span class="n">StringIO</span>
+
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">from</span> <span class="nn">ofxparse</span> <span class="kn">import</span> <span class="n">OfxParser</span>
+
+<span class="kn">from</span> <span class="nn">ofxclient.client</span> <span class="kn">import</span> <span class="n">Client</span>
+
+
+<div class="viewcode-block" id="Institution"><a class="viewcode-back" href="../../ofxclient.Institution.html#ofxclient.Institution">[docs]</a><span class="k">class</span> <span class="nc">Institution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Represents an institution or bank</span>
+
+<span class="sd">    :param id: FI Id</span>
+<span class="sd">    :type id: string</span>
+<span class="sd">    :param org: FI Org</span>
+<span class="sd">    :type org: string</span>
+<span class="sd">    :param url: FI Url</span>
+<span class="sd">    :type url: string</span>
+<span class="sd">    :param username: Customer username or member id</span>
+<span class="sd">    :type username: string</span>
+<span class="sd">    :param password: Customer password or PIN</span>
+<span class="sd">    :type password: string</span>
+<span class="sd">    :param broker_id: FI Broker ID (optional)</span>
+<span class="sd">    :type broker_id: string</span>
+<span class="sd">    :param description: Description of the bank (optional)</span>
+<span class="sd">    :type description: string or None</span>
+<span class="sd">    :param client_args: :py:class:`ofxclient.Client` kwargs (optional)</span>
+<span class="sd">    :type client_args: dict</span>
+
+<span class="sd">    Values for many of the parameters need to come from some sort of</span>
+<span class="sd">    OFX registry which knows about each banks particular setup.</span>
+
+<span class="sd">    For help obtaining this sort of information; please see the</span>
+<span class="sd">    :py:mod:`ofxhome` python module and/or the `OFX Home &lt;http://ofxhome.com&gt;`_</span>
+<span class="sd">    website.</span>
+
+<span class="sd">    Example::</span>
+
+<span class="sd">      from ofxclient import Institution</span>
+
+<span class="sd">      inst = Institution(</span>
+<span class="sd">                id       = &#39;3101&#39;,</span>
+<span class="sd">                org      = &#39;AMEX&#39;,</span>
+<span class="sd">                url      = &#39;https://online.americanexpress.com/myca\</span>
+<span class="sd">                            /ofxdl/desktop/desktop Download.do?\</span>
+<span class="sd">                            request_type=nl_ofxdownload&#39;,</span>
+<span class="sd">                username = &#39;gene&#39;,</span>
+<span class="sd">                password = &#39;wilder&#39;</span>
+<span class="sd">      )</span>
+
+<span class="sd">      for a in inst.accounts():</span>
+<span class="sd">          print(a.statement(days=5).balance)</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+<div class="viewcode-block" id="Institution.__init__"><a class="viewcode-back" href="../../ofxclient.Institution.html#ofxclient.Institution.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">org</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="p">,</span>
+                 <span class="n">broker_id</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">client_args</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">org</span> <span class="o">=</span> <span class="n">org</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">broker_id</span> <span class="o">=</span> <span class="n">broker_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">username</span> <span class="o">=</span> <span class="n">username</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">password</span> <span class="o">=</span> <span class="n">password</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_description</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">client_args</span> <span class="o">=</span> <span class="n">client_args</span></div>
+
+    <span class="k">def</span> <span class="nf">client</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Build a :py:class:`ofxclient.Client` for talking with the bank</span>
+
+<span class="sd">        It implicitly passes in the ``client_args`` that were passed</span>
+<span class="sd">        when instantiating this ``Institution``.</span>
+
+<span class="sd">        :rtype: :py:class:`ofxclient.Client`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Client</span><span class="p">(</span><span class="n">institution</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">client_args</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">local_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Locally generated unique account identifier.</span>
+
+<span class="sd">        :rtype: string</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">((</span><span class="s2">&quot;</span><span class="si">%s%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_default_description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">org</span>
+
+    <span class="k">def</span> <span class="nf">authenticate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">username</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Test the authentication credentials</span>
+
+<span class="sd">        Raises a ``ValueError`` if there is a problem authenticating</span>
+<span class="sd">        with the human readable reason given by the institution.</span>
+
+<span class="sd">        :param username: optional username (use self.username by default)</span>
+<span class="sd">        :type username: string or None</span>
+<span class="sd">        :param password: optional password (use self.password by default)</span>
+<span class="sd">        :type password: string or None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">u</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span>
+        <span class="k">if</span> <span class="n">username</span> <span class="ow">and</span> <span class="n">password</span><span class="p">:</span>
+            <span class="n">u</span> <span class="o">=</span> <span class="n">username</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">password</span>
+
+        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">authenticated_query</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">u</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">ofx</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="s1">&#39;xml&#39;</span><span class="p">)</span>
+
+        <span class="n">sonrs</span> <span class="o">=</span> <span class="n">ofx</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;sonrs&#39;</span><span class="p">)</span>
+        <span class="n">code</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">sonrs</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;code&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="n">sonrs</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;message&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">contents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">status</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">accounts</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Ask the bank for the known :py:class:`ofxclient.Account` list.</span>
+
+<span class="sd">        :rtype: list of :py:class:`ofxclient.Account` objects</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">ofxclient.account</span> <span class="kn">import</span> <span class="n">Account</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">()</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">account_list_query</span><span class="p">()</span>
+        <span class="n">resp</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="n">resp_handle</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span>
+
+        <span class="n">parsed</span> <span class="o">=</span> <span class="n">OfxParser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">resp_handle</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span><span class="n">Account</span><span class="o">.</span><span class="n">from_ofxparse</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">institution</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">parsed</span><span class="o">.</span><span class="n">accounts</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">serialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Serialize predictably for use in configuration storage.</span>
+
+<span class="sd">        Output looks like this::</span>
+
+<span class="sd">          {</span>
+<span class="sd">            &#39;local_id&#39;:    &#39;unique local identifier&#39;,</span>
+<span class="sd">            &#39;id&#39;:          &#39;FI Id&#39;,</span>
+<span class="sd">            &#39;org&#39;:         &#39;FI Org&#39;,</span>
+<span class="sd">            &#39;url&#39;:         &#39;FI OFX Endpoint Url&#39;,</span>
+<span class="sd">            &#39;broker_id&#39;:   &#39;FI Broker Id&#39;,</span>
+<span class="sd">            &#39;username&#39;:    &#39;Customer username&#39;,</span>
+<span class="sd">            &#39;password&#39;:    &#39;Customer password&#39;,</span>
+<span class="sd">            &#39;description&#39;: &#39;descr&#39;,</span>
+<span class="sd">            &#39;client_args&#39;: {</span>
+<span class="sd">                &#39;id&#39;:          &#39;random client id - see Client() for default&#39;,</span>
+<span class="sd">                &#39;app_id&#39;:      &#39;app name - see Client() for default&#39;,</span>
+<span class="sd">                &#39;app_version&#39;: &#39;app version - see Client() for default&#39;,</span>
+<span class="sd">                &#39;ofx_version&#39;: &#39;ofx version - see Client() for default&#39;,</span>
+<span class="sd">            }</span>
+<span class="sd">          }</span>
+
+<span class="sd">        :rtype: nested dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">client</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">client</span><span class="p">()</span>
+        <span class="n">client_args</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="n">client</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s1">&#39;app_id&#39;</span><span class="p">:</span> <span class="n">client</span><span class="o">.</span><span class="n">app_id</span><span class="p">,</span>
+            <span class="s1">&#39;app_version&#39;</span><span class="p">:</span> <span class="n">client</span><span class="o">.</span><span class="n">app_version</span><span class="p">,</span>
+            <span class="s1">&#39;ofx_version&#39;</span><span class="p">:</span> <span class="n">client</span><span class="o">.</span><span class="n">ofx_version</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
+            <span class="s1">&#39;org&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">org</span><span class="p">,</span>
+            <span class="s1">&#39;url&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+            <span class="s1">&#39;broker_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">broker_id</span><span class="p">,</span>
+            <span class="s1">&#39;username&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
+            <span class="s1">&#39;password&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">password</span><span class="p">,</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+            <span class="s1">&#39;client_args&#39;</span><span class="p">:</span> <span class="n">client_args</span><span class="p">,</span>
+            <span class="s1">&#39;local_id&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_id</span><span class="p">()</span>
+        <span class="p">}</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">deserialize</span><span class="p">(</span><span class="n">raw</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Instantiate :py:class:`ofxclient.Institution` from dictionary</span>
+
+<span class="sd">        :param raw: serialized ``Institution``</span>
+<span class="sd">        :param type: dict per :py:method:`~Institution.serialize`</span>
+<span class="sd">        :rtype: subclass of :py:class:`ofxclient.Institution`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Institution</span><span class="p">(</span>
+            <span class="nb">id</span><span class="o">=</span><span class="n">raw</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span>
+            <span class="n">org</span><span class="o">=</span><span class="n">raw</span><span class="p">[</span><span class="s1">&#39;org&#39;</span><span class="p">],</span>
+            <span class="n">url</span><span class="o">=</span><span class="n">raw</span><span class="p">[</span><span class="s1">&#39;url&#39;</span><span class="p">],</span>
+            <span class="n">broker_id</span><span class="o">=</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;broker_id&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">),</span>
+            <span class="n">username</span><span class="o">=</span><span class="n">raw</span><span class="p">[</span><span class="s1">&#39;username&#39;</span><span class="p">],</span>
+            <span class="n">password</span><span class="o">=</span><span class="n">raw</span><span class="p">[</span><span class="s1">&#39;password&#39;</span><span class="p">],</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;description&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">),</span>
+            <span class="n">client_args</span><span class="o">=</span><span class="n">raw</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;client_args&#39;</span><span class="p">,</span> <span class="p">{})</span>
+        <span class="p">)</span></div>
+</pre></div>
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+    </p>
+    <p>
+        &copy; Copyright 2013, David Bartle.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

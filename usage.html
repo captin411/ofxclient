@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -10,13 +9,13 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-2.3.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-2.3.0/css/bootstrap-responsive.min.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '1.3.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -26,9 +25,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-2.3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="ofxclient 1.3.7 documentation" href="index.html" />
     <link rel="next" title="Developer Guide" href="developer.html" />
@@ -39,31 +38,35 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
-<div class="container">
-  
-  <div id="navbar" class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-      <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+  <body role="document">
 
-      <a class="brand" href="index.html">ofxclient</a>
-      <span class="navbar-text pull-left"><b>1.3</b></span>
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          ofxclient</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
+      </div>
 
-      <div class="nav-collapse">
-        <ul class="nav">
-          <li class="divider-vertical"></li>
-          
-            <li class="dropdown globaltoc-container">
-  <a href="index.html"
-     class="dropdown-toggle"
-     data-toggle="dropdown">Site <b class="caret"></b></a>
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
-    ><ul class="current">
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="">Users Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
@@ -73,9 +76,16 @@
 </ul>
 </ul>
 </li>
-            <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"><ul>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">Users Guide</a><ul>
 <li><a class="reference internal" href="#running">Running</a></li>
 <li><a class="reference internal" href="#adding-accounts">Adding Accounts</a></li>
@@ -85,34 +95,50 @@
 </ul>
 </ul>
 </li>
-          
+              
+            
+            
+              
+                
+  <li>
+    <a href="installation.html" title="Previous Chapter: Installation"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Installation</span>
+    </a>
+  </li>
+  <li>
+    <a href="developer.html" title="Next Chapter: Developer Guide"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Developer Guide &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/usage.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
           
             
-  <li><a href="installation.html"
-         title="previous chapter">&laquo; Installation</a></li>
-  <li><a href="developer.html"
-         title="next chapter">Developer Guide &raquo;</a></li>
-          
-          
-            <li>
-  <a href="_sources/usage.txt"
-     rel="nofollow">Source</a></li>
-          
-        </ul>
-
-        
-          
-<form class="navbar-search pull-right" style="margin-bottom:-3px;" action="search.html" method="get">
-  <input type="text" name="q" placeholder="Search" />
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
   <input type="hidden" name="check_keywords" value="yes" />
   <input type="hidden" name="area" value="default" />
 </form>
-        
-      </div>
+          
+        </div>
     </div>
   </div>
 
-  
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
   <div class="section" id="users-guide">
 <h1>Users Guide<a class="headerlink" href="#users-guide" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="running">
@@ -125,14 +151,15 @@
 </div>
 </li>
 <li><p class="first">Follow the prompts at the main menu:</p>
-<div class="highlight-python"><pre>+----------------------------------
+<div class="highlight-python"><div class="highlight"><pre>+----------------------------------
 Main
 Edit ofxclient.ini to
 change descriptions or ofx options
 +----------------------------------
 (A) Add an account
 (Q) Quit
-choice&gt;</pre>
+choice&gt;
+</pre></div>
 </div>
 </li>
 </ol>
@@ -141,15 +168,16 @@ choice&gt;</pre>
 <h2>Adding Accounts<a class="headerlink" href="#adding-accounts" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic">
 <li><p class="first">Hitting <cite>A</cite> on the main menu will allow you to search for an bank name:</p>
-<div class="highlight-python"><pre>choice&gt; A
+<div class="highlight-python"><div class="highlight"><pre>choice&gt; A
 +----------------------------------
 Add account
 +----------------------------------
-enter part of a bank name eg. express&gt;</pre>
+enter part of a bank name eg. express&gt;
+</pre></div>
 </div>
 </li>
 <li><p class="first">Then you can search for a part of a bank name:</p>
-<div class="highlight-python"><pre>enter part of a bank name eg. express&gt; wells
+<div class="highlight-python"><div class="highlight"><pre>enter part of a bank name eg. express&gt; wells
 (0) Wells Fargo
 (1) Wells Fargo Advantage Funds
 (2) Wells Fargo Advisor
@@ -157,7 +185,8 @@ enter part of a bank name eg. express&gt;</pre>
 (4) Wells Fargo Bank
 (5) Wells Fargo Bank 2013
 (6) Wells Fargo Investments, LLC
-(7) Wells Fargo Trust-Investment Mgt</pre>
+(7) Wells Fargo Trust-Investment Mgt
+</pre></div>
 </div>
 </li>
 <li><p class="first">Enter the number of your choice and then enter the username and password for the bank:</p>
@@ -168,7 +197,7 @@ enter part of a bank name eg. express&gt;</pre>
 </div>
 </li>
 <li><p class="first">All accounts at that bank are configured automatically and stored in the config file:</p>
-<div class="highlight-python"><pre>+----------------------------------
+<div class="highlight-python"><div class="highlight"><pre>+----------------------------------
 Main
 Edit ofxclient.ini to
 change descriptions or ofx options
@@ -177,7 +206,8 @@ change descriptions or ofx options
 (A) Add an account
 (D) Download all combined
 (Q) Quit
-choice&gt; q</pre>
+choice&gt; q
+</pre></div>
 </div>
 </li>
 </ol>
@@ -189,11 +219,11 @@ will not have to mess with these values.</p>
 <p>If you run into problems, take a look at the forums at <a class="reference external" href="http://ofxhome.com">ofxhome.com</a>.  Often times others will have run into issues and have posted
 specific configuration settings that have worked for them.</p>
 <p>Note:</p>
-<p>You are probably only interested in the <tt class="docutils literal"><span class="pre">institution.client_args.*</span></tt> settings but feel free to also mess
-around with the <tt class="docutils literal"><span class="pre">description</span></tt> and <tt class="docutils literal"><span class="pre">institution.description</span></tt> settings.  Those control the name of the
-account in the applications.  Do not ever modify the <tt class="docutils literal"><span class="pre">local_id</span></tt> options.</p>
+<p>You are probably only interested in the <code class="docutils literal"><span class="pre">institution.client_args.*</span></code> settings but feel free to also mess
+around with the <code class="docutils literal"><span class="pre">description</span></code> and <code class="docutils literal"><span class="pre">institution.description</span></code> settings.  Those control the name of the
+account in the applications.  Do not ever modify the <code class="docutils literal"><span class="pre">local_id</span></code> options.</p>
 <p>You will need to edit the $HOME/ofxclient.ini file.  Here is an example excerpt from that file:</p>
-<div class="highlight-python"><pre>[f0a14074d33cdf83b4a099bc322dbe2fe19680ca1719425b33de5022]
+<div class="highlight-python"><div class="highlight"><pre>[f0a14074d33cdf83b4a099bc322dbe2fe19680ca1719425b33de5022]
 account_type = CHECKING
 description = Checking
 institution.broker_id =
@@ -210,12 +240,16 @@ institution.url = https://ofxdc.wellsfargo.com/ofx/process.ofx
 institution.username = %{secured}
 local_id = f0a14074d33cdf83b4a099bc322dbe2fe19680ca1719425b33de5022
 number = ******
-routing_number = ******</pre>
+routing_number = ******
+</pre></div>
 </div>
 </div>
 </div>
 
 
+    </div>
+      
+  </div>
 </div>
 <footer class="footer">
   <div class="container">
@@ -225,7 +259,7 @@ routing_number = ******</pre>
     </p>
     <p>
         &copy; Copyright 2013, David Bartle.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.<br/>
     </p>
   </div>
 </footer>

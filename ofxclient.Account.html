@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 
@@ -10,13 +9,13 @@
     
     <link rel="stylesheet" href="_static/basic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-2.3.0/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.3.4/css/bootstrap.min.css" type="text/css" />
+    <link rel="stylesheet" href="_static/bootstrap-3.3.4/css/bootstrap-theme.min.css" type="text/css" />
     <link rel="stylesheet" href="_static/bootstrap-sphinx.css" type="text/css" />
-    <link rel="stylesheet" href="_static/bootstrap-2.3.0/css/bootstrap-responsive.min.css" type="text/css" />
     
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '',
+        URL_ROOT:    './',
         VERSION:     '1.3.7',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
@@ -26,102 +25,129 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/js/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="_static/js/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="_static/js/jquery-fix.js"></script>
-    <script type="text/javascript" src="_static/bootstrap-2.3.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="_static/bootstrap-3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="_static/bootstrap-sphinx.js"></script>
     <link rel="top" title="ofxclient 1.3.7 documentation" href="index.html" />
     <link rel="up" title="Developer Guide" href="developer.html" />
     <link rel="next" title="ofxclient.BankAccount" href="ofxclient.BankAccount.html" />
-    <link rel="prev" title="ofxclient.config.SecurableConfigParser" href="ofxclient.config.SecurableConfigParser.html" />
+    <link rel="prev" title="Developer Guide" href="developer.html" />
 <meta charset='utf-8'>
 <meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
 <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
 <meta name="apple-mobile-web-app-capable" content="yes">
 
   </head>
-  <body>
-<div class="container">
-  
-  <div id="navbar" class="navbar navbar-fixed-top">
-    <div class="navbar-inner">
-      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
-      <button class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
+  <body role="document">
 
-      <a class="brand" href="index.html">ofxclient</a>
-      <span class="navbar-text pull-left"><b>1.3</b></span>
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">
+          ofxclient</a>
+        <span class="navbar-text navbar-version pull-left"><b>1.3</b></span>
+      </div>
 
-      <div class="nav-collapse">
-        <ul class="nav">
-          <li class="divider-vertical"></li>
-          
-            <li class="dropdown globaltoc-container">
-  <a href="index.html"
-     class="dropdown-toggle"
-     data-toggle="dropdown">Site <b class="caret"></b></a>
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="index.html">Site <b class="caret"></b></a>
   <ul class="dropdown-menu globaltoc"
-    ><ul>
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Users Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="developer.html">Developer Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contact.html">Contact</a></li>
 <li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 </ul>
 </li>
-            <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">Page <b class="caret"></b></a>
-  <ul class="dropdown-menu localtoc"><ul>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
 <li><a class="reference internal" href="#">ofxclient.Account</a></li>
 </ul>
 </ul>
 </li>
-          
+              
+            
+            
+              
+                
+  <li>
+    <a href="developer.html" title="Previous Chapter: Developer Guide"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Developer Guide</span>
+    </a>
+  </li>
+  <li>
+    <a href="ofxclient.BankAccount.html" title="Next Chapter: ofxclient.BankAccount"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">ofxclient.Ban... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+              <li class="hidden-sm">
+<div id="sourcelink">
+  <a href="_sources/ofxclient.Account.txt"
+     rel="nofollow">Source</a>
+</div></li>
+            
+          </ul>
+
           
             
-  <li><a href="ofxclient.config.SecurableConfigParser.html"
-         title="previous chapter">&laquo; ofxclient.config.SecurableConfigParser</a></li>
-  <li><a href="ofxclient.BankAccount.html"
-         title="next chapter">ofxclient.BankAccount &raquo;</a></li>
-          
-          
-            <li>
-  <a href="_sources/ofxclient.Account.txt"
-     rel="nofollow">Source</a></li>
-          
-        </ul>
-
-        
-          
-<form class="navbar-search pull-right" style="margin-bottom:-3px;" action="search.html" method="get">
-  <input type="text" name="q" placeholder="Search" />
+<form class="navbar-form navbar-right" action="search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
   <input type="hidden" name="check_keywords" value="yes" />
   <input type="hidden" name="area" value="default" />
 </form>
-        
-      </div>
+          
+        </div>
     </div>
   </div>
 
-  
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 content">
+      
   <div class="section" id="ofxclient-account">
 <h1>ofxclient.Account<a class="headerlink" href="#ofxclient-account" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="ofxclient.Account">
-<em class="property">class </em><tt class="descclassname">ofxclient.</tt><tt class="descname">Account</tt><big>(</big><em>number</em>, <em>institution</em>, <em>description=None</em><big>)</big><a class="headerlink" href="#ofxclient.Account" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">ofxclient.</code><code class="descname">Account</code><span class="sig-paren">(</span><em>number</em>, <em>institution</em>, <em>description=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ofxclient/account.html#Account"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ofxclient.Account" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for accounts at an institution</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>number</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#string" title="(in Python v2.7)"><em>string</em></a>) &#8211; The account number</li>
-<li><strong>institution</strong> (<a class="reference internal" href="ofxclient.Institution.html#ofxclient.Institution" title="ofxclient.Institution"><tt class="xref py py-class docutils literal"><span class="pre">ofxclient.Institution</span></tt></a> object) &#8211; The bank this belongs to</li>
+<li><strong>number</strong> (<a class="reference external" href="http://docs.python.org/library/string.html#module-string" title="(in Python v2.7)"><em>string</em></a>) &#8211; The account number</li>
+<li><strong>institution</strong> (<a class="reference internal" href="ofxclient.Institution.html#ofxclient.Institution" title="ofxclient.Institution"><code class="xref py py-class docutils literal"><span class="pre">ofxclient.Institution</span></code></a> object) &#8211; The bank this belongs to</li>
 <li><strong>description</strong> (<em>string or None</em>) &#8211; optional account description</li>
 </ul>
 </td>
@@ -132,36 +158,36 @@
 sub-classes are instantiated.</p>
 <p>In most cases these subclasses are either being deserialized from a
 config file entry, a serialization hash, or returned by the
-<tt class="xref py py-meth docutils literal"><span class="pre">ofxclient.Institution.accounts()</span></tt> method.</p>
+<code class="xref py py-meth docutils literal"><span class="pre">ofxclient.Institution.accounts()</span></code> method.</p>
 <p>Example from a saved config entry:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">ofxclient.config</span> <span class="kn">import</span> <span class="n">OfxConfig</span>
-<span class="n">account</span> <span class="o">=</span> <span class="n">OfxConfig</span><span class="p">()</span><span class="o">.</span><span class="n">account</span><span class="p">(</span><span class="s">&#39;local_id() string&#39;</span><span class="p">)</span>
+<span class="n">account</span> <span class="o">=</span> <span class="n">OfxConfig</span><span class="p">()</span><span class="o">.</span><span class="n">account</span><span class="p">(</span><span class="s1">&#39;local_id() string&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Example of deserialization:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">ofxclient</span> <span class="kn">import</span> <span class="n">BankAccount</span>
-<span class="c"># assume &#39;inst&#39; is an Institution()</span>
-<span class="n">a1</span>    <span class="o">=</span> <span class="n">BankAccount</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="s">&#39;asdf&#39;</span><span class="p">,</span><span class="n">institution</span><span class="o">=</span><span class="n">inst</span><span class="p">)</span>
+<span class="c1"># assume &#39;inst&#39; is an Institution()</span>
+<span class="n">a1</span>    <span class="o">=</span> <span class="n">BankAccount</span><span class="p">(</span><span class="n">number</span><span class="o">=</span><span class="s1">&#39;asdf&#39;</span><span class="p">,</span><span class="n">institution</span><span class="o">=</span><span class="n">inst</span><span class="p">)</span>
 <span class="n">data1</span> <span class="o">=</span> <span class="n">a1</span><span class="o">.</span><span class="n">serialize</span><span class="p">()</span>
 <span class="n">a2</span>    <span class="o">=</span> <span class="n">Account</span><span class="o">.</span><span class="n">deserialize</span><span class="p">(</span><span class="n">data1</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Example by querying the bank directly:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">ofxclient</span> <span class="kn">import</span> <span class="n">Institution</span>
-<span class="c"># assume an Institution() is configured with</span>
-<span class="c"># a username/password etc</span>
+<span class="c1"># assume an Institution() is configured with</span>
+<span class="c1"># a username/password etc</span>
 <span class="n">accounts</span> <span class="o">=</span> <span class="n">institution</span><span class="o">.</span><span class="n">accounts</span><span class="p">()</span>
 </pre></div>
 </div>
-<div class="admonition-see-also admonition seealso">
+<div class="admonition seealso">
 <p class="first admonition-title">See also</p>
-<p class="last"><a class="reference internal" href="ofxclient.BankAccount.html#ofxclient.BankAccount" title="ofxclient.BankAccount"><tt class="xref py py-class docutils literal"><span class="pre">ofxclient.BankAccount</span></tt></a>
-<a class="reference internal" href="ofxclient.BrokerageAccount.html#ofxclient.BrokerageAccount" title="ofxclient.BrokerageAccount"><tt class="xref py py-class docutils literal"><span class="pre">ofxclient.BrokerageAccount</span></tt></a>
-<a class="reference internal" href="ofxclient.CreditCardAccount.html#ofxclient.CreditCardAccount" title="ofxclient.CreditCardAccount"><tt class="xref py py-class docutils literal"><span class="pre">ofxclient.CreditCardAccount</span></tt></a></p>
+<p class="last"><a class="reference internal" href="ofxclient.BankAccount.html#ofxclient.BankAccount" title="ofxclient.BankAccount"><code class="xref py py-class docutils literal"><span class="pre">ofxclient.BankAccount</span></code></a>
+<a class="reference internal" href="ofxclient.BrokerageAccount.html#ofxclient.BrokerageAccount" title="ofxclient.BrokerageAccount"><code class="xref py py-class docutils literal"><span class="pre">ofxclient.BrokerageAccount</span></code></a>
+<a class="reference internal" href="ofxclient.CreditCardAccount.html#ofxclient.CreditCardAccount" title="ofxclient.CreditCardAccount"><code class="xref py py-class docutils literal"><span class="pre">ofxclient.CreditCardAccount</span></code></a></p>
 </div>
 <dl class="method">
 <dt id="ofxclient.Account.__init__">
-<tt class="descname">__init__</tt><big>(</big><em>number</em>, <em>institution</em>, <em>description=None</em><big>)</big><a class="headerlink" href="#ofxclient.Account.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>number</em>, <em>institution</em>, <em>description=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ofxclient/account.html#Account.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#ofxclient.Account.__init__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <p class="rubric">Methods</p>
@@ -171,38 +197,38 @@ config file entry, a serialization hash, or returned by the
 <col width="90%" />
 </colgroup>
 <tbody valign="top">
-<tr class="row-odd"><td><a class="reference internal" href="#ofxclient.Account.__init__" title="ofxclient.Account.__init__"><tt class="xref py py-obj docutils literal"><span class="pre">__init__</span></tt></a>(number,&nbsp;institution[,&nbsp;description])</td>
+<tr class="row-odd"><td><a class="reference internal" href="#ofxclient.Account.__init__" title="ofxclient.Account.__init__"><code class="xref py py-obj docutils literal"><span class="pre">__init__</span></code></a>(number,&nbsp;institution[,&nbsp;description])</td>
 <td></td>
 </tr>
-<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">deserialize</span></tt>(raw)</td>
-<td>Instantiate <a class="reference internal" href="#ofxclient.Account" title="ofxclient.Account"><tt class="xref py py-class docutils literal"><span class="pre">ofxclient.Account</span></tt></a> subclass from dictionary</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">deserialize</span></code>(raw)</td>
+<td>Instantiate <a class="reference internal" href="#ofxclient.Account" title="ofxclient.Account"><code class="xref py py-class docutils literal"><span class="pre">ofxclient.Account</span></code></a> subclass from dictionary</td>
 </tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">download</span></tt>([days])</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">download</span></code>([days])</td>
 <td>Downloaded OFX response for the given time range</td>
 </tr>
-<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">download_parsed</span></tt>([days])</td>
-<td>Downloaded OFX response parsed by <tt class="xref py py-meth docutils literal"><span class="pre">ofxparser.OfxParser.parse()</span></tt></td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">download_parsed</span></code>([days])</td>
+<td>Downloaded OFX response parsed by <code class="xref py py-meth docutils literal"><span class="pre">OfxParser.parse()</span></code></td>
 </tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">from_ofxparse</span></tt>(data,&nbsp;institution)</td>
-<td>Instantiate <a class="reference internal" href="#ofxclient.Account" title="ofxclient.Account"><tt class="xref py py-class docutils literal"><span class="pre">ofxclient.Account</span></tt></a> subclass from ofxparse module</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">from_ofxparse</span></code>(data,&nbsp;institution)</td>
+<td>Instantiate <a class="reference internal" href="#ofxclient.Account" title="ofxclient.Account"><code class="xref py py-class docutils literal"><span class="pre">ofxclient.Account</span></code></a> subclass from ofxparse</td>
 </tr>
-<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">local_id</span></tt>()</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">local_id</span></code>()</td>
 <td>Locally generated unique account identifier.</td>
 </tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">long_description</span></tt>()</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">long_description</span></code>()</td>
 <td>Long description of the account (includes institution description).</td>
 </tr>
-<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">number_masked</span></tt>()</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">number_masked</span></code>()</td>
 <td>Masked version of the account number for privacy.</td>
 </tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">serialize</span></tt>()</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">serialize</span></code>()</td>
 <td>Serialize predictably for use in configuration storage.</td>
 </tr>
-<tr class="row-even"><td><tt class="xref py py-obj docutils literal"><span class="pre">statement</span></tt>([days])</td>
-<td>Download the <tt class="xref py py-class docutils literal"><span class="pre">ofxparse.Statement</span></tt> given the time range</td>
+<tr class="row-even"><td><code class="xref py py-obj docutils literal"><span class="pre">statement</span></code>([days])</td>
+<td>Download the <code class="xref py py-class docutils literal"><span class="pre">ofxparse.Statement</span></code> given the time range</td>
 </tr>
-<tr class="row-odd"><td><tt class="xref py py-obj docutils literal"><span class="pre">transactions</span></tt>([days])</td>
-<td>Download a a list of <tt class="xref py py-class docutils literal"><span class="pre">ofxparse.Transaction</span></tt> objects</td>
+<tr class="row-odd"><td><code class="xref py py-obj docutils literal"><span class="pre">transactions</span></code>([days])</td>
+<td>Download a a list of <code class="xref py py-class docutils literal"><span class="pre">ofxparse.Transaction</span></code> objects</td>
 </tr>
 </tbody>
 </table>
@@ -211,6 +237,9 @@ config file entry, a serialization hash, or returned by the
 </div>
 
 
+    </div>
+      
+  </div>
 </div>
 <footer class="footer">
   <div class="container">
@@ -220,7 +249,7 @@ config file entry, a serialization hash, or returned by the
     </p>
     <p>
         &copy; Copyright 2013, David Bartle.<br/>
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3.5.<br/>
     </p>
   </div>
 </footer>
