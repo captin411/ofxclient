@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+- Dockerfile
+- Lock versions of dependencies in requirements.txt
+- Force parsing backend to 'lxml' HTML
+
 ## [2.0.1] - 2016-02-11
 ### Added
 - Use unicode instead of byte string wherever possible

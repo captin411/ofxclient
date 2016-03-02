@@ -18,19 +18,27 @@ from ofxclient.util import combined_download
 AUTO_OPEN_DOWNLOADS = 1
 DOWNLOAD_DAYS = 30
 
-GlobalConfig = OfxConfig()
+GlobalConfig = None
 
 
 def run():
-    accounts = GlobalConfig.accounts()
-    account_ids = [a.local_id() for a in accounts]
+    global GlobalConfig
 
     parser = argparse.ArgumentParser(prog='ofxclient')
-    parser.add_argument('-a', '--account', choices=account_ids)
+    parser.add_argument('-a', '--account')
     parser.add_argument('-d', '--download', type=argparse.FileType('wb', 0))
     parser.add_argument('-o', '--open', action='store_true')
     parser.add_argument('-v', '--verbose', action='store_true')
+    parser.add_argument('-c', '--config', help='config file path')
     args = parser.parse_args()
+
+    if args.config:
+        GlobalConfig = OfxConfig(file_name=args.config)
+    else:
+        GlobalConfig = OfxConfig()
+
+    accounts = GlobalConfig.accounts()
+    account_ids = [a.local_id() for a in accounts]
 
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)

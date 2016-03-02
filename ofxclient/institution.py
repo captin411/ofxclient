@@ -114,7 +114,7 @@ class Institution(object):
         client = self.client()
         query = client.authenticated_query(username=u, password=p)
         res = client.post(query)
-        ofx = BeautifulSoup(res, 'xml')
+        ofx = BeautifulSoup(res, 'lxml')
 
         sonrs = ofx.find('sonrs')
         code = int(sonrs.find('code').contents[0].strip())
