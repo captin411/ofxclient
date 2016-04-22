@@ -189,8 +189,11 @@ def login_check_menu(bank_info):
             username = prompt('username> ')
 
         password = ''
+        prompt_text = 'password> '
+        if os.name == 'nt' and sys.version_info < (3, 0):
+            prompt_text = prompt_text.encode('utf8')
         while not password:
-            password = getpass.getpass('password> ')
+            password = getpass.getpass(prompt=prompt_text)
 
         i = Institution(
             id=bank_info['fid'],
