@@ -107,7 +107,7 @@ class Client:
                       "Accept": "*/*, application/x-ofx"
                   })
         res = h.getresponse()
-        response = res.read().decode('ascii')
+        response = res.read().decode('ascii', 'ignore')
         logging.debug('---- response ----')
         logging.debug(res.__dict__)
         logging.debug(response)
