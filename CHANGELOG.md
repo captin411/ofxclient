@@ -1,7 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [2.0.2] - 2015-05-30
+- Bug: fix get password on windows
+- Bug: ignore unexpected chars when decoding
 - Dockerfile
 - Lock versions of dependencies in requirements.txt
 - Force parsing backend to 'lxml' HTML
