@@ -9,7 +9,7 @@ COPY keyringrc.cfg /root/.local/share/python_keyring
 RUN python setup.py install
 
 VOLUME /export
-VOLUME /root/.local/share/pythong_keyring
+VOLUME /root/.local/share/python_keyring
 
 # so that ofxclient will download to the shared volume by default
 WORKDIR /export
