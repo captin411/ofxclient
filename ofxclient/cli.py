@@ -14,6 +14,7 @@ from ofxclient.account import BankAccount, BrokerageAccount, CreditCardAccount
 from ofxclient.config import OfxConfig
 from ofxclient.institution import Institution
 from ofxclient.util import combined_download
+from ofxclient.client import DEFAULT_OFX_VERSION
 
 AUTO_OPEN_DOWNLOADS = 1
 DOWNLOAD_DAYS = 30
@@ -30,6 +31,8 @@ def run():
     parser.add_argument('-o', '--open', action='store_true')
     parser.add_argument('-v', '--verbose', action='store_true')
     parser.add_argument('-c', '--config', help='config file path')
+    parser.add_argument('--download-days', default=DOWNLOAD_DAYS, type=int, help='number of days to download (default: %s)' % DOWNLOAD_DAYS)
+    parser.add_argument('--ofx-version', default=DEFAULT_OFX_VERSION, type=int, help='ofx version to use for new accounts (default: %s)' % DEFAULT_OFX_VERSION)
     args = parser.parse_args()
 
     if args.config:
@@ -47,9 +50,9 @@ def run():
         if accounts:
             if args.account:
                 a = GlobalConfig.account(args.account)
-                ofxdata = a.download(days=DOWNLOAD_DAYS)
+                ofxdata = a.download(days=args.download_days)
             else:
-                ofxdata = combined_download(accounts, days=DOWNLOAD_DAYS)
+                ofxdata = combined_download(accounts, days=args.download_days)
             args.download.write(ofxdata.read())
             if args.open:
                 open_with_ofx_handler(args.download.name)
@@ -57,10 +60,10 @@ def run():
         else:
             print("no accounts configured")
 
-    main_menu()
+    main_menu(args)
 
 
-def main_menu():
+def main_menu(args):
     while 1:
         menu_title("Main\nEdit %s to\nchange descriptions or ofx options" %
                    GlobalConfig.file_name)
@@ -77,12 +80,12 @@ def main_menu():
 
         choice = prompt().lower()
         if choice == 'a':
-            add_account_menu()
+            add_account_menu(args)
         elif choice == 'd':
             if not accounts:
                 print("no accounts on file")
             else:
-                ofxdata = combined_download(accounts, days=DOWNLOAD_DAYS)
+                ofxdata = combined_download(accounts, days=args.download_days)
                 wrote = write_and_handle_download(
                     ofxdata,
                     'combined_download.ofx'
@@ -92,10 +95,10 @@ def main_menu():
             return
         elif int(choice) < len(accounts):
             account = accounts[int(choice)]
-            view_account_menu(account)
+            view_account_menu(account, args)
 
 
-def add_account_menu():
+def add_account_menu(args):
     menu_title("Add account")
     while 1:
         print('------')
@@ -124,11 +127,11 @@ def add_account_menu():
                 return
             elif int(choice) < len(found):
                 bank = OFXHome.lookup(found[int(choice)]['id'])
-                if login_check_menu(bank):
+                if login_check_menu(bank, args):
                     return
 
 
-def view_account_menu(account):
+def view_account_menu(account, args):
     while 1:
         menu_title(account.long_description())
 
@@ -147,7 +150,7 @@ def view_account_menu(account):
             print("  Broker ID:      %s" % account.broker_id)
 
         print("Nerdy Info:")
-        print("  Download Up To:        %s days" % DOWNLOAD_DAYS)
+        print("  Download Up To:        %s days" % args.download_days)
         print("  Username:              %s" % institution.username)
         print("  Local Account ID:      %s" % account.local_id())
         print("  Local Institution ID:  %s" % institution.local_id())
@@ -165,14 +168,14 @@ def view_account_menu(account):
         menu_item('D', 'Download')
         choice = prompt().lower()
         if choice == 'd':
-            out = account.download(days=DOWNLOAD_DAYS)
+            out = account.download(days=args.download_days)
             wrote = write_and_handle_download(out,
                                               "%s.ofx" % account.local_id())
             print("wrote: %s" % wrote)
         return
 
 
-def login_check_menu(bank_info):
+def login_check_menu(bank_info, args):
     print('------')
     print('Notice')
     print('------')
@@ -202,7 +205,8 @@ def login_check_menu(bank_info):
             broker_id=bank_info['brokerid'],
             description=bank_info['name'],
             username=username,
-            password=password
+            password=password,
+            client_args={ofx_version: args.ofx_version}
         )
         try:
             i.authenticate()
