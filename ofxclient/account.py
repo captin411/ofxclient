@@ -5,11 +5,11 @@ import hashlib
 try:
     # python 3
     from io import StringIO, BytesIO
-	IS_PYTHON_2 = False
+    IS_PYTHON_2 = False
 except ImportError:
     # python 2
     from StringIO import StringIO
-	IS_PYTHON_2 = True
+    IS_PYTHON_2 = True
 import time
 
 from ofxparse import OfxParser, AccountType
@@ -111,10 +111,10 @@ class Account(object):
         :type days: integer
         :rtype: :py:class:`ofxparser.Ofx`
         """
-		if IS_PYTHON_2:
-			return OfxParser.parse(self.download(days=days))
+        if IS_PYTHON_2:
+            return OfxParser.parse(self.download(days=days))
         else:
-			return OfxParser.parse(BytesIO((((self.download(days=days)).read()).encode())))
+            return OfxParser.parse(BytesIO((((self.download(days=days)).read()).encode())))
 
     def statement(self, days=60):
         """Download the :py:class:`ofxparse.Statement` given the time range
