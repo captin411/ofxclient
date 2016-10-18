@@ -3,10 +3,12 @@ from __future__ import unicode_literals
 import hashlib
 try:
     # python 3
-    from io import StringIO
+    from io import StringIO, BytesIO
+    IS_PYTHON_2 = False
 except ImportError:
     # python 2
     from StringIO import StringIO
+    IS_PYTHON_2 = Trues
 
 from bs4 import BeautifulSoup
 from ofxparse import OfxParser
@@ -140,7 +142,10 @@ class Institution(object):
         resp = client.post(query)
         resp_handle = StringIO(resp)
 
-        parsed = OfxParser.parse(resp_handle)
+        if IS_PYTHON_2:
+            parsed = OfxParser.parse(resp_handle)
+        else:
+            parsed = OfxParser.parse(BytesIO((((resp_handle).read()).encode())))
 
         return [Account.from_ofxparse(a, institution=self)
                 for a in parsed.accounts]
