@@ -100,7 +100,7 @@ class Client:
         logging.debug(query)
         garbage, path = splittype(i.url)
         host, selector = splithost(path)
-        h = HTTPSConnection(host)
+        h = HTTPSConnection(host, timeout=60)
         h.request('POST', selector, query,
                   {
                       "Content-type": "application/x-ofx",
