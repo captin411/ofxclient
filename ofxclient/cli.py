@@ -206,7 +206,7 @@ def login_check_menu(bank_info, args):
             description=bank_info['name'],
             username=username,
             password=password,
-            client_args={ofx_version: args.ofx_version}
+            client_args={'ofx_version': args.ofx_version}
         )
         try:
             i.authenticate()
