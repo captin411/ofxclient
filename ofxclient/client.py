@@ -101,12 +101,23 @@ class Client:
         garbage, path = splittype(i.url)
         host, selector = splithost(path)
         h = HTTPSConnection(host, timeout=60)
-        h.request('POST', selector, query,
-                  {
-                      "Content-type": "application/x-ofx",
-                      "Accept": "*/*, application/x-ofx",
-                      "User-Agent": "httpclient"
-                  })
+        if host == 'ofx.discovercard.com':
+            # Discover requires a particular ordering of headers, so send the
+            # request step by step.
+            h.putrequest('POST', selector, skip_host=True,
+                         skip_accept_encoding=True)
+            h.putheader('Content-Type', 'application/x-ofx')
+            h.putheader('Host', host)
+            h.putheader('Content-Length', len(query))
+            h.putheader('Connection', 'Keep-Alive')
+            h.endheaders(query.encode())
+        else:
+            h.request('POST', selector, query,
+                      {
+                          "Content-type": "application/x-ofx",
+                          "Accept": "*/*, application/x-ofx",
+                          "User-Agent": "httpclient"
+                      })
         res = h.getresponse()
         response = res.read().decode('ascii', 'ignore')
         logging.debug('---- response ----')
