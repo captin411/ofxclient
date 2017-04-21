@@ -104,7 +104,10 @@ class Client:
         h.request('POST', selector, query,
                   {
                       "Content-type": "application/x-ofx",
-                      "Accept": "*/*, application/x-ofx"
+                      "Accept": "*/*, application/x-ofx",
+                      "User-Agent": "httpclient" # This is necessary for TD Bank.
+                  })
+                      
                   })
         res = h.getresponse()
         response = res.read().decode('ascii', 'ignore')
