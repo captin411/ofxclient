@@ -115,7 +115,8 @@ class Client:
             h.request('POST', selector, query,
                       {
                           "Content-type": "application/x-ofx",
-                          "Accept": "*/*, application/x-ofx"
+                          "Accept": "*/*, application/x-ofx",
+                          "User-Agent": "httpclient"
                       })
         res = h.getresponse()
         response = res.read().decode('ascii', 'ignore')
