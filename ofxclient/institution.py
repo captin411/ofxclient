@@ -8,7 +8,7 @@ try:
 except ImportError:
     # python 2
     from StringIO import StringIO
-    IS_PYTHON_2 = Trues
+    IS_PYTHON_2 = True
 
 from bs4 import BeautifulSoup
 from ofxparse import OfxParser
