@@ -1,6 +1,14 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.0.3] - 2017-04-27
+- Update quicken client version to 2500
+- CLI option to set OFX version
+- CLI option to support changing how far back to download
+- Python 3 bug fixes
+- Fix Discover card header requirements
+- Fix TD Bank header requirements
+
 ## [2.0.2] - 2015-05-30
 - Bug: fix get password on windows
 - Bug: ignore unexpected chars when decoding
