@@ -142,7 +142,7 @@ class Client:
         h.putheader('Content-Length', len(query))
         h.putheader('Connection', 'Keep-Alive')
         if self.accept:
-            h.putheader('Accept', self.accet)
+            h.putheader('Accept', self.accept)
         if self.user_agent:
             h.putheader('User-Agent', self.user_agent)
         h.endheaders(query.encode())
