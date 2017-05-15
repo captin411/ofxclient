@@ -22,11 +22,6 @@ DOWNLOAD_DAYS = 30
 GlobalConfig = None
 
 
-FORMAT = "[%(asctime)s %(levelname)s] %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=FORMAT)
-logger = logging.getLogger()
-
-
 def run():
     global GlobalConfig
 
