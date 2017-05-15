@@ -113,7 +113,7 @@ class Institution(object):
             u = username
             p = password
 
-        client = self.client(**self.client_args)
+        client = self.client()
         query = client.authenticated_query(username=u, password=p)
         res = client.post(query)
         ofx = BeautifulSoup(res, 'lxml')
