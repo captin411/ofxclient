@@ -22,6 +22,11 @@ DOWNLOAD_DAYS = 30
 GlobalConfig = None
 
 
+FORMAT = "[%(asctime)s %(levelname)s] %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=FORMAT)
+logger = logging.getLogger()
+
+
 def run():
     global GlobalConfig
 
@@ -238,7 +243,7 @@ def client_args_for_bank(bank_info, ofx_version):
     :return: Client arguments for a specific institution
     :rtype: dict
     """
-    client_args = {'ofx_version': ofx_version}
+    client_args = {'ofx_version': str(ofx_version)}
     if 'ofx.discovercard.com' in bank_info['url']:
         # Discover needs no User-Agent and no Accept headers
         client_args['user_agent'] = False
