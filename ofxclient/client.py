@@ -19,6 +19,8 @@ import uuid
 DEFAULT_APP_ID = 'QWIN'
 DEFAULT_APP_VERSION = '2500'
 DEFAULT_OFX_VERSION = '102'
+DEFAULT_USER_AGENT = 'httpclient'
+DEFAULT_ACCEPT = '*/*, application/x-ofx'
 
 LINE_ENDING = "\r\n"
 
@@ -40,6 +42,12 @@ class Client:
     :type app_version: string
     :param ofx_version: OFX spec version
     :type ofx_version: string
+    :param user_agent: Value to send for User-Agent HTTP header. Leave as
+      None to send default. Set to False to not send User-Agent header.
+    :type user_agent: str, None or False
+    :param accept: Value to send for Accept HTTP header. Leave as
+      None to send default. Set to False to not send User-Agent header.
+    :type accept: str, None or False
     """
 
     def __init__(
@@ -48,14 +56,38 @@ class Client:
         id=ofx_uid(),
         app_id=DEFAULT_APP_ID,
         app_version=DEFAULT_APP_VERSION,
-        ofx_version=DEFAULT_OFX_VERSION
+        ofx_version=DEFAULT_OFX_VERSION,
+        user_agent=DEFAULT_USER_AGENT,
+        accept=DEFAULT_ACCEPT
     ):
         self.institution = institution
         self.id = id
         self.app_id = app_id
         self.app_version = app_version
         self.ofx_version = ofx_version
+        self.user_agent = user_agent
+        self.accept = accept
+        # used when serializing Institutions
+        self._init_args = {
+            'id': self.id,
+            'app_id': self.app_id,
+            'app_version': self.app_version,
+            'ofx_version': self.ofx_version,
+            'user_agent': self.user_agent,
+            'accept': self.accept
+        }
         self.cookie = 3
+
+    @property
+    def init_args(self):
+        """
+        Return a dict of the arguments used to initialize this client,
+        suitable for use when serializing an Institution.
+
+        :return: constructor arguments
+        :rtype: dict
+        """
+        return self._init_args
 
     def authenticated_query(
         self,
