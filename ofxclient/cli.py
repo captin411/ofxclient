@@ -163,6 +163,8 @@ def view_account_menu(account, args):
         print("  App Ver:               %s" % client.app_version)
         print("  App Id:                %s" % client.app_id)
         print("  OFX Ver:               %s" % client.ofx_version)
+        print("  User-Agent header:     %s" % client.user_agent)
+        print("  Accept header:         %s" % client.accept)
         print("  Config File:           %s" % GlobalConfig.file_name)
 
         menu_item('D', 'Download')
