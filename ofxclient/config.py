@@ -118,9 +118,6 @@ class SecurableConfigParser(ConfigParser):
     def set(self, section, option, value):
         """Set an option value. Knows how to set options properly marked
         as secure."""
-        print("set [%s] %s to: %s (%s)" % (
-            section, option, value, type(value)
-        ))
         if value is False:
             value = '!!False!!'
         if self.is_secure_option(section, option):
