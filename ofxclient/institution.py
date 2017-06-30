@@ -145,7 +145,7 @@ class Institution(object):
         if IS_PYTHON_2:
             parsed = OfxParser.parse(resp_handle)
         else:
-            parsed = OfxParser.parse(BytesIO((((resp_handle).read()).encode())))
+            parsed = OfxParser.parse(BytesIO(resp_handle.read().encode()))
 
         return [Account.from_ofxparse(a, institution=self)
                 for a in parsed.accounts]

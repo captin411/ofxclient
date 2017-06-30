@@ -112,9 +112,13 @@ class Account(object):
         :rtype: :py:class:`ofxparser.Ofx`
         """
         if IS_PYTHON_2:
-            return OfxParser.parse(self.download(days=days))
+            return OfxParser.parse(
+                self.download(days=days)
+            )
         else:
-            return OfxParser.parse(BytesIO((((self.download(days=days)).read()).encode())))
+            return OfxParser.parse(
+                BytesIO(self.download(days=days).read().encode())
+            )
 
     def statement(self, days=60):
         """Download the :py:class:`ofxparse.Statement` given the time range

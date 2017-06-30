@@ -1,5 +1,6 @@
 .buildinfo
 .doctrees
+venv
 
 *.py[co]
 
@@ -22,12 +23,16 @@ pip-log.txt
 # Unit test / coverage reports
 .coverage
 .tox
+tests/python_keyring/keyring_pass.cfg
 
 # ofx files in root folder
 /*.ofx
 
 #Translations
 *.mo
+
+#Vim
+*.swp
 
 #Mr Developer
 .mr.developer.cfg

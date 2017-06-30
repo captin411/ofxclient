@@ -1,0 +1,14 @@
+cmd: "python"
+name: "build"
+args:
+  - "setup.py"
+  - "sdist"
+targets:
+  test:
+    cmd: "python"
+    name: "test"
+    args:
+      - "setup.py"
+      - "test"
+errorMatch:
+    - ".*File \"(?<file>[\\/0-9a-zA-Z\\._\\-]+)\", line (?<line>\\d+).*"
