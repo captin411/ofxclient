@@ -163,6 +163,8 @@ def view_account_menu(account, args):
         print("  App Ver:               %s" % client.app_version)
         print("  App Id:                %s" % client.app_id)
         print("  OFX Ver:               %s" % client.ofx_version)
+        print("  User-Agent header:     %s" % client.user_agent)
+        print("  Accept header:         %s" % client.accept)
         print("  Config File:           %s" % GlobalConfig.file_name)
 
         menu_item('D', 'Download')
@@ -206,7 +208,7 @@ def login_check_menu(bank_info, args):
             description=bank_info['name'],
             username=username,
             password=password,
-            client_args={'ofx_version': args.ofx_version}
+            client_args=client_args_for_bank(bank_info, args.ofx_version)
         )
         try:
             i.authenticate()
@@ -220,6 +222,31 @@ def login_check_menu(bank_info, args):
         GlobalConfig.save()
         return 1
 
+
+def client_args_for_bank(bank_info, ofx_version):
+    """
+    Return the client arguments to use for a particular Institution, as found
+    from ofxhome. This provides us with an extension point to override or
+    augment ofxhome data for specific institutions, such as those that
+    require specific User-Agent headers (or no User-Agent header).
+
+    :param bank_info: OFXHome bank information for the institution, as returned
+      by ``OFXHome.lookup()``
+    :type bank_info: dict
+    :param ofx_version: OFX Version argument specified on command line
+    :type ofx_version: str
+    :return: Client arguments for a specific institution
+    :rtype: dict
+    """
+    client_args = {'ofx_version': str(ofx_version)}
+    if 'ofx.discovercard.com' in bank_info['url']:
+        # Discover needs no User-Agent and no Accept headers
+        client_args['user_agent'] = False
+        client_args['accept'] = False
+    if 'www.accountonline.com' in bank_info['url']:
+        # Citi needs no User-Agent header
+        client_args['user_agent'] = False
+    return client_args
 
 def write_and_handle_download(ofx_data, name):
     outfile = io.open(name, 'w')

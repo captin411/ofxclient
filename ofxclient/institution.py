@@ -165,22 +165,14 @@ class Institution(object):
             'password':    'Customer password',
             'description': 'descr',
             'client_args': {
-                'id':          'random client id - see Client() for default',
-                'app_id':      'app name - see Client() for default',
-                'app_version': 'app version - see Client() for default',
-                'ofx_version': 'ofx version - see Client() for default',
+                'id':     'random client id - see Client() for default',
+                'app_id': 'app name - see Client() for default',
+                '...':    'see Client() for other options'
             }
           }
 
         :rtype: nested dictionary
         """
-        client = self.client()
-        client_args = {
-            'id': client.id,
-            'app_id': client.app_id,
-            'app_version': client.app_version,
-            'ofx_version': client.ofx_version,
-        }
         return {
             'id': self.id,
             'org': self.org,
@@ -189,7 +181,7 @@ class Institution(object):
             'username': self.username,
             'password': self.password,
             'description': self.description,
-            'client_args': client_args,
+            'client_args': self.client().init_args,
             'local_id': self.local_id()
         }
 

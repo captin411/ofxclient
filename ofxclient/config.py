@@ -100,6 +100,8 @@ class SecurableConfigParser(ConfigParser):
         for k, v in ConfigParser.items(self, section):
             if self.is_secure_option(section, k):
                 v = self.get(section, k)
+            if v == '!!False!!':
+                v = False
             items.append((k, v))
         return items
 
@@ -116,6 +118,8 @@ class SecurableConfigParser(ConfigParser):
     def set(self, section, option, value):
         """Set an option value. Knows how to set options properly marked
         as secure."""
+        if value is False:
+            value = '!!False!!'
         if self.is_secure_option(section, option):
             self.set_secure(section, option, value)
         else:
@@ -139,10 +143,14 @@ class SecurableConfigParser(ConfigParser):
         if self.is_secure_option(section, option) and self.keyring_available:
             s_option = "%s%s" % (section, option)
             if self._unsaved.get(s_option, [''])[0] == 'set':
-                return self._unsaved[s_option][1]
+                res = self._unsaved[s_option][1]
             else:
-                return keyring.get_password(self.keyring_name, s_option)
-        return ConfigParser.get(self, section, option, *args)
+                res = keyring.get_password(self.keyring_name, s_option)
+        else:
+            res = ConfigParser.get(self, section, option, *args)
+        if res == '!!False!!':
+            return False
+        return res
 
     def remove_option(self, section, option):
         """Removes the option from ConfigParser as well as
