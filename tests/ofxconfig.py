@@ -4,7 +4,7 @@ import os
 import os.path
 import tempfile
 import unittest
-from test.test_support import EnvironmentVarGuard
+from test.support import EnvironmentVarGuard
 
 import ofxclient.config
 from ofxclient.config import OfxConfig
