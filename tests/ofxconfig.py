@@ -4,7 +4,10 @@ import os
 import os.path
 import tempfile
 import unittest
-from test.support import EnvironmentVarGuard
+try:
+    from test.support import EnvironmentVarGuard
+except ImportError:
+    from test.test_support import EnvironmentVarGuard
 
 import ofxclient.config
 from ofxclient.config import OfxConfig
