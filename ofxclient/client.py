@@ -127,12 +127,28 @@ class Client:
 
     def post(self, query):
         """
-        Perform an HTTP POST; return the response as a string.
+        Wrapper around ``_do_post()`` to handle accounts that require
+        sending back session cookies (``self.set_cookies`` True).
+        """
+        res, response = self._do_post(query)
+        cookies = res.getheader('Set-Cookie', None)
+        if len(response) == 0 and cookies is not None and res.status == 200:
+            logging.debug('Got 0-length 200 response with Set-Cookies header; '
+                          'retrying request with cookies')
+            _, response = self._do_post(query, [('Cookie', cookies)])
+        return response
 
-        :param query: HTTP request body (OFX query)
+    def _do_post(self, query, extra_headers=[]):
+        """
+        Do a POST to the Institution.
+
+        :param query: Body content to POST (OFX Query)
         :type query: str
-        :return: HTTP response body
-        :rtype: str
+        :param extra_headers: Extra headers to send with the request, as a list
+          of (Name, Value) header 2-tuples.
+        :type extra_headers: list
+        :return: 2-tuple of (HTTPResponse, str response body)
+        :rtype: tuple
         """
         i = self.institution
         logging.debug('posting data to %s' % i.url)
@@ -153,6 +169,8 @@ class Client:
             headers.append(('Accept', self.accept))
         if self.user_agent:
             headers.append(('User-Agent', self.user_agent))
+        for ehname, ehval in extra_headers:
+            headers.append((ehname, ehval))
         logging.debug('---- request headers ----')
         for hname, hval in headers:
             logging.debug('%s: %s', hname, hval)
@@ -167,7 +185,7 @@ class Client:
         logging.debug('Headers: %s', res.getheaders())
         logging.debug(response)
         res.close()
-        return response
+        return res, response
 
     def next_cookie(self):
         self.cookie += 1
