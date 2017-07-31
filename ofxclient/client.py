@@ -126,10 +126,16 @@ class Client:
         return self.authenticated_query(self._acctreq(date))
 
     def post(self, query):
+        """
+        Perform an HTTP POST; return the response as a string.
+
+        :param query: HTTP request body (OFX query)
+        :type query: str
+        :return: HTTP response body
+        :rtype: str
+        """
         i = self.institution
         logging.debug('posting data to %s' % i.url)
-        logging.debug('---- request ----')
-        logging.debug(query)
         garbage, path = splittype(i.url)
         host, selector = splithost(path)
         h = HTTPSConnection(host, timeout=60)
@@ -137,22 +143,30 @@ class Client:
         # request step by step.
         h.putrequest('POST', selector, skip_host=True,
                      skip_accept_encoding=True)
-        h.putheader('Content-Type', 'application/x-ofx')
-        h.putheader('Host', host)
-        h.putheader('Content-Length', len(query))
-        h.putheader('Connection', 'Keep-Alive')
+        headers = [
+            ('Content-Type', 'application/x-ofx'),
+            ('Host', host),
+            ('Content-Length', len(query)),
+            ('Connection', 'Keep-Alive')
+        ]
         if self.accept:
-            h.putheader('Accept', self.accept)
+            headers.append(('Accept', self.accept))
         if self.user_agent:
-            h.putheader('User-Agent', self.user_agent)
+            headers.append(('User-Agent', self.user_agent))
+        logging.debug('---- request headers ----')
+        for hname, hval in headers:
+            logging.debug('%s: %s', hname, hval)
+            h.putheader(hname, hval)
+        logging.debug('---- request body (query) ----')
+        logging.debug(query)
         h.endheaders(query.encode())
         res = h.getresponse()
         response = res.read().decode('ascii', 'ignore')
         logging.debug('---- response ----')
         logging.debug(res.__dict__)
+        logging.debug('Headers: %s', res.getheaders())
         logging.debug(response)
         res.close()
-
         return response
 
     def next_cookie(self):
