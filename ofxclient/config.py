@@ -123,7 +123,7 @@ class SecurableConfigParser(ConfigParser):
         if self.is_secure_option(section, option):
             self.set_secure(section, option, value)
         else:
-            ConfigParser.set(self, section, option, value)
+            ConfigParser.set(self, section, option, str(value))
 
     def set_secure(self, section, option, value):
         """Set an option and mark it as secure.
