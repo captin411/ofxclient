@@ -118,12 +118,13 @@ class SecurableConfigParser(ConfigParser):
     def set(self, section, option, value):
         """Set an option value. Knows how to set options properly marked
         as secure."""
-        if value is False:
+        if not value:
             value = '!!False!!'
+#        section, option, value = (str(section), str(option), str(value))
         if self.is_secure_option(section, option):
             self.set_secure(section, option, value)
         else:
-            ConfigParser.set(self, section, option, str(value))
+            ConfigParser.set(self, section, option, value)
 
     def set_secure(self, section, option, value):
         """Set an option and mark it as secure.
@@ -131,6 +132,7 @@ class SecurableConfigParser(ConfigParser):
         Any subsequent uses of 'set' or 'get' will also
         now know that this option is secure as well.
         """
+#        section, option, value = (str(section), str(option), str(value))
         if self.keyring_available:
             s_option = "%s%s" % (section, option)
             self._unsaved[s_option] = ('set', value)
