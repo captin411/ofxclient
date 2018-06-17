@@ -53,7 +53,7 @@ def run():
                 ofxdata = a.download(days=args.download_days)
             else:
                 ofxdata = combined_download(accounts, days=args.download_days)
-            args.download.write(ofxdata.read())
+            args.download.write(ofxdata.read().encode())
             if args.open:
                 open_with_ofx_handler(args.download.name)
             sys.exit(0)
