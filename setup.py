@@ -40,6 +40,7 @@ setup(name='ofxclient',
       },
       install_requires=[
           "argparse",
+          "configparser; python_version < '3.2',
           "keyring",
           "lxml",
           "ofxhome",

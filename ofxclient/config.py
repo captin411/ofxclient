@@ -56,12 +56,7 @@ class SecurableConfigParser(ConfigParser):
 
     def __init__(self, keyring_name='ofxclient',
                  keyring_available=KEYRING_AVAILABLE, **kwargs):
-        if sys.version_info >= (3,):
-            # python 3
-            ConfigParser.__init__(self, interpolation=None)
-        else:
-            # python 2
-            ConfigParser.__init__(self)
+        ConfigParser.__init__(self, interpolation=None)
         self.keyring_name = keyring_name
         self.keyring_available = keyring_available
         self._unsaved = {}
