@@ -131,14 +131,14 @@ class Institution(object):
 
         raise ValueError(status)
 
-    def accounts(self):
+    def accounts(self, *args, **kwargs):
         """Ask the bank for the known :py:class:`ofxclient.Account` list.
 
         :rtype: list of :py:class:`ofxclient.Account` objects
         """
         from ofxclient.account import Account
         client = self.client()
-        query = client.account_list_query()
+        query = client.account_list_query(*args, **kwargs)
         resp = client.post(query)
         resp_handle = StringIO(resp)
 
