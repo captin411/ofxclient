@@ -131,14 +131,14 @@ class Institution(object):
 
         raise ValueError(status)
 
-    def accounts(self, *args, **kwargs):
+    def accounts(self, date='19700101000000'):
         """Ask the bank for the known :py:class:`ofxclient.Account` list.
 
         :rtype: list of :py:class:`ofxclient.Account` objects
         """
         from ofxclient.account import Account
         client = self.client()
-        query = client.account_list_query(*args, **kwargs)
+        query = client.account_list_query(date)
         resp = client.post(query)
         resp_handle = StringIO(resp)
 
@@ -146,6 +146,10 @@ class Institution(object):
             parsed = OfxParser.parse(resp_handle)
         else:
             parsed = OfxParser.parse(BytesIO(resp_handle.read().encode()))
+
+        if not parsed.accounts and len(date) > 8:
+            # TD Bank doesn't support full date/time string here
+            return self.accounts(date=date[:8])
 
         return [Account.from_ofxparse(a, institution=self)
                 for a in parsed.accounts]
