@@ -21,6 +21,7 @@ DEFAULT_APP_VERSION = '2500'
 DEFAULT_OFX_VERSION = '102'
 DEFAULT_USER_AGENT = 'httpclient'
 DEFAULT_ACCEPT = '*/*, application/x-ofx'
+DEFAULT_DELAY = '0'
 
 LINE_ENDING = "\r\n"
 
@@ -48,6 +49,9 @@ class Client:
     :param accept: Value to send for Accept HTTP header. Leave as
       None to send default. Set to False to not send User-Agent header.
     :type accept: str, None or False
+    :param delay: A number in seconds to delay after posting the request
+      Some institution may limit request rates
+    :type delay: str, None or False
     """
 
     def __init__(
@@ -58,7 +62,8 @@ class Client:
         app_version=DEFAULT_APP_VERSION,
         ofx_version=DEFAULT_OFX_VERSION,
         user_agent=DEFAULT_USER_AGENT,
-        accept=DEFAULT_ACCEPT
+        accept=DEFAULT_ACCEPT,
+        delay=DEFAULT_DELAY
     ):
         self.institution = institution
         self.id = id
@@ -67,6 +72,7 @@ class Client:
         self.ofx_version = ofx_version
         self.user_agent = user_agent
         self.accept = accept
+        self.delay = delay
         # used when serializing Institutions
         self._init_args = {
             'id': self.id,
@@ -74,7 +80,8 @@ class Client:
             'app_version': self.app_version,
             'ofx_version': self.ofx_version,
             'user_agent': self.user_agent,
-            'accept': self.accept
+            'accept': self.accept,
+            'delay': self.delay
         }
         self.cookie = 3
 
@@ -185,6 +192,9 @@ class Client:
         logging.debug('Headers: %s', res.getheaders())
         logging.debug(response)
         res.close()
+        if self.delay and int(self.delay):
+            logging.debug('Delay for %d seconds', self.delay)
+            time.sleep(int(self.delay))
         return res, response
 
     def next_cookie(self):
