@@ -40,7 +40,7 @@ setup(name='ofxclient',
       },
       install_requires=[
           "argparse",
-          "keyring",
+          "keyring==8.4.1",
           "lxml",
           "ofxhome",
           "ofxparse>0.8",
