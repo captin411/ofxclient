@@ -39,12 +39,14 @@ setup(name='ofxclient',
           ]
       },
       install_requires=[
-          "argparse",
-          "keyring",
-          "lxml",
-          "ofxhome",
-          "ofxparse>0.8",
-          "beautifulsoup4",
+          "argparse==1.4.1; python_version < '2.7'",
+          "keyring==8.4.1",
+          "lxml>=3.5.0",
+          "ofxhome==0.3.3",
+          "ofxparse==0.14",
+          "beautifulsoup4==4.4.1",
+          "keyrings.alt==1.1.1",
+          "pycrypto==2.6.1"
       ],
       test_suite='tests',
       )
