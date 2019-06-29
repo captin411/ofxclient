@@ -243,6 +243,8 @@ def client_args_for_bank(bank_info, ofx_version):
         # Discover needs no User-Agent and no Accept headers
         client_args['user_agent'] = False
         client_args['accept'] = False
+        # Discover limits request rates
+        client_args['delay'] = '2'
     if 'www.accountonline.com' in bank_info['url']:
         # Citi needs no User-Agent header
         client_args['user_agent'] = False
