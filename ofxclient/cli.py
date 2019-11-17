@@ -246,6 +246,9 @@ def client_args_for_bank(bank_info, ofx_version):
     if 'www.accountonline.com' in bank_info['url']:
         # Citi needs no User-Agent header
         client_args['user_agent'] = False
+    if 'ofx.schwab.com' in bank_info['url']:
+        # Schwab requires no User-Agent header
+        client_args['user_agent'] = False
     return client_args
 
 def write_and_handle_download(ofx_data, name):
