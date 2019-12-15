@@ -1,6 +1,9 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.0.5] - XXXX-XX-XX
+- Fix Schwab header requirements
+
 ## [2.0.4] - 2019-02-10
 - fix a number of python3 encoding issues
 - fix bug with ConfigParser
