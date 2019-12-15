@@ -246,7 +246,7 @@ def client_args_for_bank(bank_info, ofx_version):
     if 'www.accountonline.com' in bank_info['url']:
         # Citi needs no User-Agent header
         client_args['user_agent'] = False
-    if 'ofx.schwab.com' in bank_info['url']
+    if 'ofx.schwab.com' in bank_info['url']:
         # Schwab needs just "application/x-ofx" in the accept header
         # and no User-Agent header
         client_args['accept'] = "application/x-ofx"
