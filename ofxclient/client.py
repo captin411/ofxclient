@@ -108,10 +108,10 @@ class Client:
             contents.append(with_message)
         return LINE_ENDING.join([self.header(), _tag(*contents)])
 
-    def bank_account_query(self, number, date, account_type, bank_id):
+    def bank_account_query(self, number, date_start, date_end, account_type, bank_id):
         """Bank account statement request"""
         return self.authenticated_query(
-            self._bareq(number, date, account_type, bank_id)
+            self._bareq(number, date_start, date_end, account_type, bank_id)
         )
 
     def credit_card_account_query(self, number, date):
@@ -236,7 +236,7 @@ class Client:
         return self._message("SIGNUP", "ACCTINFO", req)
 
 # this is from _ccreq below and reading page 176 of the latest OFX doc.
-    def _bareq(self, acctid, dtstart, accttype, bankid):
+    def _bareq(self, acctid, dtstart, dtend, accttype, bankid):
         req = _tag("STMTRQ",
                    _tag("BANKACCTFROM",
                         _field("BANKID", bankid),
@@ -244,6 +244,7 @@ class Client:
                         _field("ACCTTYPE", accttype)),
                    _tag("INCTRAN",
                         _field("DTSTART", dtstart),
+                        _field("DTEND", dtend),
                         _field("INCLUDE", "Y")))
         return self._message("BANK", "STMT", req)
 
