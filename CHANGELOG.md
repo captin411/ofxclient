@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [2.0.4] - 2019-02-10
+- fix a number of python3 encoding issues
+- fix bug with ConfigParser
+- Vanguard and Citibank bug fixes
+
 ## [2.0.3] - 2017-04-27
 - Update quicken client version to 2500
 - CLI option to set OFX version
