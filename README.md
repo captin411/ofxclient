@@ -6,7 +6,7 @@ Simple ofxclient command line utility and OFX client libraries for development.
 Full Documentation
 ==================
 
-http://captin411.github.com/ofxclient/
+http://captin411.github.io/ofxclient/
 
 Quick Start
 ===========
@@ -41,4 +41,4 @@ Your username and password are stored encrypted however your account number, rou
 bank name, and account type are not encrypted and are visible to anyone with access to this
 file on your local computer.
 
-For full details on the config file, see: http://captin411.github.com/ofxclient/
+For full details on the config file, see: http://captin411.github.io/ofxclient/
